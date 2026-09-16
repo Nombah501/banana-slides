@@ -39,11 +39,11 @@ backend/
 │   ├── __init__.py
 │   ├── response.py          # 统一响应格式
 │   └── validators.py        # 数据验证
-├── instance/                 # 数据库文件目录（自动创建）
-├── uploads/                  # 文件上传目录（自动创建）
-├── .env.example             # 环境变量示例
+├── .env.example             # 环境变量配置示例
 └── README.md                # 本文件
 ```
+
+运行实例数据默认写入 `${XDG_DATA_HOME:-~/.local/share}/banana-slides`，可通过 `INSTANCE_PATH` 或桌面壳传入的 `DATABASE_PATH` 覆盖。
 
 ## 快速开始
 
@@ -307,10 +307,10 @@ curl -X POST http://localhost:5011/api/projects/{project_id}/generate/outline \
 ## 常见问题
 
 ### Q: 数据库文件在哪里？
-A: 在 `backend/instance/database.db`，会自动创建。
+A: 默认在 `${XDG_DATA_HOME:-~/.local/share}/banana-slides/database.db`。`INSTANCE_PATH` 可显式指定实例目录；否则使用 `DATABASE_PATH` 的父目录。桌面壳会把数据库、上传和导出目录放在所选可写数据目录中，因此不会写入只读应用包。
 
 ### Q: 上传的文件存在哪里？
-A: 在 `uploads/{project_id}/` 目录下，按项目隔离。
+A: 默认在实例目录的 `uploads/{project_id}/` 下；桌面壳运行时使用所选数据目录的 `uploads/{project_id}/`，按项目隔离。
 
 ### Q: 如何修改并发数？
 A: 推荐通过前端设置页修改（会同步到数据库并覆盖 `.env` 值）；也可以在 `.env` 文件中修改 `MAX_DESCRIPTION_WORKERS` 和 `MAX_IMAGE_WORKERS` 作为默认值，然后在设置页点击“重置为默认值”同步到 DB。

@@ -25,12 +25,15 @@ if __name__ == '__main__':
 # Load environment variables from project root .env file
 _project_root = Path(__file__).parent.parent
 _env_file = _project_root / '.env'
-load_dotenv(dotenv_path=_env_file, override=not os.getenv('DATABASE_PATH'))
+load_dotenv(
+    dotenv_path=_env_file,
+    override=not (os.getenv('DATABASE_PATH') or os.getenv('INSTANCE_PATH')),
+)
 
 from flask import Flask
 from flask_cors import CORS
 from models import db
-from config import Config, DEFAULT_BACKEND_PORT, DEFAULT_FRONTEND_PORT
+from config import Config, DEFAULT_BACKEND_PORT, DEFAULT_FRONTEND_PORT, resolve_instance_path
 from controllers.material_controller import material_bp, material_global_bp
 from controllers.reference_file_controller import reference_file_bp
 from controllers.settings_controller import settings_bp
@@ -76,17 +79,20 @@ def create_app():
     if database_url_env and not db_path_env:
         app.config['SQLALCHEMY_DATABASE_URI'] = database_url_env
 
-    # Ensure instance directory exists for the default SQLite path in Config
-    backend_dir = os.path.dirname(os.path.abspath(__file__))
-    instance_dir = os.path.join(backend_dir, 'instance')
+    # The packaged backend may run from a read-only AppImage mount. Resolve
+    # instance data from explicit/shell/XDG paths and never create bundle dirs.
+    instance_dir = resolve_instance_path()
+    app.config['INSTANCE_PATH'] = instance_dir
+    if not db_path_env and not database_url_env:
+        app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{Path(instance_dir, "database.db").as_posix()}'
     os.makedirs(instance_dir, exist_ok=True)
 
-    # Ensure upload folder exists
-    project_root = os.path.dirname(backend_dir)
-    upload_folder = os.path.join(project_root, 'uploads')
+    # Ensure the default upload folder is writable too. Desktop supplies an
+    # explicit path below, while local/backend-only runs use instance data.
+    upload_folder = os.path.join(instance_dir, 'uploads')
     os.makedirs(upload_folder, exist_ok=True)
     app.config['UPLOAD_FOLDER'] = upload_folder
-    
+
     # Desktop environment overrides (set by Electron python-manager)
     upload_folder_env = os.environ.get('UPLOAD_FOLDER')
     export_folder_env = os.environ.get('EXPORT_FOLDER')
@@ -100,7 +106,6 @@ def create_app():
     if export_folder_env:
         os.makedirs(export_folder_env, exist_ok=True)
         app.config['EXPORT_FOLDER'] = export_folder_env
-
     # CORS configuration (parse from environment)
     raw_cors = os.getenv('CORS_ORIGINS', f'http://localhost:{DEFAULT_FRONTEND_PORT}')
     if raw_cors.strip() == '*':

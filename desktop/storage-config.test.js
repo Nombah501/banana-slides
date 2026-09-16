@@ -266,6 +266,7 @@ test('does not silently fall back when configured storage is unavailable', async
 
 test('packaged smoke tests set Electron userData explicitly before app readiness', () => {
   const mainSource = fs.readFileSync(path.join(desktopRoot, 'main.js'), 'utf8');
+  const pythonManagerSource = fs.readFileSync(path.join(desktopRoot, 'python-manager.js'), 'utf8');
   const macSmoke = fs.readFileSync(path.join(desktopRoot, 'scripts', 'smoke-macos-dmg.sh'), 'utf8');
   const linuxSmoke = fs.readFileSync(path.join(desktopRoot, 'scripts', 'smoke-linux-appimage.sh'), 'utf8');
 
@@ -280,4 +281,5 @@ test('packaged smoke tests set Electron userData explicitly before app readiness
   assert.match(mainSource, /splashWindow && !splashWindow\.isDestroyed\(\) \? splashWindow : null/);
   assert.match(macSmoke, /BANANA_DESKTOP_SMOKE_USER_DATA_DIR="\$user_data_dir"/);
   assert.match(linuxSmoke, /BANANA_DESKTOP_SMOKE_USER_DATA_DIR="\$user_data_dir"/);
+  assert.match(pythonManagerSource, /INSTANCE_PATH: dataDir/);
 });

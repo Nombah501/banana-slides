@@ -68,6 +68,7 @@ async function startBackend(dataRoot) {
     ...process.env,
     PATH: [ffmpegDir, process.env.PATH].filter(Boolean).join(pathEnvSeparator),
     BACKEND_PORT: '0',
+    INSTANCE_PATH: dataDir,
     DATABASE_PATH: path.join(dataDir, 'database.db'),
     UPLOAD_FOLDER: uploadsDir,
     EXPORT_FOLDER: exportsDir,

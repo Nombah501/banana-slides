@@ -1,3 +1,4 @@
+import os
 import importlib
 import logging
 import hashlib
@@ -56,9 +57,49 @@ def test_create_app_prefers_database_path_over_database_url(monkeypatch, tmp_pat
     app_module = _reload_app_module()
 
     flask_app = app_module.create_app()
-
     assert flask_app.config['SQLALCHEMY_DATABASE_URI'] == f"sqlite:///{db_path}"
 
+
+
+def test_create_app_uses_writable_xdg_fallback_when_bundle_is_read_only(monkeypatch, tmp_path):
+    bundle_backend = tmp_path / 'bundle' / 'resources' / 'backend'
+    bundle_backend.mkdir(parents=True)
+    (bundle_backend / 'app.py').write_text('', encoding='utf-8')
+    os.chmod(bundle_backend.parent, 0o555)
+    os.chmod(bundle_backend, 0o555)
+
+    xdg_data_home = tmp_path / 'xdg-data'
+    monkeypatch.delenv('INSTANCE_PATH', raising=False)
+    monkeypatch.delenv('DATABASE_PATH', raising=False)
+    monkeypatch.delenv('DATABASE_URL', raising=False)
+    monkeypatch.setenv('XDG_DATA_HOME', str(xdg_data_home))
+    monkeypatch.setenv('TESTING', 'true')
+    monkeypatch.setenv('FLASK_ENV', 'testing')
+
+    app_module = _reload_app_module()
+    monkeypatch.setattr(app_module, '__file__', str(bundle_backend / 'app.py'))
+
+    flask_app = app_module.create_app()
+    instance_path = xdg_data_home / 'banana-slides'
+
+    assert flask_app.config['INSTANCE_PATH'] == str(instance_path)
+    assert flask_app.config['SQLALCHEMY_DATABASE_URI'] == f'sqlite:///{instance_path / "database.db"}'
+    assert instance_path.is_dir()
+    assert not (bundle_backend / 'instance').exists()
+
+
+
+def test_instance_path_precedence_prefers_explicit_over_database_and_xdg(monkeypatch, tmp_path):
+    explicit_path = tmp_path / 'explicit-instance'
+    database_path = tmp_path / 'database-parent' / 'database.db'
+    monkeypatch.setenv('INSTANCE_PATH', str(explicit_path))
+    monkeypatch.setenv('DATABASE_PATH', str(database_path))
+    monkeypatch.setenv('XDG_DATA_HOME', str(tmp_path / 'xdg-data'))
+
+    config_module = importlib.import_module('config')
+    config_module = importlib.reload(config_module)
+
+    assert config_module.resolve_instance_path() == str(explicit_path)
 
 def test_create_app_defaults_werkzeug_log_level_to_info(monkeypatch, tmp_path):
     _set_test_env(monkeypatch, tmp_path)

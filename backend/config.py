@@ -5,13 +5,32 @@ import os
 import sys
 from datetime import timedelta
 
-# 基础配置 - 使用更可靠的路径计算方式
-# 在模块加载时立即计算并固定路径
-_current_file = os.path.realpath(__file__)  # 使用realpath解析所有符号链接
+# Resolve mutable application data outside the installation directory. Packaged
+# backends may run from a read-only AppImage mount.
+_current_file = os.path.realpath(__file__)
 BASE_DIR = os.path.dirname(_current_file)
 PROJECT_ROOT = os.path.dirname(BASE_DIR)
 DEFAULT_FRONTEND_PORT = 3011
 DEFAULT_BACKEND_PORT = 5011
+
+
+def resolve_instance_path(env=None):
+    """Return the writable directory used for instance/database data."""
+    environment = os.environ if env is None else env
+    explicit_path = str(environment.get('INSTANCE_PATH') or '').strip()
+    if explicit_path:
+        return os.path.abspath(os.path.expanduser(explicit_path))
+
+    database_path = str(environment.get('DATABASE_PATH') or '').strip()
+    if database_path:
+        return os.path.dirname(os.path.abspath(os.path.expanduser(database_path)))
+
+    xdg_data_home = str(environment.get('XDG_DATA_HOME') or '').strip()
+    data_home = xdg_data_home or os.path.expanduser('~/.local/share')
+    return os.path.join(os.path.abspath(os.path.expanduser(data_home)), 'banana-slides')
+
+
+INSTANCE_PATH = resolve_instance_path()
 
 # Flask配置
 class Config:
@@ -20,7 +39,7 @@ class Config:
     
     # 数据库配置
     # Use absolute path to avoid WSL path issues
-    db_path = os.path.join(BASE_DIR, 'instance', 'database.db')
+    db_path = os.path.join(INSTANCE_PATH, 'database.db')
     SQLALCHEMY_DATABASE_URI = os.getenv(
         'DATABASE_URL', 
         f'sqlite:///{db_path}'
@@ -37,8 +56,8 @@ class Config:
         'pool_recycle': 3600,  # 1小时回收连接
     }
     
-    # 文件存储配置
-    UPLOAD_FOLDER = os.path.join(PROJECT_ROOT, 'uploads')
+    # Keep default uploads beside the writable instance/database data.
+    UPLOAD_FOLDER = os.path.join(INSTANCE_PATH, 'uploads')
     MAX_CONTENT_LENGTH = 200 * 1024 * 1024  # 200MB max file size
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
     ALLOWED_REFERENCE_FILE_EXTENSIONS = {'pdf', 'docx', 'pptx', 'doc', 'ppt', 'xlsx', 'xls', 'csv', 'txt', 'md'}

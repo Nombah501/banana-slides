@@ -51,6 +51,10 @@
 !docs/superpowers/plans/*.md
 !docs/desktop-handover.md
 !.github/**/*.md
+!FORK.md
+!RELEASE.md
+!PHASE15-REPORT.md
+!docs/product/phase15-fork-infra/plan.md
 *.pyc
 .env
 /desktop/.cache/
