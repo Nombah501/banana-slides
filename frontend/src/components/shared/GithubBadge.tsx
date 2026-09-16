@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Github, Star, GitFork } from 'lucide-react';
-
-const GITHUB_REPO = 'Anionex/banana-slides';
-const GITHUB_URL = `https://github.com/${GITHUB_REPO}`;
+import { GITHUB_REPO, GITHUB_URL } from '@/config/links';
 
 interface GithubStats {
   stars: number;

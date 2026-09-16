@@ -7,6 +7,7 @@ import { useT, type TranslationFunction } from '@/hooks/useT';
 import { useTranslation } from 'react-i18next';
 import logoUrl from '@/assets/logo.png';
 import { resolveLocale, type SupportedLocale } from '@/utils/i18nHelper';
+import { GITHUB_ISSUES_URL, GITHUB_URL } from '@/config/links';
 
 // ---------------------------------------------------------------------------
 // i18n
@@ -273,7 +274,7 @@ const renderSetupPage: PageRenderer = ({ t, lang, navigate, onClose }) => {
           <h4 className="font-semibold text-gray-800 dark:text-foreground-primary">{t('guide.s4')}</h4>
           <p className="text-sm text-gray-600 dark:text-foreground-tertiary">{t('guide.s4d')}</p>
         </div>
-        <a href="https://github.com/Anionex/banana-slides/issues" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-sm text-banana-600 hover:text-banana-700 font-medium">
+        <a href={GITHUB_ISSUES_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-sm text-banana-600 hover:text-banana-700 font-medium">
           <ExternalLink size={14} />
           {t('guide.issueLink')}
         </a>
@@ -393,6 +394,7 @@ const renderGalleryPage: PageRenderer = ({ t, showcaseIdx, setShowcaseIdx }) => 
       </div>
 
       <div className="text-center pt-4">
+        {/* Upstream content reference: community use cases remain on the original repository. */}
         <a href="https://github.com/Anionex/banana-slides/issues/2" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-sm text-banana-600 hover:text-banana-700 font-medium">
           <ExternalLink size={14} />
           {t('guide.galleryMore')}
@@ -476,7 +478,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
             )}
           </div>
 
-          <a href="https://github.com/Anionex/banana-slides" target="_blank" rel="noopener noreferrer" className="text-sm text-gray-500 dark:text-foreground-tertiary hover:text-gray-700 dark:hover:text-gray-200 flex items-center gap-1">
+          <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer" className="text-sm text-gray-500 dark:text-foreground-tertiary hover:text-gray-700 dark:hover:text-gray-200 flex items-center gap-1">
             <ExternalLink size={14} />
             GitHub
           </a>

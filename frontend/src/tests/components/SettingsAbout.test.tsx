@@ -46,7 +46,7 @@ describe('SettingsAbout', () => {
     expect(screen.getByText('关于')).toBeInTheDocument();
     expect(screen.getByText('当前版本: v9.9.9')).toBeInTheDocument();
     expect(screen.getByLabelText('当前版本 v9.9.9 (abcdef1234567890)')).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'GitHub 项目' })).toHaveAttribute('href', 'https://github.com/Anionex/banana-slides');
+    expect(screen.getByRole('link', { name: 'GitHub 项目' })).toHaveAttribute('href', 'https://github.com/Nombah501/banana-slides');
   });
 
   it('shows a user-friendly message when an update is available', async () => {

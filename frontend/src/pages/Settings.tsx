@@ -5,6 +5,7 @@ import { Home, Key, Image, Zap, Save, RotateCcw, Globe, FileText, Brain, ArrowUp
 import { useT } from '@/hooks/useT';
 import { resolveLocale, type SupportedLocale } from '@/utils/i18nHelper';
 import { appVersion } from '@/utils/appVersion';
+import { GITHUB_URL } from '@/config/links';
 import { startOpenAIOAuthMonitor } from '@/utils/openaiOAuthMonitor';
 import { isDesktop } from '@/utils';
 import { DataStorageSettings } from '@/components/settings/DataStorageSettings';
@@ -1202,7 +1203,7 @@ export const SettingsAbout: React.FC<{ t: SettingsTranslator }> = ({ t }) => {
               {t('settings.about.version')}: {appVersion.display}
             </div>
             <a
-              href="https://github.com/Anionex/banana-slides"
+              href={GITHUB_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1 text-banana-700 dark:text-banana hover:underline"

@@ -2,9 +2,8 @@ import React from 'react';
 import { BookOpen, Github } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { resolveLocale } from '@/utils/i18nHelper';
+import { GITHUB_URL } from '@/config/links';
 
-const GITHUB_REPO = 'Anionex/banana-slides';
-const GITHUB_URL = `https://github.com/${GITHUB_REPO}`;
 const DOCS_URL = 'https://docs.bananaslides.online';
 
 export const Footer: React.FC = () => {
