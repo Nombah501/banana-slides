@@ -4,6 +4,7 @@ const { spawnSync } = require('child_process');
 const {
   fetchGitHubJson,
   fetchGitHubReleases,
+  isRateLimitedError,
 } = require('./github-release-client');
 const {
   isVersionLess,
@@ -13,12 +14,11 @@ const {
   shouldNotifyUpdate,
 } = require('./update-policy');
 const {
+  DEFAULT_UPDATE_REPOSITORY,
+  normalizeUpdateSettings,
   readUpdateSettings,
   writeUpdateSettings,
 } = require('./update-settings');
-
-const REPO_OWNER = 'Anionex';
-const REPO_NAME = 'banana-slides';
 const BUILD_META_PATH = path.join(__dirname, 'build-meta.json');
 const DEFAULT_INITIAL_CHECK_DELAY_MS = 5000;
 const DEFAULT_CHECK_INTERVAL_MS = 6 * 60 * 60 * 1000;
@@ -63,17 +63,17 @@ function releaseNotesToText(releaseNotes) {
     .join('\n\n');
 }
 
-function createReleaseUrl(version) {
-  return `https://github.com/${REPO_OWNER}/${REPO_NAME}/releases/tag/v${version}`;
+function createReleaseUrl(repository, version) {
+  return `https://github.com/${repository.owner}/${repository.name}/releases/tag/v${version}`;
 }
 
-function updateInfoToPublicUpdate(updateInfo) {
+function updateInfoToPublicUpdate(updateInfo, repository = DEFAULT_UPDATE_REPOSITORY) {
   const version = normalizeReleaseVersion(updateInfo?.version);
   if (!version) return null;
   return {
     version,
     notes: releaseNotesToText(updateInfo.releaseNotes),
-    url: createReleaseUrl(version),
+    url: updateInfo?.releaseUrl || createReleaseUrl(repository, version),
   };
 }
 
@@ -96,14 +96,21 @@ function detectAutoUpdateSupport({
   return result.status === 0 && !signatureInfo.includes('Signature=adhoc');
 }
 
-async function checkGitHubReleaseFallback({ app, logger = console }) {
+async function checkGitHubReleaseFallback({
+  app,
+  logger = console,
+  repository = DEFAULT_UPDATE_REPOSITORY,
+  env = process.env,
+  fetchReleases = fetchGitHubReleases,
+  fetchJson = fetchGitHubJson,
+}) {
+  const requestOptions = {
+    token: env.GITHUB_TOKEN || '',
+    userAgent: `BananaSlides/${app.getVersion()}`,
+  };
   let releases;
   try {
-    releases = await fetchGitHubReleases(
-      REPO_OWNER,
-      REPO_NAME,
-      { userAgent: `BananaSlides/${app.getVersion()}` },
-    );
+    releases = await fetchReleases(repository.owner, repository.name, requestOptions);
   } catch (error) {
     logger.warn('[auto-updater] Failed to fetch releases:', error.message);
     throw error;
@@ -127,6 +134,7 @@ async function checkGitHubReleaseFallback({ app, logger = console }) {
   }
   const buildMeta = readBuildMeta(logger);
   const currentBuildTimestamp = resolveCurrentBuildTimestamp(buildMeta);
+  const updateUrl = release.html_url || createReleaseUrl(repository, latestVersion);
   if (shouldNotifyUpdate({ currentVersion, latestVersion })) {
     return {
       status: 'update_available',
@@ -135,7 +143,7 @@ async function checkGitHubReleaseFallback({ app, logger = console }) {
       update: {
         version: latestVersion,
         notes: release.body || '',
-        url: release.html_url,
+        url: updateUrl,
       },
       progress: null,
       canAutoUpdate: false,
@@ -155,9 +163,9 @@ async function checkGitHubReleaseFallback({ app, logger = console }) {
 
   let releaseCommit;
   try {
-    releaseCommit = await fetchGitHubJson(
-      `/repos/${REPO_OWNER}/${REPO_NAME}/commits/${encodeURIComponent(release.tag_name)}`,
-      { userAgent: `BananaSlides/${app.getVersion()}` },
+    releaseCommit = await fetchJson(
+      `/repos/${repository.owner}/${repository.name}/commits/${encodeURIComponent(release.tag_name)}`,
+      requestOptions,
     );
   } catch (error) {
     logger.warn('[auto-updater] Failed to fetch release commit:', error.message);
@@ -173,7 +181,7 @@ async function checkGitHubReleaseFallback({ app, logger = console }) {
       update: {
         version: latestVersion,
         notes: release.body || '',
-        url: release.html_url,
+        url: updateUrl,
       },
       progress: null,
       canAutoUpdate: false,
@@ -226,8 +234,7 @@ class DesktopAutoUpdateManager {
     this.downloadWasAutomatic = false;
     this.initialCheckTimer = null;
     this.periodicCheckTimer = null;
-    this.initialized = false;
-    this.settings = { automaticUpdatesEnabled: true };
+    this.settings = normalizeUpdateSettings({});
     this.state = {
       status: 'idle',
       currentVersion: app.getVersion(),
@@ -241,15 +248,32 @@ class DesktopAutoUpdateManager {
     };
   }
 
+  _configureUpdaterFeed() {
+    if (typeof this.updater.setFeedURL !== 'function') return;
+    const repository = this.settings.updateRepository;
+    try {
+      this.updater.setFeedURL({
+        provider: 'github',
+        owner: repository.owner,
+        repo: repository.name,
+      });
+    } catch (error) {
+      this.logger.warn('[auto-updater] Failed to configure update repository:', error.message);
+    }
+  }
+
   async initialize() {
     if (this.initialized) return this.getState();
     try {
-      this.settings = await this.readSettings(this.app.getPath('userData'));
+      this.settings = normalizeUpdateSettings(
+        await this.readSettings(this.app.getPath('userData')),
+      );
     } catch (error) {
       this.logger.warn('[auto-updater] Failed to read update preferences, using defaults:', error.message);
-      this.settings = { automaticUpdatesEnabled: true };
+      this.settings = normalizeUpdateSettings({});
     }
     this.state.automaticUpdatesEnabled = this.settings.automaticUpdatesEnabled;
+    this._configureUpdaterFeed();
     this.updater.logger = this.logger;
     this.updater.autoDownload = false;
     this.updater.autoInstallOnAppQuit = false;
@@ -269,7 +293,7 @@ class DesktopAutoUpdateManager {
     });
     this.updater.on('update-available', (info) => {
       if (this._shouldIgnoreUpdaterCheckEvent()) return;
-      const update = updateInfoToPublicUpdate(info);
+      const update = updateInfoToPublicUpdate(info, this.settings.updateRepository);
       this._setState({
         status: 'update_available',
         latestVersion: update?.version || this.state.latestVersion,
@@ -302,7 +326,7 @@ class DesktopAutoUpdateManager {
       });
     });
     this.updater.on('update-downloaded', (info) => {
-      const update = updateInfoToPublicUpdate(info) || this.state.update;
+      const update = updateInfoToPublicUpdate(info, this.settings.updateRepository) || this.state.update;
       this.downloadCancellationToken = null;
       this.downloadWasAutomatic = false;
       this._setState({
@@ -365,9 +389,10 @@ class DesktopAutoUpdateManager {
   }
 
   async setAutomaticUpdatesEnabled(enabled) {
-    this.settings = await this.writeSettings(this.app.getPath('userData'), {
+    this.settings = normalizeUpdateSettings(await this.writeSettings(this.app.getPath('userData'), {
       automaticUpdatesEnabled: enabled === true,
-    });
+      updateRepository: this.settings.updateRepository,
+    }));
 
     if (!this.settings.automaticUpdatesEnabled) {
       this.automaticCheckGeneration += 1;
@@ -460,16 +485,24 @@ class DesktopAutoUpdateManager {
     return checkPromise;
   }
 
+  async _applyReleaseFallback(check) {
+    const fallbackState = await this.checkReleaseFallback({
+      app: this.app,
+      logger: this.logger,
+      repository: this.settings.updateRepository,
+    });
+    if (!this._isCheckCurrent(check)) return this.getState();
+    this._setState({
+      ...fallbackState,
+      automaticUpdatesEnabled: this.settings.automaticUpdatesEnabled,
+      checkSource: check.automatic ? 'automatic' : 'manual',
+    });
+    return this.getState();
+  }
+
   async _checkForUpdates(check) {
     if (!this.app.isPackaged || !this.canAutoUpdate) {
-      const fallbackState = await this.checkReleaseFallback({ app: this.app, logger: this.logger });
-      if (!this._isCheckCurrent(check)) return this.getState();
-      this._setState({
-        ...fallbackState,
-        automaticUpdatesEnabled: this.settings.automaticUpdatesEnabled,
-        checkSource: check.automatic ? 'automatic' : 'manual',
-      });
-      return this.getState();
+      return this._applyReleaseFallback(check);
     }
 
     this._setState({
@@ -478,19 +511,18 @@ class DesktopAutoUpdateManager {
       progress: null,
       checkSource: check.automatic ? 'automatic' : 'manual',
     });
-    const result = await this.updater.checkForUpdates();
+    let result;
+    try {
+      result = await this.updater.checkForUpdates();
+    } catch (error) {
+      if (!isRateLimitedError(error)) throw error;
+      return this._applyReleaseFallback(check);
+    }
     if (!this._isCheckCurrent(check)) return this.getState();
-    const update = updateInfoToPublicUpdate(result?.updateInfo);
+    const update = updateInfoToPublicUpdate(result?.updateInfo, this.settings.updateRepository);
     const currentVersion = normalizeReleaseVersion(this.app.getVersion());
     if (update?.version === currentVersion && result?.isUpdateAvailable === false) {
-      const fallbackState = await this.checkReleaseFallback({ app: this.app, logger: this.logger });
-      if (!this._isCheckCurrent(check)) return this.getState();
-      this._setState({
-        ...fallbackState,
-        automaticUpdatesEnabled: this.settings.automaticUpdatesEnabled,
-        checkSource: check.automatic ? 'automatic' : 'manual',
-      });
-      return this.getState();
+      return this._applyReleaseFallback(check);
     }
     const updateIsNewer = update && shouldNotifyUpdate({
       currentVersion,

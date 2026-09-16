@@ -29,6 +29,11 @@ test('desktop packaging publishes the artifacts required by electron-updater', (
     owner: 'Anionex',
     repo: 'banana-slides',
   });
+  const packageJson = JSON.parse(fs.readFileSync(path.join(desktopDir, 'package.json'), 'utf8'));
+  assert.deepEqual(packageJson.updateRepository, {
+    owner: 'Anionex',
+    name: 'banana-slides',
+  });
   assert.ok(macTargets.includes('dmg'), 'macOS releases must keep the user-facing DMG');
   assert.ok(macTargets.includes('zip'), 'macOS auto-update requires a ZIP payload');
   assert.equal(builderConfig.mac.identity, undefined, 'macOS signing credentials must not be forcibly disabled');
@@ -38,6 +43,9 @@ test('desktop packaging publishes the artifacts required by electron-updater', (
     path.join(repoRoot, '.github', 'workflows', 'release-desktop.yml'),
     'utf8',
   );
+  assert.match(releaseWorkflow, /Configure fork update source/);
+  assert.match(releaseWorkflow, /FORK_REPOSITORY: \$\{\{ github\.repository \}\}/);
+
   for (const artifactPattern of ['desktop/dist/*.zip', 'desktop/dist/*.blockmap', 'desktop/dist/latest*.yml']) {
     const escapedPattern = artifactPattern.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     const matches = releaseWorkflow.match(new RegExp(escapedPattern, 'g')) || [];

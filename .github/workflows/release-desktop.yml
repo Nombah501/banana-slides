@@ -76,6 +76,35 @@ jobs:
           "
           echo "Desktop package version set to $VERSION"
 
+      - name: Configure fork update source
+        shell: bash
+        env:
+          FORK_REPOSITORY: ${{ github.repository }}
+        run: |
+          FORK_OWNER="${FORK_REPOSITORY%%/*}"
+          FORK_NAME="${FORK_REPOSITORY#*/}"
+          if [[ ! "$FORK_OWNER" =~ ^[A-Za-z0-9_.-]+$ || ! "$FORK_NAME" =~ ^[A-Za-z0-9_.-]+$ ]]; then
+            echo "Invalid GitHub repository slug: $FORK_REPOSITORY" >&2
+            exit 1
+          fi
+          FORK_OWNER="$FORK_OWNER" FORK_NAME="$FORK_NAME" node <<'NODE'
+          const fs = require('fs');
+          const owner = process.env.FORK_OWNER;
+          const name = process.env.FORK_NAME;
+
+          const packagePath = 'desktop/package.json';
+          const packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf8'));
+          packageJson.updateRepository = { owner, name };
+          fs.writeFileSync(packagePath, `${JSON.stringify(packageJson, null, 2)}\n`);
+
+          const builderPath = 'desktop/electron-builder.yml';
+          let builder = fs.readFileSync(builderPath, 'utf8');
+          builder = builder.replace(/(^\s*owner:\s*)[^\n]+/m, `$1${owner}`);
+          builder = builder.replace(/(^\s*repo:\s*)[^\n]+/m, `$1${name}`);
+          fs.writeFileSync(builderPath, builder);
+          console.log(`Desktop update feed configured for ${owner}/${name}`);
+          NODE
+
       - name: Install frontend dependencies
         run: cd frontend && npm ci
 

@@ -54,6 +54,12 @@ function getDesktopAssetPatterns(platform, arch) {
 }
 
 function releaseHasDesktopAsset(release, platform, arch) {
+  if (release?.source === 'atom') {
+    // GitHub's Atom feed omits assets; the release page remains the manual
+    // update target when the API cannot enumerate platform artifacts.
+    return typeof release.html_url === 'string' && release.html_url.length > 0;
+  }
+
   const patterns = getDesktopAssetPatterns(platform, arch);
   if (patterns.length === 0 || !Array.isArray(release?.assets)) {
     return false;

@@ -2,7 +2,11 @@ const assert = require('node:assert/strict');
 const { EventEmitter } = require('node:events');
 const test = require('node:test');
 
-const { DesktopAutoUpdateManager, detectAutoUpdateSupport } = require('./auto-updater');
+const {
+  DesktopAutoUpdateManager,
+  checkGitHubReleaseFallback,
+  detectAutoUpdateSupport,
+} = require('./auto-updater');
 
 class FakeCancellationToken {
   constructor() {
@@ -343,12 +347,17 @@ test('persists the toggle and immediately schedules checks when re-enabled', asy
     scheduledDelays.push(delay);
     return { type: 'timeout' };
   };
-  await manager.initialize();
-
   await manager.setAutomaticUpdatesEnabled(true);
 
-  assert.deepEqual(persisted, [{ automaticUpdatesEnabled: true }]);
-  assert.deepEqual(manager.getSettings(), { automaticUpdatesEnabled: true, canAutoUpdate: true });
+  assert.deepEqual(persisted, [{
+    automaticUpdatesEnabled: true,
+    updateRepository: { owner: 'Anionex', name: 'banana-slides' },
+  }]);
+  assert.deepEqual(manager.getSettings(), {
+    automaticUpdatesEnabled: true,
+    updateRepository: { owner: 'Anionex', name: 'banana-slides' },
+    canAutoUpdate: true,
+  });
   assert.deepEqual(scheduledDelays, [0]);
 });
 
@@ -426,7 +435,94 @@ test('uses safe defaults when update preferences cannot be read', async () => {
 
   assert.deepEqual(manager.getSettings(), {
     automaticUpdatesEnabled: true,
+    updateRepository: { owner: 'Anionex', name: 'banana-slides' },
     canAutoUpdate: true,
   });
+
   assert.equal(warnings.length, 1);
+});
+
+test('detects a configured fork release through the Atom-backed fallback', async () => {
+  const requests = [];
+  const state = await checkGitHubReleaseFallback({
+    app: { getVersion: () => '0.9.0-rc.7' },
+    repository: { owner: 'ForkOwner', name: 'banana-slides-ru' },
+    fetchReleases: async (owner, repository, options) => {
+      requests.push({ owner, repository, options });
+      return [{
+        tag_name: 'v0.9.0-rc.7-ru.1',
+        source: 'atom',
+        html_url: 'https://github.com/ForkOwner/banana-slides-ru/releases/tag/v0.9.0-rc.7-ru.1',
+        body: 'Russian release',
+        published_at: '2026-09-15T12:00:00Z',
+        assets: [],
+      }];
+    },
+    fetchJson: async () => {
+      throw new Error('GitHub API returned HTTP 403');
+    },
+    logger: { info() {}, warn() {}, error() {} },
+  });
+
+  assert.deepEqual(requests, [{
+    owner: 'ForkOwner',
+    repository: 'banana-slides-ru',
+    options: { token: '', userAgent: 'BananaSlides/0.9.0-rc.7' },
+  }]);
+  assert.equal(state.status, 'update_available');
+  assert.equal(state.latestVersion, '0.9.0-rc.7-ru.1');
+  assert.equal(state.update.url, 'https://github.com/ForkOwner/banana-slides-ru/releases/tag/v0.9.0-rc.7-ru.1');
+  assert.equal(state.canAutoUpdate, false);
+});
+
+test('uses the configured repository when the packaged updater is rate limited', async () => {
+  const updater = new FakeUpdater();
+  updater.setFeedURL = (options) => {
+    updater.feedURL = options;
+  };
+  const fallbackCalls = [];
+  const manager = new DesktopAutoUpdateManager({
+    app: {
+      getVersion: () => '1.0.0',
+      getPath: () => '/tmp/banana-auto-update-tests',
+      isPackaged: true,
+    },
+    updater,
+    CancellationToken: FakeCancellationToken,
+    logger: { info() {}, warn() {}, error() {} },
+    readSettings: async () => ({
+      automaticUpdatesEnabled: true,
+      updateRepository: { owner: 'ForkOwner', name: 'banana-slides-ru' },
+    }),
+    writeSettings: async (_userDataPath, settings) => settings,
+    checkReleaseFallback: async (options) => {
+      fallbackCalls.push(options.repository);
+      return {
+        status: 'update_available',
+        currentVersion: '1.0.0',
+        latestVersion: '1.1.0',
+        update: { version: '1.1.0', notes: 'Fork release', url: 'https://example.test/release' },
+        progress: null,
+        canAutoUpdate: false,
+      };
+    },
+    canAutoUpdate: true,
+  });
+  updater.checkForUpdates = async () => {
+    const error = new Error('GitHub API returned HTTP 403');
+    error.statusCode = 403;
+    throw error;
+  };
+
+  await manager.initialize();
+  const state = await manager.checkForUpdates();
+
+  assert.deepEqual(updater.feedURL, {
+    provider: 'github',
+    owner: 'ForkOwner',
+    repo: 'banana-slides-ru',
+  });
+  assert.deepEqual(fallbackCalls, [{ owner: 'ForkOwner', name: 'banana-slides-ru' }]);
+  assert.equal(state.status, 'update_available');
+  assert.equal(state.latestVersion, '1.1.0');
 });
