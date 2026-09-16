@@ -1,0 +1,53 @@
+
+> banana-slides-frontend@0.9.0 test
+> vitest --run
+
+
+ RUN  v1.6.1 /workspace/banana-slides-ru/frontend
+
+ ✓ src/tests/openaiOAuthMonitor.test.ts  (12 tests) 121ms
+ ✓ src/tests/store/useExportTasksStore.test.ts  (13 tests) 75ms
+stdout | src/tests/store/useProjectStore.initializeProject.test.ts > initializeProject - reference file association > should pass reference file IDs and associate them after project creation
+[初始化项目] 已关联 2 个参考文件
+
+stdout | src/tests/store/useProjectStore.initializeProject.test.ts > initializeProject - reference file association > should associate files before loading the created description project
+[初始化项目] 已关联 1 个参考文件
+
+stdout | src/tests/store/useProjectStore.initializeProject.test.ts > initializeProject - reference file association > should associate files before uploading template
+[初始化项目] 已关联 1 个参考文件
+
+ ✓ src/tests/store/useProjectStore.initializeProject.test.ts  (9 tests) 152ms
+stdout | src/tests/store/useProjectStore.test.ts > useProjectStore 流式大纲项目隔离 > 流进行中切到其他项目时，页面与完成回调不写入当前项目
+[流式大纲] 完成: 1 个页面
+
+ ✓ src/tests/desktop-client.test.ts  (11 tests) 1613ms
+ ✓ src/tests/store/useProjectStore.test.ts  (14 tests) 519ms
+ ✓ src/tests/components/ImportMarkdownModal.test.tsx  (8 tests) 1494ms
+ ✓ src/tests/components/MaterialGeneratorModal.test.tsx  (8 tests) 2321ms
+ ✓ src/tests/utils.normalizeErrorMessage.test.ts  (12 tests) 23ms
+ ✓ src/tests/components/Markdown.test.tsx  (15 tests) 679ms
+ ✓ src/tests/components/DescriptionCard.test.tsx  (17 tests) 2483ms
+ ✓ src/tests/components/ExportTasksPanel.test.tsx  (3 tests) 2964ms
+ ✓ src/tests/components/TemplateAnalysisEditor.test.tsx  (5 tests) 878ms
+ ✓ src/tests/desktop-components.test.tsx  (17 tests) 9352ms
+ ✓ src/tests/components/SettingsAbout.test.tsx  (3 tests) 2357ms
+ ✓ src/tests/components/MarkdownTextarea.test.tsx  (4 tests) 1360ms
+ ✓ src/tests/components/SettingsQualityControl.test.tsx  (3 tests) 3913ms
+ ✓ src/tests/components/SettingsAbout.desktop.test.tsx  (8 tests) 6474ms
+ ✓ src/tests/utils.i18nHelper.test.ts  (5 tests) 28ms
+ ✓ src/tests/components/TextStyleSelector.test.tsx  (4 tests) 3464ms
+ ✓ src/tests/utils.presetStorage.test.ts  (8 tests) 15ms
+ ✓ src/tests/components/SwitchToSingleModeDialog.test.tsx  (4 tests) 1091ms
+ ✓ src/tests/components/TemplatePickerModal.test.tsx  (4 tests) 1009ms
+ ✓ src/tests/utils.projectUtils.test.ts  (2 tests) 24ms
+ ✓ src/tests/components/Button.test.tsx  (8 tests) 460ms
+ ✓ src/tests/utils.appVersion.test.ts  (3 tests) 8ms
+ ✓ src/tests/components/DataStorageSettings.test.tsx  (11 tests) 9720ms
+ ✓ src/tests/components/Markdown.desktop.test.tsx  (5 tests) 198ms
+ ✓ src/tests/components/TemplateMatchProgress.test.tsx  (1 test) 252ms
+ ✓ src/tests/components/TemplateSelector.test.ts  (3 tests) 13ms
+
+ Test Files  29 passed (29)
+      Tests  220 passed (220)
+   Start at  16:06:19
+   Duration  17.96s (transform 6.69s, setup 22.85s, collect 31.31s, tests 53.06s, environment 52.35s, prepare 8.70s)
