@@ -37,5 +37,6 @@ function createElectronAPI({ ipcRenderer, platform, getLocationSearch }) {
     ),
   };
 }
-
-module.exports = { createElectronAPI };
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { createElectronAPI };
+}
