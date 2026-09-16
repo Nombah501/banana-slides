@@ -1,6 +1,6 @@
 # Banana Slides RU Fork Policy
 
-This checkout is the Phase 1 Russian-content fork. The working branch for this delivery is `phase1-ru-content`, based on upstream tag `v0.9.0-rc.7`. The local `upstream` remote points to `https://github.com/Anionex/banana-slides.git`; the existing `origin` is left untouched. The published fork is `https://github.com/Nombah501/banana-slides` (SSH: `git@github.com:Nombah501/banana-slides.git`, remote `fork`); fork releases and in-app update checks target this repository.
+This checkout is the Phase 1 Russian-content fork. The working branch for this delivery is `phase1-ru-content`, based on upstream tag `v0.9.0-rc.7`. The local `upstream` remote points to `https://github.com/Anionex/banana-slides.git`; the existing `origin` is left untouched. The published fork is `https://github.com/Nombah501/banana-slides` (SSH: `git@github.com:Nombah501/banana-slides.git`, remote `fork`). Source defaults intentionally stay upstream; fork builds derive their update feed from `${{ github.repository }}` at build time (release workflow's "Configure fork update source" step patches package/builder metadata).
 
 Synced upstream base: `v0.9.0-rc.7`
 
