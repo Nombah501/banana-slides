@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import i18n from '@/i18n';
+import i18n, { getDocumentTitle } from '@/i18n';
 import { getT, resolveLocale, type Translations } from '@/utils/i18nHelper';
 import { getExtraFieldDisplayName } from '@/utils/extraFieldLabels';
 import { landingI18n } from '@/pages/Landing';
@@ -40,6 +40,15 @@ describe('locale helpers', () => {
     window.localStorage.removeItem('banana-slides-language');
     await i18n.changeLanguage('ru');
     expect(window.localStorage.getItem('banana-slides-language')).toBe('ru');
+  });
+  it('updates the document title for Chinese and non-Chinese locales', async () => {
+    await i18n.changeLanguage('zh');
+    expect(getDocumentTitle(i18n.language)).toBe('蕉幻 | AI 原生 PPT 生成器');
+    expect(document.title).toBe('蕉幻 | AI 原生 PPT 生成器');
+
+    await i18n.changeLanguage('ru');
+    expect(getDocumentTitle(i18n.language)).toBe('Banana Slides');
+    expect(document.title).toBe('Banana Slides');
   });
   it('uses the configured fallback chain from Russian to English to Chinese', async () => {
     const enBundle = i18n.getResourceBundle('en', 'translation') as Record<string, unknown>;

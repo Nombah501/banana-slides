@@ -17,7 +17,7 @@
   "scripts": {
     "start": "electron .",
     "dev": "cross-env NODE_ENV=development electron .",
-    "test": "node --test update-policy.test.js auto-updater.test.js update-settings.test.js github-release-client.test.js download-manager.test.js storage-config.test.js markdown-image-script.test.js icon-policy.test.js scripts/check-icon-contract.test.js scripts/check-installer-data-root.test.js scripts/check-auto-update-contract.test.js",
+    "test": "node --test update-policy.test.js auto-updater.test.js update-settings.test.js github-release-client.test.js download-manager.test.js storage-config.test.js markdown-image-script.test.js icon-policy.test.js scripts/check-icon-contract.test.js scripts/check-installer-data-root.test.js scripts/check-auto-update-contract.test.js i18n.test.js electron-api.test.js",
     "test:integration": "node --test github-release-client.integration.test.js",
     "check:icons": "node scripts/check-icon-contract.js",
     "test:download-session": "electron scripts/test-download-session.js",

@@ -22,6 +22,7 @@ const {
   prepareDataRoot,
   writeStorageConfig,
 } = require('./storage-config');
+const { resolveLocale, createTranslator } = require('./i18n');
 
 let mainWindow = null;
 let splashWindow = null;
@@ -32,10 +33,38 @@ let backendStopRequested = false;
 let activeDataRoot = null;
 let activeDataRootIsDefault = true;
 let desktopAutoUpdater = null;
+let currentLocale = 'en';
+let detectedAppLocale = 'en';
+let translate = createTranslator(currentLocale);
+
+function initializeLocale() {
+  detectedAppLocale = app.getLocale();
+  currentLocale = resolveLocale({
+    envLocale: process.env.BANANA_SLIDES_LOCALE,
+    appLocale: detectedAppLocale,
+  });
+  translate = createTranslator(currentLocale);
+}
+
+function applyLocale(locale) {
+  const nextLocale = resolveLocale({
+    frontendLocale: locale,
+    envLocale: process.env.BANANA_SLIDES_LOCALE,
+    appLocale: detectedAppLocale,
+  });
+  if (nextLocale === currentLocale) return currentLocale;
+  currentLocale = nextLocale;
+  translate = createTranslator(currentLocale);
+  createAppMenu();
+  updateTrayContextMenu();
+  return currentLocale;
+}
+
 const runtimeIconState = {
   dockOverrideApplied: false,
   trayTemplateImage: false,
 };
+
 
 function isDev() {
   return process.env.NODE_ENV === 'development';
@@ -162,7 +191,9 @@ function createSplashWindow() {
     skipTaskbar: true,
     webPreferences: { nodeIntegration: false, contextIsolation: true },
   });
-  splashWindow.loadFile(path.join(__dirname, 'splash.html'));
+  splashWindow.loadFile(path.join(__dirname, 'splash.html'), {
+    query: { locale: currentLocale },
+  });
   splashWindow.on('closed', () => { splashWindow = null; });
 }
 
@@ -253,14 +284,17 @@ function createTray() {
   }
   tray = new Tray(icon);
   tray.setToolTip('Banana Slides');
-
-  const contextMenu = Menu.buildFromTemplate([
-    { label: '显示主窗口', click: () => { mainWindow?.show(); mainWindow?.focus(); } },
-    { type: 'separator' },
-    { label: '退出', click: () => { isQuitting = true; app.quit(); } },
-  ]);
-  tray.setContextMenu(contextMenu);
+  updateTrayContextMenu();
   tray.on('double-click', () => { mainWindow?.show(); mainWindow?.focus(); });
+}
+
+function updateTrayContextMenu() {
+  if (!tray) return;
+  tray.setContextMenu(Menu.buildFromTemplate([
+    { label: translate('tray.showMainWindow'), click: () => { mainWindow?.show(); mainWindow?.focus(); } },
+    { type: 'separator' },
+    { label: translate('tray.quit'), click: () => { isQuitting = true; app.quit(); } },
+  ]));
 }
 
 function sendUpdateState(state) {
@@ -289,12 +323,16 @@ async function installDownloadedUpdate() {
 }
 
 async function showDownloadedUpdateDialog(checkResult) {
+  const version = checkResult.update.version;
   const result = await dialog.showMessageBox(mainWindow, {
     type: 'info',
-    title: '更新已就绪',
-    message: `新版本 v${checkResult.update.version} 已下载完成`,
-    detail: '重启 Banana Slides 即可完成更新。',
-    buttons: ['重启并更新', '稍后重启'],
+    title: translate('update.downloaded.title'),
+    message: translate('update.downloaded.message', { version }),
+    detail: translate('update.downloaded.detail'),
+    buttons: [
+      translate('update.downloaded.restart'),
+      translate('update.downloaded.later'),
+    ],
     defaultId: 0,
     cancelId: 1,
   });
@@ -312,14 +350,20 @@ async function showManualUpdateDialog() {
     }
 
     if (checkResult.update) {
-      const primaryAction = checkResult.canAutoUpdate ? '下载更新' : '前往下载';
+      const primaryAction = checkResult.canAutoUpdate
+        ? translate('update.available.download')
+        : translate('update.available.openDownload');
       const releaseNotes = checkResult.update.notes.trim();
       const result = await dialog.showMessageBox(mainWindow, {
         type: 'info',
-        title: '发现新版本',
-        message: `新版本 v${checkResult.update.version} 可用`,
+        title: translate('update.available.title'),
+        message: translate('update.available.message', { version: checkResult.update.version }),
         ...(releaseNotes ? { detail: releaseNotes.substring(0, 300) } : {}),
-        buttons: [primaryAction, '查看完整更新日志', '稍后更新'],
+        buttons: [
+          primaryAction,
+          translate('update.available.changelog'),
+          translate('update.available.later'),
+        ],
         defaultId: 0,
         cancelId: 2,
       });
@@ -340,15 +384,15 @@ async function showManualUpdateDialog() {
 
     await dialog.showMessageBox(mainWindow, {
       type: 'info',
-      title: '检查更新',
-      message: '当前已是最新版本',
+      title: translate('update.upToDate.title'),
+      message: translate('update.upToDate.message'),
     });
   } catch (error) {
     log.error('[main] Failed to check for updates:', error);
     await dialog.showMessageBox(mainWindow, {
       type: 'error',
-      title: '检查更新失败',
-      message: '无法连接更新服务，请检查网络后重试',
+      title: translate('update.error.title'),
+      message: translate('update.error.message'),
     });
   }
 }
@@ -359,80 +403,80 @@ function createAppMenu() {
     ...(isMac ? [{
       label: app.name,
       submenu: [
-        { label: '关于 Banana Slides', role: 'about' },
+        { label: translate('menu.mac.about'), role: 'about' },
         { type: 'separator' },
-        { label: '隐藏', role: 'hide' },
-        { label: '隐藏其他', role: 'hideOthers' },
-        { label: '全部显示', role: 'unhide' },
+        { label: translate('menu.mac.hide'), role: 'hide' },
+        { label: translate('menu.mac.hideOthers'), role: 'hideOthers' },
+        { label: translate('menu.mac.showAll'), role: 'unhide' },
         { type: 'separator' },
-        { label: '退出', role: 'quit' },
+        { label: translate('menu.mac.quit'), role: 'quit' },
       ],
     }] : []),
     {
-      label: '文件',
+      label: translate('menu.file.label'),
       submenu: [
         ...(!isMac ? [
           { type: 'separator' },
-          { label: '退出', role: 'quit' },
+          { label: translate('menu.file.quit'), role: 'quit' },
         ] : [
-          { label: '关闭窗口', role: 'close' },
+          { label: translate('menu.file.closeWindow'), role: 'close' },
         ]),
       ],
     },
     {
-      label: '编辑',
+      label: translate('menu.edit.label'),
       submenu: [
-        { label: '撤销', role: 'undo' },
-        { label: '重做', role: 'redo' },
+        { label: translate('menu.edit.undo'), role: 'undo' },
+        { label: translate('menu.edit.redo'), role: 'redo' },
         { type: 'separator' },
-        { label: '剪切', role: 'cut' },
-        { label: '复制', role: 'copy' },
-        { label: '粘贴', role: 'paste' },
-        { label: '全选', role: 'selectAll' },
+        { label: translate('menu.edit.cut'), role: 'cut' },
+        { label: translate('menu.edit.copy'), role: 'copy' },
+        { label: translate('menu.edit.paste'), role: 'paste' },
+        { label: translate('menu.edit.selectAll'), role: 'selectAll' },
       ],
     },
     {
-      label: '视图',
+      label: translate('menu.view.label'),
       submenu: [
-        { label: '放大', role: 'zoomIn', accelerator: 'CmdOrCtrl+=' },
-        { label: '缩小', role: 'zoomOut', accelerator: 'CmdOrCtrl+-' },
-        { label: '重置缩放', role: 'resetZoom', accelerator: 'CmdOrCtrl+0' },
+        { label: translate('menu.view.zoomIn'), role: 'zoomIn', accelerator: 'CmdOrCtrl+=' },
+        { label: translate('menu.view.zoomOut'), role: 'zoomOut', accelerator: 'CmdOrCtrl+-' },
+        { label: translate('menu.view.resetZoom'), role: 'resetZoom', accelerator: 'CmdOrCtrl+0' },
         { type: 'separator' },
-        { label: '全屏', role: 'togglefullscreen' },
+        { label: translate('menu.view.fullscreen'), role: 'togglefullscreen' },
         { type: 'separator' },
-        { label: '重新加载', role: 'reload' },
-        { label: '强制重新加载', role: 'forceReload' },
-        { label: '开发者工具', role: 'toggleDevTools' },
+        { label: translate('menu.view.reload'), role: 'reload' },
+        { label: translate('menu.view.forceReload'), role: 'forceReload' },
+        { label: translate('menu.view.devTools'), role: 'toggleDevTools' },
       ],
     },
     {
-      label: '窗口',
+      label: translate('menu.window.label'),
       submenu: [
-        { label: '最小化', role: 'minimize' },
+        { label: translate('menu.window.minimize'), role: 'minimize' },
         ...(isMac ? [
           { type: 'separator' },
-          { label: '前置全部窗口', role: 'front' },
+          { label: translate('menu.window.front'), role: 'front' },
         ] : [
-          { label: '关闭', role: 'close' },
+          { label: translate('menu.window.close'), role: 'close' },
         ]),
       ],
     },
     {
-      label: '帮助',
+      label: translate('menu.help.label'),
       submenu: [
         {
-          label: '检查更新...',
+          label: translate('menu.help.checkForUpdates'),
           click: showManualUpdateDialog,
         },
         { type: 'separator' },
         {
-          label: '关于',
+          label: translate('menu.help.about'),
           click: () => {
             dialog.showMessageBox(mainWindow, {
               type: 'info',
-              title: '关于 Banana Slides',
-              message: `Banana Slides v${app.getVersion()}`,
-              detail: 'AI-Native Presentation Generator',
+              title: translate('about.title'),
+              message: translate('about.message', { version: app.getVersion() }),
+              detail: translate('about.detail'),
             });
           },
         },
@@ -454,6 +498,7 @@ function setupIPC() {
   ));
   ipcMain.handle('download-update', () => desktopAutoUpdater.downloadUpdate());
   ipcMain.handle('install-update', () => installDownloadedUpdate());
+  ipcMain.handle('set-locale', (_, locale) => applyLocale(locale));
   ipcMain.handle('open-external', (_, url) => {
     try {
       const parsedUrl = new URL(url);
@@ -501,7 +546,7 @@ function setupIPC() {
   });
   ipcMain.handle('choose-data-storage-directory', async () => {
     const result = await dialog.showOpenDialog(mainWindow, {
-      title: '选择数据存储位置',
+      title: translate('storage.chooseTitle'),
       defaultPath: activeDataRoot,
       properties: ['openDirectory', 'createDirectory'],
     });
@@ -538,7 +583,6 @@ function setupIPC() {
     return { success: true, restarting: true };
   });
 
-  // 原生下载对话框：前端传入绝对 URL + 建议文件名
   ipcMain.handle('download-file', async (_, { url, filename }) => {
     const currentWindow = mainWindow;
     if (!currentWindow || currentWindow.isDestroyed()) return { success: false };
@@ -546,7 +590,7 @@ function setupIPC() {
     const downloadUrl = createUniqueDownloadUrl(url);
     const { filePath: savePath, canceled } = await dialog.showSaveDialog(currentWindow, {
       defaultPath: filename || 'download',
-      filters: [{ name: '所有文件', extensions: [ext, '*'] }],
+      filters: [{ name: translate('download.allFiles'), extensions: [ext, '*'] }],
     });
     if (canceled || !savePath) return { success: false, canceled: true };
     if (currentWindow.isDestroyed()) return { success: false };
@@ -564,18 +608,21 @@ function setupIPC() {
       log.error('[main] Download failed:', { url: downloadUrl, savePath, ...result });
       if (!currentWindow.isDestroyed()) {
         const localizedError = {
-          interrupted: '下载被中断，请重试。',
-          timeout: '下载超时，请重试。',
-          missing: '目标文件没有写入。',
-          empty: '目标文件为空。',
-          failed: '文件复制或下载失败。',
-          cancelled: '下载已取消。',
-        }[result.state];
+          interrupted: translate('download.error.interrupted'),
+          timeout: translate('download.error.timeout'),
+          missing: translate('download.error.missing'),
+          empty: translate('download.error.empty'),
+          failed: translate('download.error.failed'),
+          cancelled: translate('download.error.cancelled'),
+        }[result.state] || result.error || translate('download.error.fallback');
         await dialog.showMessageBox(currentWindow, {
           type: 'error',
-          title: '保存失败',
-          message: '文件没有保存成功',
-          detail: `${localizedError || result.error || '下载失败'}\n\n目标位置：${savePath}`,
+          title: translate('download.dialog.title'),
+          message: translate('download.dialog.message'),
+          detail: translate('download.dialog.detail', {
+            error: localizedError,
+            destination: savePath,
+          }),
         });
       }
     } else {
@@ -593,10 +640,13 @@ async function selectRecoveryDataRoot(startupError) {
     if (!skipErrorDialog) {
       const choice = await dialog.showMessageBox(parentWindow, {
         type: 'error',
-        title: '无法访问数据存储位置',
-        message: 'Banana Slides 无法访问已配置的数据存储位置。',
+        title: translate('storage.recovery.title'),
+        message: translate('storage.recovery.message'),
         detail: error.message,
-        buttons: ['选择其他位置', '退出'],
+        buttons: [
+          translate('storage.recovery.chooseOther'),
+          translate('storage.recovery.quit'),
+        ],
         defaultId: 0,
         cancelId: 1,
         noLink: true,
@@ -606,11 +656,11 @@ async function selectRecoveryDataRoot(startupError) {
     skipErrorDialog = false;
 
     const selection = await dialog.showOpenDialog(parentWindow, {
-      title: '选择数据存储位置',
+      title: translate('storage.chooseTitle'),
       properties: ['openDirectory', 'createDirectory'],
     });
     if (selection.canceled || !selection.filePaths[0]) {
-      error = new Error('尚未选择可用的数据存储位置。');
+      error = new Error(translate('storage.recovery.noSelection'));
       continue;
     }
     try {
@@ -618,10 +668,13 @@ async function selectRecoveryDataRoot(startupError) {
       if (!inspection.hasDatabase) {
         const confirmation = await dialog.showMessageBox(parentWindow, {
           type: 'warning',
-          title: '确认使用新的数据位置',
-          message: '所选目录中没有 Banana Slides 数据库。',
-          detail: '继续后将把此位置作为新的空数据目录使用。应用不会移动或删除原目录中的任何数据。',
-          buttons: ['使用此位置', '重新选择'],
+          title: translate('storage.confirm.title'),
+          message: translate('storage.confirm.message'),
+          detail: translate('storage.confirm.detail'),
+          buttons: [
+            translate('storage.confirm.use'),
+            translate('storage.confirm.chooseOther'),
+          ],
           defaultId: 1,
           cancelId: 1,
           noLink: true,
@@ -641,6 +694,7 @@ async function selectRecoveryDataRoot(startupError) {
 }
 
 async function bootstrap() {
+  initializeLocale();
   createSplashWindow();
   createMainWindow();
   createTray();
@@ -689,7 +743,10 @@ async function bootstrap() {
   } catch (err) {
     log.error('[main] Startup failed:', err);
     if (splashWindow) splashWindow.close();
-    dialog.showErrorBox('启动失败', `后端服务启动失败：${err.message}`);
+    dialog.showErrorBox(
+      translate('startup.errorTitle'),
+      translate('startup.backendError', { detail: err.message }),
+    );
     app.quit();
   }
 }

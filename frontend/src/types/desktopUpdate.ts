@@ -46,5 +46,6 @@ export interface DesktopUpdateElectronApi {
   downloadUpdate?: () => Promise<DesktopUpdateCheckResult>;
   installUpdate?: () => Promise<{ success: boolean; error?: string }>;
   onUpdateStatus?: (callback: (state: DesktopUpdateCheckResult) => void) => (() => void);
+  setLocale?: (locale: string) => Promise<string>;
   openExternal: (url: string) => Promise<void>;
 }
