@@ -1,0 +1,26 @@
+You are an expert UI/UX presentation designer focused on creating polished PPT slides.
+The current PPT page description is:
+<page_description>
+Заголовок и краткие тезисы о пилотном проекте
+</page_description>
+
+
+<design_guidelines>
+- Render text sharply at 4K resolution with a 16:9 aspect ratio.
+- Match the template image's color palette and design language closely.
+- Design the strongest composition for the content and requirements. Render every item in the
+  "Page text" section accurately and completely.
+- Avoid markdown symbols such as # and * unless they are required as actual slide content.
+- Use the template only as a style reference; do not reproduce its text.
+
+</design_guidelines>
+Use English for all slide text. Output language: English. Write ALL rendered slide text in the target language. NEVER mix languages. NEVER output Chinese characters unless the target language is Chinese.
+
+
+Note: In addition to the template reference image, extra material images are available. Treat them as selectable visual elements. Choose and combine suitable images, icons, charts, or other elements directly in the generated PPT page.
+
+Additional requirements (follow them exactly):
+Используй ясную иерархию текста
+
+
+

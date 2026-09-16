@@ -1,0 +1,5 @@
+   Building banana-slides @ file:///workspace/banana-slides-ru
+  × Failed to download `anthropic==0.91.0`
+  ╰─▶ Network connectivity is disabled, and the requested data was not found in the cache.
+
+hint: `anthropic` (v0.91.0) was included because `banana-slides` (v0.9.0) depends on `anthropic`

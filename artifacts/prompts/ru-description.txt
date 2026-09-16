@@ -1,0 +1,39 @@
+We are generating a content description for each page of a PPT.
+The user's original request is:
+Создай презентацию о безопасном внедрении ИИ в университетах.
+
+The complete outline is:
+[{'title': 'План внедрения', 'points': ['Пилот снижает риск']}]
+
+
+
+Generate the description for page 2:
+{'title': 'Пилот снижает риск', 'points': ['Проверить гипотезы']}
+
+
+## Important
+- Text under "Page text" is rendered verbatim on the slide. Include only text that should
+  actually appear on the slide; put explanations, annotations, and design intent in the
+  corresponding extra field instead.
+- For content pages, prefer an assertion sentence as the title: state the page conclusion
+  rather than a topic phrase. The first outline takeaway is the preferred title source.
+  Keep functional page titles (cover, TOC, section divider) short.
+
+## Output format
+
+--- Page text ---
+
+[Place the body text here in markdown. Detail level: Keep the wording clear and concise. Prefer short phrases over full sentences; use roughly 2-6 sentences of page text and avoid verbose or complex wording that replaces the speaker.. It may include LaTeX formulas or tables; do not repeat the page title.]
+
+--- End page text ---
+
+Visuals and materials: [What should appear besides text: charts, diagrams, illustrations, or referenced material images. State the type and intended meaning (e.g. "line chart: revenue growth from 2020-2025, highlighting the 2023 inflection"). Use markdown for real material images (e.g. ![description](/files/xxx/image.png)). Do not write body text (that belongs in Page text) or placement (that belongs in Layout and emphasis). Include at most 3 items; omit this field when no visuals are needed.]
+Layout and emphasis: [No more than two sentences. First describe the layout (e.g. title over two columns / text left and image right / horizontal timeline / full-bleed image with text overlay / centered headline). Second state the visual focus (what the audience should see first and what should be enlarged or emphasized). Describe only how existing content is arranged; do not add or repeat content.]
+Speaker notes: [Spoken explanation points for presenting: reasoning, transitions between pages, and supplementary examples. This field is not rendered on the slide and does not affect image generation.]
+
+## Material images
+If reference files contain local image URLs beginning with /files/ (for example
+/files/mineru/xxx/image.png), reference them in markdown such as
+![image description](/files/mineru/xxx/image.png) and put them in "Visuals and materials".
+If that field is disabled, append them after the page text. These images are included in the PPT page.
+Отвечай полностью на русском языке. Output language: Russian. Write ALL content in the target language. NEVER mix languages. NEVER output Chinese characters unless the target language is Chinese.
