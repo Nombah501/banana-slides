@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { AlertTriangle } from 'lucide-react';
 import { Modal } from './Modal';
 import { Button } from './Button';
-
+import i18n from '@/i18n';
 interface ConfirmDialogProps {
   isOpen: boolean;
   onClose: () => void;
@@ -20,10 +20,10 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
   isOpen,
   onClose,
   onConfirm,
-  title = '确认操作',
+  title = i18n.t('common.confirm'),
   message,
-  confirmText = '确定',
-  cancelText = '取消',
+  confirmText = i18n.t('common.confirm'),
+  cancelText = i18n.t('common.cancel'),
   variant = 'warning',
   checkboxLabel,
   checkboxDefaultChecked = false,

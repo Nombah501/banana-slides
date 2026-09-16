@@ -24,7 +24,17 @@ const slideCardI18n = {
       coverPage: "Cover",
       coverPageTooltip: "This is the cover page, usually containing the title and subtitle"
     }
-  }
+  },
+
+  ru: {
+    slideCard: {
+      notGenerated: "Не создано",
+      confirmDeletePage: "Вы уверены, что хотите удалить эту страницу?",
+      confirmDeleteTitle: "Подтвердить удаление",
+      coverPage: "Титульная страница",
+      coverPageTooltip: "Это титульная страница, обычно содержащая заголовок и подзаголовок"
+    }
+  },
 };
 
 interface SlideCardProps {

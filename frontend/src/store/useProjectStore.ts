@@ -74,7 +74,40 @@ const storeI18n = {
       exportFailed: 'Export failed',
       exportEditableFailed: 'Failed to export editable PPTX',
     }
-  }
+  },
+
+  ru: {
+    store: {
+      createFailed: 'Не удалось создать проект',
+      createNoId: 'Не удалось создать проект: идентификатор проекта не получен',
+      syncFailed: 'Не удалось синхронизировать проект',
+      projectNotFound: 'Проект не найден, возможно, он был удалён',
+      requestFailed: 'Не удалось выполнить запрос',
+      requestFailedStatus: 'Не удалось выполнить запрос: {{status}}',
+      networkError: 'Ошибка сети. Проверьте, запущена ли серверная служба',
+      updateOrderFailed: 'Не удалось обновить порядок страниц',
+      newPage: 'Новая страница',
+      addPageFailed: 'Не удалось добавить страницу',
+      deletePageFailed: 'Не удалось удалить страницу',
+      taskStartFailed: 'Не удалось запустить задачу',
+      taskFailed: 'Задача завершилась с ошибкой',
+      unknownTaskStatus: 'Неизвестный статус задачи: {{status}}',
+      taskQueryFailed: 'Не удалось получить сведения о задаче',
+      generateOutlineFailed: 'Не удалось сгенерировать структуру',
+      generateFromDescFailed: 'Не удалось сгенерировать по описанию',
+      projectIdMissing: 'Идентификатор проекта не найден',
+      noTaskId: 'Идентификатор задачи не получен',
+      generateDescFailed: 'Не удалось сгенерировать описание',
+      generateDescTimeout: 'Не удалось сгенерировать описание: время ожидания при опросе истекло',
+      startGenerationFailed: 'Не удалось запустить задачу генерации',
+      regenerateFailed: 'Не удалось выполнить повторную генерацию',
+      batchGenerateFailed: 'Не удалось выполнить пакетную генерацию',
+      editImageFailed: 'Не удалось отредактировать изображение',
+      exportLinkFailed: 'Не удалось получить ссылку для экспорта',
+      exportFailed: 'Не удалось выполнить экспорт',
+      exportEditableFailed: 'Не удалось экспортировать редактируемый PPTX',
+    }
+  },
 };
 const t = getT(storeI18n);
 

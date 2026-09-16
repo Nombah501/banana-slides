@@ -27,7 +27,20 @@ const markdownTextareaI18n = {
       doubleClickToEdit: 'Double-click to edit description',
       uploading: 'Uploading...',
     }
-  }
+  },
+
+  ru: {
+    markdownTextarea: {
+      dropImages: 'Перетащить изображения сюда',
+      dropImagesOrFiles: 'Перетащить изображения или файлы сюда',
+      uploadImage: 'Загрузить изображение',
+      localUpload: 'Загрузить локально',
+      selectFromLibrary: 'Выбрать из библиотеки',
+      imageDescription: 'Описание изображения',
+      doubleClickToEdit: 'Дважды щёлкнуть, чтобы изменить описание',
+      uploading: 'Выполняется загрузка...',
+    }
+  },
 };
 
 const IMAGE_REGEX = /!\[([^\]]*)\]\(([^)]+)\)/g;

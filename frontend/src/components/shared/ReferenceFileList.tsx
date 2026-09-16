@@ -6,7 +6,9 @@ import { listProjectReferenceFiles, type ReferenceFile } from '@/api/endpoints';
 // ReferenceFileList 组件自包含翻译
 const referenceFileListI18n = {
   zh: { referenceFile: { uploadedFiles: "已上传的文件", messages: { loadFailed: "加载参考文件列表失败" } } },
-  en: { referenceFile: { uploadedFiles: "Uploaded Files", messages: { loadFailed: "Failed to load reference file list" } } }
+  en: { referenceFile: { uploadedFiles: "Uploaded Files", messages: { loadFailed: "Failed to load reference file list" } } },
+
+  ru: { referenceFile: { uploadedFiles: "Загруженные файлы", messages: { loadFailed: "Не удалось загрузить список справочных файлов" } } },
 };
 
 interface ReferenceFileListProps {

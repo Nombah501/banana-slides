@@ -1,11 +1,9 @@
 import { useTranslation } from 'react-i18next';
+import { localeFallbackChain, type SupportedLocale } from '@/utils/i18nHelper';
 
 type NestedRecord = Record<string, unknown>;
 
-type Translations = {
-  zh: NestedRecord;
-  en: NestedRecord;
-};
+type Translations = Record<SupportedLocale, NestedRecord>;
 
 /**
  * 获取嵌套对象的值，支持点号路径
@@ -57,22 +55,23 @@ function getNestedValue(obj: NestedRecord, path: string): string | undefined {
  * 
  * 这样翻译和组件放在一起，AI 一眼就能看到所有上下文！
  */
+export type TranslationFunction = (
+  key: string,
+  defaultOrParams?: string | Record<string, string | number>
+) => string;
+
 export function useT<T extends Translations>(translations: T) {
   const { t: globalT, i18n } = useTranslation();
-  const lang = i18n.language?.startsWith('zh') ? 'zh' : 'en';
-  const dict = translations[lang] || translations['zh'];
-
+  const locales = localeFallbackChain(i18n.language);
   // 兼容 react-i18next 的多种调用方式：
   // t('key') / t('key', '默认值') / t('key', { param: value })
   return (key: string, defaultOrParams?: string | Record<string, string | number>): string => {
-    // 解析第二个参数
     const params = typeof defaultOrParams === 'object' ? defaultOrParams : undefined;
-    
-    // 优先从组件内翻译查找
-    const localValue = getNestedValue(dict, key);
+    const localValue = locales
+      .map((locale) => getNestedValue(translations[locale], key))
+      .find((value): value is string => value !== undefined);
     
     if (localValue !== undefined) {
-      // 组件内找到了，处理插值
       let text = localValue;
       if (params) {
         Object.entries(params).forEach(([k, v]) => {
@@ -82,7 +81,9 @@ export function useT<T extends Translations>(translations: T) {
       return text;
     }
     
-    // 组件内没找到，fallback 到全局翻译（保持原始参数传递）
-    return globalT(key, defaultOrParams as any);
+    if (typeof defaultOrParams === 'string') {
+      return globalT(key, { defaultValue: defaultOrParams });
+    }
+    return defaultOrParams ? globalT(key, defaultOrParams) : globalT(key);
   };
 }

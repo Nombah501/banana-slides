@@ -27,7 +27,18 @@ const outlineCardI18n = {
       coverPage: "Cover",
       coverPageTooltip: "This is the cover page, usually containing the title and subtitle"
     }
-  }
+  },
+
+  ru: {
+    outlineCard: {
+      page: "Страница {{num}}", chapter: "Глава", titleLabel: "Заголовок",
+      keyPointsPlaceholder: "Ключевые пункты (по одному в строке, вставка изображений поддерживается)", confirmDeletePage: "Вы действительно хотите удалить эту страницу?",
+      confirmDeleteTitle: "Подтвердить удаление",
+      uploadingImage: "Выполняется загрузка изображения...",
+      coverPage: "Обложка",
+      coverPageTooltip: "Это обложка, обычно содержащая заголовок и подзаголовок"
+    }
+  },
 };
 
 interface OutlineCardProps {

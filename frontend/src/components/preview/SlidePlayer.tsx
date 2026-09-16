@@ -35,6 +35,22 @@ const playerI18n = {
       fullscreenUnavailable: 'Fullscreen is not supported in this environment',
     },
   },
+
+  ru: {
+    player: {
+      playing: 'Воспроизведение',
+      exitPlayer: 'Выйти из презентации',
+      exitPlayerFs: 'Выйти из презентации',
+      fullscreen: 'Перейти в полноэкранный режим',
+      exitFullscreen: 'Выйти из полноэкранного режима',
+      prevPage: 'Предыдущий слайд',
+      nextPage: 'Следующий слайд',
+      notGenerated: 'Изображение ещё не сгенерировано',
+      queued: 'Поставлено в очередь на генерацию...',
+      generating: 'Выполняется генерация...',
+      fullscreenUnavailable: 'В этой среде полноэкранный режим не поддерживается',
+    },
+  },
 };
 
 interface SlidePlayerProps {

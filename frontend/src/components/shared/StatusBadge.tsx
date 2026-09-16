@@ -26,7 +26,19 @@ const statusI18n = {
       imageFailed: "Image generation failed", imageCompleted: "Image generated",
       draftStage: "Draft Stage", allCompleted: "All Completed", statusUnknown: "Status Unknown"
     }
-  }
+  },
+
+  ru: {
+    status: {
+      draft: "Черновик", generatingDescription: "Генерация описания", descriptionGenerated: "Описание сгенерировано", queued: "В очереди", generating: "Генерация",
+      completed: "Завершено", failed: "Не удалось выполнить", unknown: "Неизвестно",
+      notGeneratedDesc: "Описание не сгенерировано", noDescription: "Описание ещё не сгенерировано",
+      descGenerated: "Описание сгенерировано", notGeneratedImage: "Изображение не сгенерировано",
+      waitingForImage: "Описание сгенерировано, ожидание генерации изображения", generatingImage: "Генерация изображения",
+      imageFailed: "Не удалось сгенерировать изображение", imageCompleted: "Изображение сгенерировано",
+      draftStage: "Этап черновика", allCompleted: "Всё завершено", statusUnknown: "Статус неизвестен"
+    }
+  },
 };
 
 interface StatusBadgeProps {

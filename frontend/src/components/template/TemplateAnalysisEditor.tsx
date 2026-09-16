@@ -58,6 +58,33 @@ const i18n = {
       commaHint: 'comma separated',
     },
   },
+
+  ru: {
+    tae: {
+      role: 'Роль шаблона',
+      layout: 'Структура макета',
+      capacity: 'Объём содержимого',
+      textRegions: 'Текстовые области',
+      imageRegions: 'Области изображений',
+      density: 'Визуальная плотность',
+      keywords: 'Ключевые слова стиля',
+      palette: 'Цветовая палитра',
+      notes: 'Примечания',
+      low: 'Низкая',
+      medium: 'Средняя',
+      high: 'Высокая',
+      save: 'Сохранить',
+      saving: 'Сохраняется…',
+      reanalyze: 'Повторно проанализировать',
+      failedHint: 'Не удалось выполнить анализ. Повторно проанализируйте или заполните вручную',
+      regionName: 'Название',
+      regionPosition: 'Положение',
+      regionSize: 'Размер',
+      addRegion: 'Добавить область',
+      remove: 'Удалить',
+      commaHint: 'Через запятую',
+    },
+  },
 };
 
 const emptyAnalysis: TemplateAnalysis = {

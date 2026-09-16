@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useT } from '@/hooks/useT';
+import { resolveLocale } from '@/utils/i18nHelper';
 import { devLog } from '@/utils/logger';
 
 // 组件内翻译
@@ -282,7 +283,146 @@ const previewI18n = {
       titleLabel: "Title",
       keyPoints: "Key Points"
     }
-  }
+  },
+
+  ru: {
+    home: { title: 'Banana Slides' },
+    nav: { home: 'Главная', materialGenerate: 'Генерация материалов' },
+    slidePreview: {
+      pageGenerating: "Выполняется генерация страницы. Подождите...", generationStarted: "Генерация изображения начата. Подождите...",
+      versionSwitched: "Выполнено переключение на эту версию", outlineSaved: "Структура и описание сохранены",
+      materialsAdded: "Добавлено материалов: {{count}}", exportStarted: "Задача экспорта запущена. Ход выполнения можно посмотреть на панели задач экспорта",
+      exportStartResponseLost: "Соединение с ответом при создании задачи экспорта прервано. Выполняется проверка состояния на сервере по зарезервированному ID задачи; это не означает, что экспорт завершился с ошибкой",
+      cannotRefresh: "Не удалось обновить: отсутствует ID проекта", refreshSuccess: "Обновление выполнено успешно",
+      extraRequirementsSaved: "Дополнительные требования сохранены", styleDescSaved: "Описание стиля сохранено",
+      switchedToMulti: "Выполнено переключение на шаблоны для отдельных страниц", switchFailed: "Не удалось переключить режим шаблонов: {{error}}",
+      exportSettingsSaved: "Настройки экспорта сохранены", aspectRatioSaved: "Соотношение сторон сохранено", loadTemplateFailed: "Не удалось загрузить шаблон", templateChanged: "Шаблон успешно изменён",
+      saveFailed: "Не удалось сохранить: {{error}}", refreshFailed: "Не удалось обновить. Повторите попытку позже",
+      loadMaterialFailed: "Не удалось загрузить материал: {{error}}", templateChangeFailed: "Не удалось заменить шаблон: {{error}}",
+      versionSwitchFailed: "Не удалось переключиться: {{error}}", unknownError: "Неизвестная ошибка",
+      regionCropSuccess: "Выбранная область добавлена как референсное изображение. При необходимости удалите её из миниатюры",
+      regionCropFailed: "Не удалось обрезать текущего изображения (ограничение безопасности браузера). Попробуйте загрузить референсное изображение вручную."
+    },
+    preview: {
+      title: "Предварительный просмотр", pageCount: "Страниц: {{count}}", export: "Экспортировать", exportTasks: "Задачи экспорта",
+      exportPptx: "Экспортировать в PPTX", exportPdf: "Экспортировать в PDF",
+      exportEditablePptx: "Экспортировать редактируемый PPTX (бета-версия)", exportImages: "Экспортировать в виде изображений",
+      exportVideo: "Экспортировать как видео с озвучкой",
+      videoSettingsLoading: "Выполняется загрузка настроек видео...",
+      videoSettingsLoadFailed: "Не удалось загрузить настройки экспорта видео. Повторите попытку перед экспортом.",
+      videoVoicesLoadFailed: "Не удалось загрузить список голосов ElevenLabs. Повторите попытку позже.",
+      pptxExportTitle: "Настройки экспорта PPTX",
+      pptxExportSubtitle: "Перед экспортом подтвердите настройки воспроизведения этого PPTX.",
+      pptxTransitionToggle: "Включить анимацию переходов между слайдами",
+      pptxTransitionDesc: "В экспортируемом PPTX для каждого слайда будет задан эффект перехода. Если выбрано несколько эффектов, для каждого слайда случайным образом будет выбран один из них.",
+      pptxTransitionFade: "Плавное появление",
+      pptxTransitionPageTurn: "Перелистывание страницы",
+      pptxTransitionPush: "Сдвиг",
+      pptxTransitionWipe: "Шторка",
+      pptxTransitionSplit: "Разделение",
+      pptxTransitionBlinds: "Жалюзи",
+      pptxTransitionChecker: "Шашки",
+      pptxTransitionWheel: "Часы",
+      pptxTransitionRequired: "Выберите хотя бы один эффект перехода",
+      pptxStartExport: "Начать экспорт",
+      pptxCancel: "Отменить",
+      videoExportTitle: "Настройки экспорта видео с озвучкой",
+      videoExportSubtitle: "На последнем шаге экспорта настройте стратегию озвучивания для демонстраций, годовых итоговых обзоров, запусков продуктов или академических докладов.",
+      videoVoiceLabel: "Голос",
+      videoSpeedLabel: "Скорость речи",
+      videoSpeedHint: "0.7 — медленно — 1.0 — по умолчанию — 1.2 — быстро",
+      videoNarrationPresetTitle: "Стратегия озвучивания",
+      videoNarrationPersona: "Образ выступающего",
+      videoNarrationAudience: "Целевая аудитория",
+      videoNarrationTone: "Тон речи",
+      videoNarrationTopic: "Основная тема",
+      videoNarrationTopicPlaceholder: "Например: история и технологическая эволюция Nvidia",
+      videoNarrationLength: "Количество слов на слайд",
+      videoNarrationAdvanced: "Расширенные настройки",
+      videoNarrationCollapse: "Скрыть расширенные настройки",
+      videoNarrationAdvancedHint: "Эти параметры влияют только на генерацию озвучки во время экспорта.",
+      videoNarrationMinWords: "Минимальное число слов",
+      videoNarrationMaxWords: "Максимальное число слов",
+      videoNarrationSummaryLabel: "Текущая стратегия",
+      videoNarrationGenerateMissing: "Автоматически создать озвучку для слайдов, на которых она отсутствует",
+      videoUseElevenLabs: "Использовать синтез речи ElevenLabs",
+      videoElevenLabsNoKey: "Не настроен ElevenLabs API Key — синтез речи будет недоступен.",
+      videoElevenLabsGoSettings: "Перейти в настройки",
+      videoEnableKenBurns: "Включить движение камеры",
+      videoKenBurnsTip: "Добавить к каждому слайду медленную анимацию масштабирования или панорамирования, чтобы сделать видео динамичнее",
+      videoIncludeNoImage: "Включить страницы без изображений (кадры-заполнители)",
+      videoMissingImagesWarning: "В выбранном диапазоне экспорта {{count}} страниц ещё не имеют изображений. Включите «Включить страницы без изображений», чтобы экспортировать кадры-заполнители, или сначала сгенерируйте изображения.",
+      videoStartExport: "Начать экспорт",
+      videoCancel: "Отменить",
+      editablePptxDialogTitle: "Экспортировать редактируемый PPTX",
+      editablePptxDialogSubtitle: "Выберите параметры обработки для этого экспорта.",
+      editablePptxIconTransparent: "Прозрачный фон значков",
+      editablePptxIconTransparentDesc: "Обработать изображения, распознанные как значки, локальной моделью RMBG-2.0 для удаления фона и создания PNG с прозрачным фоном, чтобы избежать конфликтов цветов фона.",
+      editablePptxModelHint: "При первом использовании в ~/.cache/banana-slides/models/ будет загружена модель размером ~512MB. Инференс на CPU требует значительного объёма памяти; рекомендуется наличие ≥16GB свободной памяти.",
+      editablePptxRangeLabel: "Диапазон экспорта",
+      editablePptxRangeAll: "Все страницы: {{count}}",
+      editablePptxRangePages: "Страницы {{pages}} (всего: {{count}})",
+      editablePptxRangeTip: "Чтобы экспортировать только определённые страницы, нажмите «Множественный выбор» в верхней части левой боковой панели и сначала выберите нужные страницы.",
+      editablePptxStartExport: "Начать экспорт",
+      editablePptxCancel: "Отменить",
+      exportSelectedPages: "Будет экспортировано выбранных страниц: {{count}}",
+      regenerate: "Сгенерировать заново", regenerating: "Выполняется повторная генерация...",
+      editMode: "Режим редактирования", viewMode: "Режим просмотра", page: "Страница {{num}}",
+      projectSettings: "Настройки проекта", changeTemplate: "Заменить шаблон", refresh: "Обновить",
+      switchToMulti: "Переключить на шаблоны для отдельных страниц", switchToSingle: "Переключить на единый шаблон", templateSetup: "Настройка шаблона", templateMenu: "Шаблон",
+      batchGenerate: "Сгенерировать изображения пакетно ({{count}})", generateSelected: "Сгенерировать выбранные ({{count}})",
+      multiSelect: "Множественный выбор", cancelMultiSelect: "Отменить множественный выбор", pagesUnit: " страниц",
+      noPages: "Страниц пока нет", noPagesHint: "Сначала вернитесь в редактор и добавьте содержимое", backToEdit: "Вернуться в редактор",
+      generating: "Выполняется генерация...", queued: "Добавлено в очередь на генерацию...", notGenerated: "Изображение ещё не сгенерировано", generateThisPage: "Сгенерировать эту страницу",
+      prevPage: "Предыдущая", nextPage: "Следующая", historyVersions: "История версий",
+      play: "Воспроизвести",
+      versions: "Версии", version: "Версия", current: "Текущая", editPage: "Отредактировать страницу",
+      regionSelect: "Выбрать область", endRegionSelect: "Завершить выбор области",
+      inlineEditPromptPlaceholder: "Опишите, что нужно изменить, или сначала выделите область на изображении…",
+      addReference: "Добавить референсное изображение",
+      pageOutline: "Структура страницы (редактируемая)", pageDescription: "Описание страницы (редактируемое)",
+      enterTitle: "Введите заголовок страницы", pointsPerLine: "Ключевые пункты (по одному в строке)",
+      enterPointsPerLine: "Введите по одному ключевому пункту в строке", enterDescription: "Введите подробное описание страницы",
+      selectContextImages: "Выбрать контекстные изображения (необязательно)", useTemplateImage: "Использовать изображение шаблона",
+      imagesInDescription: "Изображения в описании", uploadImages: "Загрузить изображения",
+      selectFromMaterials: "Выбрать из материалов", upload: "Загрузить",
+      editPromptLabel: "Введите инструкции по редактированию (описание страницы будет добавлено автоматически)",
+      editPromptPlaceholder: "Например: удалить элементы в выбранной области, изменить фон на синий, увеличить размер шрифта заголовка, изменить стиль текстового поля на пунктирный...",
+      saveOutlineOnly: "Сохранить только структуру/описание", generateImage: "Сгенерировать изображение",
+      templateModalDesc: "Выбор нового шаблона применит его к генерации будущих страниц PPT (уже созданные страницы не изменятся). Можно выбрать предустановленный или существующий шаблон либо загрузить новый.",
+      useTextStyle: "Использовать текстовое описание стиля",
+      applyStyle: "Применить стиль",
+      styleSaved: "Описание стиля сохранено",
+      uploadingTemplate: "Выполняется загрузка шаблона...",
+      resolution1KWarning: "Предупреждение о разрешении 1K",
+      resolution1KWarningText: "В настоящее время для генерации изображений используется разрешение 1K, из-за чего текст может отображаться нечитаемым или размытым.",
+      resolution1KWarningHint: "Рекомендуется переключиться на разрешение 2K или 4K в разделе «Настройки проекта → Глобальные настройки», чтобы получить более чёткий результат.",
+      dontShowAgain: "Больше не показывать", generateAnyway: "Всё равно сгенерировать",
+      confirmRegenerateSelected: "Будут заново сгенерированы выбранные страницы: {{count}} (история будет сохранена). Продолжить?",
+      confirmRegenerateAll: "Все страницы будут сгенерированы заново (история будет сохранена). Продолжить?",
+      confirmRegenerateTitle: "Подтвердить повторную генерацию",
+      generationFailed: "Не удалось выполнить генерацию",
+      qualityControl: "Контроль качества",
+      qualityControlDesc: "Проверять результат после генерации и сохранять только прошедшие проверку версии",
+      qualityControlTooltip: "При включении Banana Slides сначала генерирует изображение, но не сохраняет его сразу. Проверяется наличие нечитаемого или странного текста, явно некачественных визуальных элементов и существенного несоответствия запросу. При обнаружении проблемы выполняется повторная генерация — не более 3 раз. Новая версия сохраняется только после успешной проверки. Если проверка не будет пройдена, появится предложение скорректировать описание.",
+      qualityControlOn: "Включён",
+      qualityControlOff: "Выключен",
+      qualityControlSaved: "Настройка контроля качества сохранена",
+      qualityControlSaveFailed: "Не удалось сохранить настройку контроля качества",
+      disabledExportTip: "В выбранном диапазоне экспорта ещё нет изображений для {{count}} страниц. Сначала сгенерируйте изображения или измените выбор",
+      messages: {
+        exportSuccess: "Экспорт выполнен успешно", exportFailed: "Не удалось выполнить экспорт",
+        regenerateSuccess: "Повторная генерация завершена", regenerateFailed: "Не удалось выполнить повторную генерацию",
+        loadingProject: "Выполняется загрузка проекта...", processing: "Выполняется обработка...",
+        generatingBackgrounds: "Выполняется генерация чистых фонов...", creatingPdf: "Выполняется создание PDF...",
+        parsingContent: "Выполняется разбор содержимого...", creatingPptx: "Выполняется создание редактируемого PPTX...", complete: "Готово!"
+      }
+    },
+    outline: {
+      titleLabel: "Заголовок",
+      keyPoints: "Ключевые пункты"
+    }
+  },
 };
 import {
   Home,
@@ -329,45 +469,44 @@ import { getImageUrl } from '@/api/client';
 import { getPageImageVersions, setCurrentImageVersion, updateProject, uploadTemplate, exportPPTX as apiExportPPTX, exportPDF as apiExportPDF, exportImages as apiExportImages, exportEditablePPTX as apiExportEditablePPTX, exportVideo as apiExportVideo, getSettings, getElevenLabsVoices, updateSettings } from '@/api/endpoints';
 import type { ImageVersion, DescriptionContent, ExportExtractorMethod, ExportInpaintMethod, Page, NarrationConfig } from '@/types';
 import { normalizeErrorMessage } from '@/utils';
-
 const VIDEO_VOICE_OPTIONS = [
-  { group: '中文', voices: [
-    { id: 'zh-CN-XiaoxiaoNeural', label: '晓晓（女声）', lang: 'zh' },
-    { id: 'zh-CN-YunxiNeural', label: '云希（男声）', lang: 'zh' },
-    { id: 'zh-CN-YunjianNeural', label: '云健（男声）', lang: 'zh' },
-    { id: 'zh-CN-XiaoyiNeural', label: '晓伊（女声）', lang: 'zh' },
+  { group: '中文', groupRu: 'Китайский', voices: [
+    { id: 'zh-CN-XiaoxiaoNeural', label: '晓晓（女声）', ruLabel: '晓晓 (женский голос)', lang: 'zh' },
+    { id: 'zh-CN-YunxiNeural', label: '云希（男声）', ruLabel: '云希 (мужской голос)', lang: 'zh' },
+    { id: 'zh-CN-YunjianNeural', label: '云健（男声）', ruLabel: '云健 (мужской голос)', lang: 'zh' },
+    { id: 'zh-CN-XiaoyiNeural', label: '晓伊（女声）', ruLabel: '晓伊 (женский голос)', lang: 'zh' },
   ]},
-  { group: 'English', voices: [
-    { id: 'en-US-JennyNeural', label: 'Jenny (Female)', lang: 'en' },
-    { id: 'en-US-GuyNeural', label: 'Guy (Male)', lang: 'en' },
-    { id: 'en-US-AriaNeural', label: 'Aria (Female)', lang: 'en' },
-    { id: 'en-US-DavisNeural', label: 'Davis (Male)', lang: 'en' },
+  { group: 'English', groupRu: 'Английский', voices: [
+    { id: 'en-US-JennyNeural', label: 'Jenny (Female)', ruLabel: 'Jenny (женский голос)', lang: 'en' },
+    { id: 'en-US-GuyNeural', label: 'Guy (Male)', ruLabel: 'Guy (мужской голос)', lang: 'en' },
+    { id: 'en-US-AriaNeural', label: 'Aria (Female)', ruLabel: 'Aria (женский голос)', lang: 'en' },
+    { id: 'en-US-DavisNeural', label: 'Davis (Male)', ruLabel: 'Davis (мужской голос)', lang: 'en' },
   ]},
-  { group: '日本語', voices: [
-    { id: 'ja-JP-NanamiNeural', label: 'Nanami（女声）', lang: 'ja' },
-    { id: 'ja-JP-KeitaNeural', label: 'Keita（男声）', lang: 'ja' },
+  { group: '日本語', groupRu: 'Японский', voices: [
+    { id: 'ja-JP-NanamiNeural', label: 'Nanami（女声）', ruLabel: 'Nanami (женский голос)', lang: 'ja' },
+    { id: 'ja-JP-KeitaNeural', label: 'Keita（男声）', ruLabel: 'Keita (мужской голос)', lang: 'ja' },
   ]},
 ];
 
 const NARRATION_PERSONA_OPTIONS = [
-  { value: 'charismatic keynote speaker', zh: '演讲家', en: 'Keynote speaker' },
-  { value: 'knowledgeable and patient university professor', zh: '大学教授', en: 'University professor' },
-  { value: 'confident corporate executive', zh: '企业高管', en: 'Corporate executive' },
-  { value: 'engaging online content creator', zh: '自媒体讲述者', en: 'Content creator' },
+  { value: 'charismatic keynote speaker', zh: '演讲家', en: 'Keynote speaker', ru: 'Ведущий презентации' },
+  { value: 'knowledgeable and patient university professor', zh: '大学教授', en: 'University professor', ru: 'Знающий и терпеливый преподаватель' },
+  { value: 'confident corporate executive', zh: '企业高管', en: 'Corporate executive', ru: 'Уверенный руководитель компании' },
+  { value: 'engaging online content creator', zh: '自媒体讲述者', en: 'Content creator', ru: 'Увлекательный автор контента' },
 ];
 
 const NARRATION_AUDIENCE_OPTIONS = [
-  { value: 'the general public with no technical background', zh: '普通大众', en: 'General public' },
-  { value: 'industry experts and seasoned professionals', zh: '行业专家', en: 'Industry experts' },
-  { value: 'potential investors and venture capitalists', zh: '投资人和 VC', en: 'Investors and VCs' },
-  { value: 'internal team members and employees', zh: '内部团队成员', en: 'Internal team' },
+  { value: 'the general public with no technical background', zh: '普通大众', en: 'General public', ru: 'Широкая аудитория без технической подготовки' },
+  { value: 'industry experts and seasoned professionals', zh: '行业专家', en: 'Industry experts', ru: 'Отраслевые эксперты и опытные специалисты' },
+  { value: 'potential investors and venture capitalists', zh: '投资人和 VC', en: 'Investors and VCs', ru: 'Потенциальные инвесторы и венчурные фонды' },
+  { value: 'internal team members and employees', zh: '内部团队成员', en: 'Internal team', ru: 'Участники внутренней команды и сотрудники' },
 ];
 
 const NARRATION_TONE_OPTIONS = [
-  { value: 'inspiring, passionate, and persuasive', zh: '激情说服型', en: 'Inspiring and persuasive' },
-  { value: 'analytical, data-driven, and highly professional', zh: '理性数据流', en: 'Analytical and professional' },
-  { value: 'storytelling-focused, emotional, and captivating', zh: '故事沉浸型', en: 'Storytelling and emotional' },
-  { value: 'conversational, witty, and approachable', zh: '轻松聊天型', en: 'Conversational and witty' },
+  { value: 'inspiring, passionate, and persuasive', zh: '激情说服型', en: 'Inspiring and persuasive', ru: 'Воодушевляющий и убедительный' },
+  { value: 'analytical, data-driven, and highly professional', zh: '理性数据流', en: 'Analytical and professional', ru: 'Аналитический и профессиональный' },
+  { value: 'storytelling-focused, emotional, and captivating', zh: '故事沉浸型', en: 'Storytelling and emotional', ru: 'Эмоциональный и увлекательный рассказ' },
+  { value: 'conversational, witty, and approachable', zh: '轻松聊天型', en: 'Conversational and witty', ru: 'Непринуждённый и остроумный' },
 ];
 
 const DEFAULT_VIDEO_NARRATION_CONFIG: NarrationConfig = {
@@ -520,6 +659,7 @@ export const SlidePreview: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { i18n } = useTranslation();
+  const locale = resolveLocale(i18n.language);
   const t = useT(previewI18n);
   const { projectId } = useParams<{ projectId: string }>();
   const fromHistory = (location.state as any)?.from === 'history';
@@ -2102,10 +2242,9 @@ export const SlidePreview: React.FC = () => {
   const exportRangeMissingTip = exportMissingImageCount > 0
     ? t('preview.disabledExportTip', { count: exportMissingImageCount })
     : undefined;
-  const isEnglishUi = i18n.language?.startsWith('en');
-  const getNarrationOptionLabel = (options: Array<{ value: string; zh: string; en: string }>, value: string) => {
+  const getNarrationOptionLabel = (options: Array<{ value: string; zh: string; en: string; ru: string }>, value: string) => {
     const match = options.find(item => item.value === value);
-    return match ? (isEnglishUi ? match.en : match.zh) : value;
+    return match ? match[locale] : value;
   };
   const narrationSummary = [
     videoNarrationConfig.presentation_topic,
@@ -2501,7 +2640,7 @@ export const SlidePreview: React.FC = () => {
                     >
                       {NARRATION_PERSONA_OPTIONS.map(option => (
                         <option key={option.value} value={option.value}>
-                          {isEnglishUi ? option.en : option.zh}
+                          {option[locale]}
                         </option>
                       ))}
                     </select>
@@ -2515,7 +2654,7 @@ export const SlidePreview: React.FC = () => {
                     >
                       {NARRATION_AUDIENCE_OPTIONS.map(option => (
                         <option key={option.value} value={option.value}>
-                          {isEnglishUi ? option.en : option.zh}
+                          {option[locale]}
                         </option>
                       ))}
                     </select>
@@ -2529,7 +2668,7 @@ export const SlidePreview: React.FC = () => {
                     >
                       {NARRATION_TONE_OPTIONS.map(option => (
                         <option key={option.value} value={option.value}>
-                          {isEnglishUi ? option.en : option.zh}
+                          {option[locale]}
                         </option>
                       ))}
                     </select>
@@ -2551,9 +2690,9 @@ export const SlidePreview: React.FC = () => {
                               className="w-full px-3 py-2 text-sm border border-gray-200 dark:border-border-primary rounded-lg bg-white dark:bg-background-primary focus:outline-none focus:ring-2 focus:ring-banana-400 disabled:opacity-60"
                             >
                               {elevenLabsVoicesLoading ? (
-                                <option>{isEnglishUi ? 'Loading voices…' : '加载声音列表中…'}</option>
+                                <option>{locale === 'ru' ? 'Загрузка списка голосов…' : locale === 'zh' ? '加载声音列表中…' : 'Loading voices…'}</option>
                               ) : elevenLabsVoices.length === 0 ? (
-                                <option>{isEnglishUi ? 'No voices available' : '暂无可用声音'}</option>
+                                <option>{locale === 'ru' ? 'Нет доступных голосов' : locale === 'zh' ? '暂无可用声音' : 'No voices available'}</option>
                               ) : list.map(v => {
                                 const langs = (v.languages || []).join(', ');
                                 const meta = [langs, v.accent].filter(Boolean).join(' · ');
@@ -2566,9 +2705,11 @@ export const SlidePreview: React.FC = () => {
                             </select>
                             {noMatch && (
                               <div className="mt-2 rounded-lg border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/30 px-3 py-2 text-xs text-amber-700 dark:text-amber-400">
-                                {isEnglishUi
-                                  ? `No ElevenLabs voice in your account supports the target language "${targetLang}". Showing all voices as fallback — generated audio may not sound natural.`
-                                  : `当前账号下没有支持目标语言"${targetLang}"的 ElevenLabs 声音，已显示全部声音作为兜底——生成的语音可能不自然。`}
+                                {locale === 'ru'
+                                  ? `В Вашем аккаунте ElevenLabs нет голоса для целевого языка «${targetLang}». Показаны все голоса в качестве запасного варианта — сгенерированная речь может звучать неестественно.`
+                                  : locale === 'zh'
+                                    ? `当前账号下没有支持目标语言"${targetLang}"的 ElevenLabs 声音，已显示全部声音作为兜底——生成的语音可能不自然。`
+                                    : `No ElevenLabs voice in your account supports the target language "${targetLang}". Showing all voices as fallback — generated audio may not sound natural.`}
                               </div>
                             )}
                           </>
@@ -2581,9 +2722,9 @@ export const SlidePreview: React.FC = () => {
                         className="w-full px-3 py-2 text-sm border border-gray-200 dark:border-border-primary rounded-lg bg-white dark:bg-background-primary focus:outline-none focus:ring-2 focus:ring-banana-400"
                       >
                         {VIDEO_VOICE_OPTIONS.map(group => (
-                          <optgroup key={group.group} label={group.group}>
+                          <optgroup key={group.group} label={locale === 'ru' ? group.groupRu : group.group}>
                             {group.voices.map(v => (
-                              <option key={v.id} value={v.id}>{v.label}</option>
+                              <option key={v.id} value={v.id}>{locale === 'ru' ? v.ruLabel : v.label}</option>
                             ))}
                           </optgroup>
                         ))}

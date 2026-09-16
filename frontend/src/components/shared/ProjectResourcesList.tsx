@@ -20,7 +20,15 @@ const projectResourcesI18n = {
       refreshList: "Refresh List", imageLoadFailed: "Image load failed", deleteThisMaterial: "Delete this material"
     },
     material: { messages: { loadMaterialFailed: "Failed to load materials", deleteSuccess: "Material deleted", deleteFailed: "Failed to delete material" } }
-  }
+  },
+
+  ru: {
+    projectResources: {
+      uploadedFiles: "Загруженные файлы", uploadedImages: "Загруженные изображения",
+      refreshList: "Обновить список", imageLoadFailed: "Не удалось загрузить изображение", deleteThisMaterial: "Удалить этот материал"
+    },
+    material: { messages: { loadMaterialFailed: "Не удалось загрузить материалы", deleteSuccess: "Материал удалён", deleteFailed: "Не удалось удалить материал" } }
+  },
 };
 
 interface ProjectResourcesListProps {

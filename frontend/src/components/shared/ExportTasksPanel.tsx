@@ -76,7 +76,41 @@ const exportI18n = {
       dismissDeleteError: "Dismiss delete error",
     },
     shared: { historyRecords: "History Records" }
-  }
+  },
+
+  ru: {
+    export: {
+      tasks: "Задачи экспорта", inProgress: "Выполняется: {{count}}", clearHistory: "Очистить",
+      exportPptx: "PPTX", exportPdf: "PDF", exportEditablePptx: "Редактируемый PPTX", exportImages: "Изображения", exportVideo: "Видео с дикторским сопровождением",
+      allPages: "Все", pageRange: "Страницы {{start}}–{{end}}", singlePage: "Страница {{num}}", pagesCount: "{{count}} страниц",
+      warnings: "{{count}} предупреждений", clickToView: "Просмотреть", warningsTitle: "Предупреждения экспорта",
+      warningsCount: "Предупреждения экспорта ({{count}})", detailInfo: "Подробная информация",
+      styleExtractionFailed: "Не удалось извлечь стили ({{count}})", textRenderFailed: "Не удалось отобразить текст ({{count}})",
+      moreItems: "... ещё {{count}}", exportFailed: "Не удалось выполнить экспорт", preparing: "Подготовка...",
+      settingsTip: "Настройки можно изменить в «Настройки проекта → Настройки экспорта» или включить параметр «Разрешить частичные результаты»",
+      codexReconnectTip: "Если истёк срок действия авторизации в Codex или соединение было прервано, повторно подключите аккаунт OpenAI в разделе «Настройки» и попробуйте ещё раз.",
+      monitoringInterrupted: "Проверка состояния временно прервана",
+      backendNotFailed: "Это не означает, что экспорт на стороне сервера завершился с ошибкой",
+      retryStatus: "Проверить ещё раз",
+      retryCount: "{{count}} попыток автоматического переподключения",
+      failureStage: "Этап, на котором произошёл сбой",
+      errorCode: "Код ошибки",
+      provider: "Провайдер",
+      model: "Модель",
+      retryPolicy: "До {{seconds}} с на один запрос, максимум {{attempts}} попыток",
+      technicalReason: "Техническая причина",
+      styleExtractionStage: "Извлечение стилей текста",
+      queueSubmissionStage: "Отправка фоновой задачи",
+      textRenderStage: "Отрисовка содержимого",
+      exportedFiles: "Экспортированные файлы",
+      deleteExportTitle: "Удалить экспортированный файл",
+      deleteExportMessage: "Удалить «{{filename}}» с сервера?",
+      deleteExportConfirm: "Удалить файл",
+      deleteExportFailed: "Не удалось удалить экспортированный файл",
+      dismissDeleteError: "Закрыть сообщение об ошибке удаления",
+    },
+    shared: { historyRecords: "История записей" }
+  },
 };
 
 const getPageRangeText = (pageIds: string[] | undefined, pages: Page[], t: (key: string, options?: any) => string): string => {

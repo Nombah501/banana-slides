@@ -4,6 +4,7 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 
 import zh from './locales/zh.json';
 import en from './locales/en.json';
+import ru from './locales/ru.json';
 
 i18n
   .use(LanguageDetector)
@@ -12,8 +13,16 @@ i18n
     resources: {
       zh: { translation: zh },
       en: { translation: en },
+      ru: { translation: ru },
     },
-    fallbackLng: 'zh',
+    fallbackLng: {
+      default: ['zh'],
+      zh: ['zh'],
+      en: ['zh'],
+      ru: ['en', 'zh'],
+    },
+    supportedLngs: ['zh', 'en', 'ru'],
+    load: 'languageOnly',
     debug: false,
     interpolation: {
       escapeValue: false,

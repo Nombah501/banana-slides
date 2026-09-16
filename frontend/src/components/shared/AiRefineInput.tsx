@@ -17,7 +17,15 @@ const aiRefineI18n = {
       viewHistory: "View {{count}} previous edits", previousRequirements: "Previous edit requests:",
       submitTooltip: "Submit (Ctrl+Enter)"
     }
-  }
+  },
+
+  ru: {
+    aiRefine: {
+      ctrlEnterSubmit: "(Ctrl+Enter для отправки)", history: "История",
+      viewHistory: "Просмотреть {{count}} предыдущих правок", previousRequirements: "Предыдущие запросы на изменение:",
+      submitTooltip: "Отправить (Ctrl+Enter)"
+    }
+  },
 };
 
 export interface AiRefineInputProps {

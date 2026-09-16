@@ -14,6 +14,7 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { cn } from '@/utils';
+import { getExtraFieldDisplayName } from '@/utils/extraFieldLabels';
 import { useT } from '@/hooks/useT';
 import { useTranslation } from 'react-i18next';
 import { useImagePaste, buildMaterialsMarkdown } from '@/hooks/useImagePaste';
@@ -104,6 +105,49 @@ const drawerI18n = {
       emptyHint: 'Pick a slide on the left to view and edit its properties',
       templateSaveFailed: 'Could not save the template',
       templateChanged: 'Template changed for this page',
+    },
+  },
+
+  ru: {
+    props: {
+      title: 'Свойства страницы',
+      close: 'Свернуть панель свойств',
+      open: 'Развернуть свойства страницы',
+      resize: 'Перетащить, чтобы изменить ширину панели',
+      saving: 'Сохранение…',
+      saved: 'Сохранено',
+      section: { content: 'Содержимое', template: 'Шаблон', meta: 'Информация' },
+      pageTitle: 'Заголовок',
+      pageTitlePlaceholder: 'Введите заголовок страницы',
+      part: 'Раздел',
+      partPlaceholder: 'Без группы',
+      description: 'Описание',
+      descriptionPlaceholder:
+        'Введите описание страницы — текст страницы, материалы, примечания по макету; можно вставить изображения',
+      notInImagePrompt: 'Не используется для генерации изображений',
+      narration: 'Сценарий озвучки',
+      narrationHint:
+        'Зачитывается при экспорте видео с озвучкой; если оставить поле пустым, сценарий будет автоматически создан при экспорте',
+      narrationPlaceholder: 'Сценария ещё нет — напишите его здесь',
+      templateChange: 'Изменить',
+      templateLabel: 'Изображение шаблона',
+      templateStyle: 'Промпт шаблона',
+      templateStylePlaceholder: 'Опишите желаемые макет и стиль этой страницы',
+      templateNone: 'Унаследовать шаблон проекта',
+      templateAuto: 'Подобрано с помощью AI',
+      templateManual: 'Задать вручную',
+      templateBatch: 'Применить пакетно',
+      templateSetup: 'Массовая настройка шаблонов',
+      pageIndex: 'Номер страницы',
+      pageIndexValue: 'Страница {{index}} из {{total}}',
+      versions: 'Версии изображения',
+      versionsValue: '{{count}}',
+      updatedAt: 'Обновлено',
+      createdAt: 'Создано',
+      emptyTitle: 'Страница не выбрана',
+      emptyHint: 'Выберите страницу слева, чтобы просмотреть и изменить её свойства',
+      templateSaveFailed: 'Не удалось сохранить шаблон',
+      templateChanged: 'Шаблон этой страницы изменён',
     },
   },
 };
@@ -748,13 +792,14 @@ export const PagePropertiesDrawer: React.FC<PagePropertiesDrawerProps> = ({
 
                   {allFieldNames.map((name) => {
                     const notInImagePrompt = imagePromptFields && !imagePromptFields.includes(name);
+                    const displayName = getExtraFieldDisplayName(name, i18n.language);
                     return (
                       <div key={name} data-testid={`drawer-extra-field-${name}`}>
                         <MarkdownTextarea
                           ref={(el) => {
                             extraFieldRefs.current[name] = el;
                           }}
-                          label={name}
+                          label={displayName}
                           toolbarLeft={
                             notInImagePrompt ? (
                               <span className="flex items-center gap-1 text-[10px] text-gray-400 dark:text-foreground-tertiary">
@@ -778,7 +823,7 @@ export const PagePropertiesDrawer: React.FC<PagePropertiesDrawerProps> = ({
                           }
                           showUploadButton={false}
                           rows={2}
-                          placeholder={name}
+                          placeholder={displayName}
                         />
                       </div>
                     );

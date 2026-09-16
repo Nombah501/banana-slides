@@ -1,7 +1,8 @@
 import { getImageUrl } from '@/api/client';
 import type { Project, Page, DescriptionContent } from '@/types';
 import { downloadFile } from './index';
-import { getT } from './i18nHelper';
+import { getT, resolveLocale } from './i18nHelper';
+import { getExtraFieldDisplayName } from './extraFieldLabels';
 import i18n from '@/i18n';
 
 const utilsI18n = {
@@ -44,7 +45,28 @@ const utilsI18n = {
       prefixOutline: 'Outline',
       prefixProject: 'Project',
     }
-  }
+  },
+
+  ru: {
+      projectUtils: {
+        untitled: 'Проект без названия',
+        notStarted: 'Не начато',
+        completed: 'Завершено',
+        pendingImages: 'Изображения, ожидающие генерации',
+        pendingDesc: 'Описания, ожидающие генерации',
+        pageNum: 'Страница {{num}}',
+        pageHeading: '## Страница {{num}}: {{title}}',
+        chapter: 'Раздел',
+        outlinePoints: '**Ключевые пункты структуры:**',
+        noPoints: '*Пока нет пунктов*',
+        pageDesc: '**Описание страницы:**',
+        noDesc: '*Пока нет описания*',
+        generatedAt: 'Создано',
+        prefixDesc: 'Описания',
+        prefixOutline: 'Структура',
+        prefixProject: 'Проект',
+      }
+    },
 };
 const t = getT(utilsI18n);
 
@@ -101,8 +123,9 @@ export const getFirstPageImage = (project: Project): string | null => {
  */
 export const formatDate = (dateString: string): string => {
   const date = new Date(dateString);
-  const locale = i18n.language?.startsWith('zh') ? 'zh-CN' : 'en-US';
-  return date.toLocaleString(locale, {
+  const locale = resolveLocale(i18n.language);
+  const intlLocale = locale === 'zh' ? 'zh-CN' : locale === 'ru' ? 'ru-RU' : 'en-US';
+  return date.toLocaleString(intlLocale, {
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
@@ -221,7 +244,7 @@ const pageToMarkdown = (page: Page, index: number, opts: ExportOptions = {}): st
     if (extraFields) {
       md += '\n';
       for (const [name, value] of Object.entries(extraFields)) {
-        if (value) md += `${name}：${value}\n`;
+        if (value) md += `${getExtraFieldDisplayName(name, i18n.language)}：${value}\n`;
       }
     }
     md += '\n';
@@ -232,9 +255,10 @@ const pageToMarkdown = (page: Page, index: number, opts: ExportOptions = {}): st
 };
 
 export const exportProjectToMarkdown = (project: Project, opts?: ExportOptions): void => {
-  const locale = i18n.language?.startsWith('zh') ? 'zh-CN' : 'en-US';
+  const locale = resolveLocale(i18n.language);
+  const intlLocale = locale === 'zh' ? 'zh-CN' : locale === 'ru' ? 'ru-RU' : 'en-US';
   let md = `# ${getProjectTitle(project)}\n\n`;
-  md += `> ${t('projectUtils.generatedAt')}: ${new Date().toLocaleString(locale)}\n\n---\n\n`;
+  md += `> ${t('projectUtils.generatedAt')}: ${new Date().toLocaleString(intlLocale)}\n\n---\n\n`;
   project.pages.forEach((page, i) => { md += pageToMarkdown(page, i, opts); });
   const blob = new Blob([md], { type: 'text/markdown;charset=utf-8' });
   const prefix = opts?.outline === false

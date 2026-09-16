@@ -36,6 +36,21 @@ const i18n = {
       cancel: 'Cancel',
     },
   },
+
+  ru: {
+    tpm: {
+      title: 'Выбрать шаблон',
+      none: 'Не использовать шаблон',
+      uploadNew: 'Загрузить новый шаблон',
+      uploading: 'Выполняется загрузка…',
+      empty: 'Библиотека шаблонов пуста, сначала загрузите шаблон',
+      pending: 'Выполняется анализ',
+      processing: 'Выполняется анализ',
+      completed: 'Проанализировано',
+      failed: 'Не удалось проанализировать',
+      cancel: 'Отменить',
+    },
+  },
 };
 
 export interface TemplatePickerModalProps {

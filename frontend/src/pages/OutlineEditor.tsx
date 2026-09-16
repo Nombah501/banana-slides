@@ -100,7 +100,55 @@ const outlineI18n = {
         saveFailed: "Save failed",
       }
     }
-  }
+  },
+
+  ru: {
+    home: { title: 'Banana Slides' },
+    outline: {
+      title: "Редактирование плана", pageCount: "{{count}} страниц", addPage: "Добавить страницу",
+      generateDescriptions: "Сгенерировать описания", generating: "Выполняется генерация…", chapter: "Глава",
+      page: "Страница {{num}}", titleLabel: "Заголовок", keyPoints: "Ключевые пункты",
+      keyPointsPlaceholder: "Ключевые пункты (по одному в строке)", addKeyPoint: "Добавить ключевой пункт",
+      deletePage: "Удалить страницу", confirmDeletePage: "Вы действительно хотите удалить эту страницу?",
+      preview: "Предварительный просмотр", clickToPreview: "Нажмите на карточку слева, чтобы просмотреть подробности",
+      noPages: "Страниц пока нет", noPagesHint: "Нажмите «Добавить страницу», чтобы создать страницу вручную, или «Сгенерировать план автоматически», чтобы поручить это ИИ",
+      parseOutline: "Распознать план", autoGenerate: "Сгенерировать план автоматически",
+      reParseOutline: "Распознать план заново", reGenerate: "Сгенерировать план заново", export: "Экспортировать план", import: "Импортировать", importExport: "Импорт/экспорт",
+      aiPlaceholder: "например: добавить страницу о XXX, удалить страницу 3, объединить первые две страницы… · Ctrl+Enter для отправки",
+      aiPlaceholderShort: "например: добавить или удалить страницы… · Ctrl+Enter",
+      contextLabels: { idea: "Идея PPT", outline: "План", description: "Описание" },
+      inputLabel: { idea: "Идея PPT", outline: "Исходный план", description: "Описания страниц", ppt_renovation: "Содержимое исходного PPT" },
+      inputPlaceholder: { idea: "Введите идею PPT…", outline: "Введите содержимое плана…", description: "Введите описания страниц…", ppt_renovation: "Содержимое извлечено из PDF" },
+      outlineRequirements: "Требования к созданию плана",
+      outlineRequirementsPlaceholder: "например: не более 10 страниц, не более 3 пунктов на странице, использовать больше диаграмм…",
+      importModalTitle: "Импорт Markdown",
+      importModalDesc: "Вставьте Markdown напрямую или загрузите файл `.md`, `.markdown` или `.txt`. Импортированные страницы будут добавлены в конец текущего проекта.",
+      importPasteLabel: "Вставить содержимое",
+      importPastePlaceholder: "Вставьте сюда Markdown с планом или планом и описаниями…",
+      importUploadLabel: "Загрузить файл",
+      importUploadHint: "Нажмите, чтобы выбрать файл, или перетащите сюда файл Markdown",
+      importUploadFormatsHint: "Поддерживаются `.md`, `.markdown`, `.txt`",
+      importPreviewReady: "В текущий проект будет добавлено страниц: {{count}}",
+      importPreviewEmpty: "Импортируемые страницы не обнаружены. Убедитесь, что содержимое включает `## Page N: Title`",
+      importConfirm: "Импортировать в проект",
+      importCancel: "Отменить",
+      messages: {
+        outlineEmpty: "План не может быть пустым", generateSuccess: "Описания успешно сгенерированы", generateFailed: "Не удалось сгенерировать описания",
+        generateIncomplete: "План мог быть сгенерирован не полностью. Проверьте его и повторите попытку",
+        confirmRegenerate: "Повторная генерация обновит заголовки всех страниц. Существующие описания и изображения сохранятся на тех же позициях, однако если в новом плане будет меньше страниц, лишние страницы и их содержимое будут удалены. Продолжить?",
+        confirmRegenerateTitle: "Подтвердить повторную генерацию",
+        lockPageCount: "Зафиксировать количество страниц (не уменьшать его, заполнять разницу пустыми страницами)",
+        refineSuccess: "План успешно изменён",
+        refineFailed: "Не удалось внести изменения. Повторите попытку позже", exportSuccess: "Экспорт успешно выполнен",
+        importSuccess: "Импорт успешно выполнен", importFailed: "Не удалось импортировать. Проверьте формат файла", importEmpty: "В файле не найдено допустимых страниц",
+        importContentEmpty: "Сначала вставьте содержимое или загрузите файл",
+        importReadFailed: "Не удалось прочитать файл. Повторите попытку",
+        importInvalidFileType: "Можно импортировать только файлы .md, .markdown или .txt",
+        loadingProject: "Выполняется загрузка проекта…", generatingOutline: "Выполняется создание плана…",
+        saveFailed: "Не удалось сохранить",
+      }
+    }
+  },
 };
 import {
   DndContext,

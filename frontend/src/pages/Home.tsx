@@ -13,6 +13,7 @@ import { useTheme } from '@/hooks/useTheme';
 import { useImagePaste, buildMaterialsMarkdown } from '@/hooks/useImagePaste';
 import type { Material } from '@/types';
 import { useT } from '@/hooks/useT';
+import { nextLocale, resolveLocale } from '@/utils/i18nHelper';
 import logoUrl from '@/assets/logo.png';
 import { ASPECT_RATIO_OPTIONS } from '@/config/aspectRatio';
 import { isDesktop } from '@/utils';
@@ -22,8 +23,7 @@ type CreationType = 'idea' | 'outline' | 'description' | 'ppt_renovation';
 // 支持作为参考文件上传的文档扩展名（与后端 file_parser_service 保持一致）
 const ALLOWED_DOC_EXTENSIONS = ['pdf', 'docx', 'pptx', 'doc', 'ppt', 'xlsx', 'xls', 'csv', 'txt', 'md'];
 
-// 页面特有翻译 - AI 可以直接看到所有文案，保留原始 key 结构
-const homeI18n = {
+export const homeI18n = {
   zh: {
     nav: {
       materialGenerate: '素材生成', materialCenter: '素材中心',
@@ -190,11 +190,96 @@ const homeI18n = {
       },
     },
   },
+
+  ru: {
+    nav: {
+      materialGenerate: 'Генерация материалов', materialCenter: 'Центр материалов',
+      history: 'История', settings: 'Настройки', help: 'Справка'
+    },
+    settings: {
+      language: { label: 'Язык интерфейса' },
+      theme: { label: 'Тема', light: 'Светлая', dark: 'Тёмная', system: 'Системная' }
+    },
+    home: {
+      title: 'Banana Slides',
+      subtitle: 'Создавайте слайды в стиле vibe coding',
+      tagline: 'Нативный генератор PPT на базе ИИ, работающий на nano banana pro',
+      features: {
+        oneClick: 'Создание PPT одним нажатием',
+        naturalEdit: 'Редактирование с помощью естественного языка',
+        regionEdit: 'Редактирование отдельных областей',
+        export: 'Экспорт в PPTX/PDF одним нажатием',
+      },
+      tabs: {
+        idea: 'Из идеи',
+        outline: 'Из структуры',
+        description: 'Из описания',
+        ppt_renovation: 'Обновление PPT',
+      },
+      tabDescriptions: {
+        idea: 'Введите идею — ИИ создаст для вас готовую презентацию PPT',
+        outline: 'Есть структура? Вставьте её — ИИ автоматически преобразует её в структурированный план',
+        description: 'Есть подробное описание? ИИ автоматически проанализирует его и напрямую создаст изображения, пропустив этап подготовки структуры',
+        ppt_renovation: 'Загрузите существующий файл PDF/PPTX — ИИ проанализирует его содержимое и заново создаст обновлённую презентацию PPT',
+      },
+      placeholders: {
+        idea: 'Например: создать презентацию об истории развития ИИ',
+        outline: 'Вставьте структуру PPT...',
+        description: 'Вставьте полные описания слайдов...',
+      },
+      examples: {
+        outline: 'Пример формата:\n\nСлайд 1: Происхождение ИИ\n- Дартмутская конференция 1956 года\n- Видение первых исследователей\n\nСлайд 2: Развитие машинного обучения\n- От систем на основе правил к системам на основе данных\n- Обзор классических алгоритмов\n\nСлайд 3: Перспективы развития\n- Тенденции и вызовы\n\nМожно использовать заголовки с маркированными пунктами или указывать только заголовки. ИИ преобразует их в структурированный план.',
+        description: 'Пример формата:\n\nСлайд 1: Происхождение ИИ\nПредставьте возникновение ИИ, начав с Дартмутской конференции 1956 года. Используйте компоновку с текстом слева и изображением справа: слева разместите временную шкалу, справа — ретроиллюстрацию компьютера.\n\nСлайд 2: Развитие машинного обучения\nОбъясните переход от подходов на основе правил к подходам на основе данных. Используйте тёмно-синий фон, разместите в центре сравнительную диаграмму алгоритмов, а внизу укажите ключевые этапы.\n\nНа каждом слайде можно указать содержание, компоновку и визуальный стиль. Отделяйте слайды пустыми строками.',
+      },
+      template: {
+        title: 'Выбор шаблона оформления',
+        useTextStyle: 'Задать стиль по текстовому описанию',
+        multiMode: 'Отдельный шаблон для каждого слайда',
+        multiModeHint: 'Для каждого слайда можно использовать свой шаблон; после создания назначьте шаблоны на странице настройки проекта',
+      },
+      actions: {
+        selectFile: 'Выбрать файл-образец',
+        parsing: 'Выполняется разбор...',
+        createProject: 'Создать новый проект',
+        startBlank: 'Или начать с пустого проекта',
+        startBlankHint: 'Пропустить создание структуры — добавлять или импортировать слайды вручную',
+      },
+      renovation: {
+        uploadHint: 'Нажмите или перетащите файл PDF / PPTX для загрузки',
+        formatHint: 'Поддерживаются форматы .pdf, .pptx, .ppt (рекомендуется загружать PDF)',
+        keepLayout: 'Сохранить исходную компоновку',
+        onlyPdfPptx: 'Поддерживаются только файлы PDF и PPTX',
+        uploadFile: 'Сначала загрузите файл PDF или PPTX',
+      },
+      messages: {
+        enterContent: 'Введите содержимое',
+        filesParsing: 'Выполняется обработка файлов-образцов. Осталось обработать: {{count}}. Дождитесь завершения обработки',
+        projectCreateFailed: 'Не удалось создать проект',
+        multiModeSwitchFailed: 'Не удалось переключиться на режим отдельных шаблонов для каждого слайда; повторите попытку в проекте',
+        uploadingImage: 'Выполняется загрузка и распознавание изображения...',
+        imageUploadSuccess: 'Изображение загружено! Оно вставлено в позицию курсора',
+        imageUploadFailed: 'Не удалось загрузить изображение',
+        fileUploadSuccess: 'Файл успешно загружен',
+        fileUploadFailed: 'Не удалось загрузить файл',
+        fileTooLarge: 'Файл слишком большой: {{size}}MB; максимальный размер — 200MB',
+        fileUploadInProgress: 'Загрузка файла уже выполняется — дождитесь её завершения',
+        unsupportedFileType: 'Неподдерживаемый тип файла: {{type}}',
+        loadTemplateFailed: 'Не удалось загрузить шаблон. Выберите или загрузите его повторно',
+        pptTip: 'Перед загрузкой рекомендуется локально преобразовать PPTX в PDF — это обеспечит лучшую совместимость и более высокую скорость обработки',
+        filesAdded: 'Добавлено файлов-образцов: {{count}}',
+        imageRemoved: 'Изображение удалено',
+        serviceTestTip: 'Рекомендуется сначала протестировать сервисы в нижней части страницы «Настройки», чтобы избежать проблем при дальнейшей работе',
+        verifying: 'Выполняется проверка конфигурации API...',
+        verifyFailed: 'Укажите действительный API Key в разделе «Настройки», затем нажмите внизу страницы «Тестирование сервиса» для проверки',
+      },
+    },
+  },
 };
 
 export const Home: React.FC = () => {
   const navigate = useNavigate();
   const { i18n } = useTranslation();
+  const locale = resolveLocale(i18n.language);
   const t = useT(homeI18n);
   const { theme, isDark, setTheme } = useTheme();
   const { initializeProject, isGlobalLoading, switchTemplateMode } = useProjectStore();
@@ -775,12 +860,12 @@ export const Home: React.FC = () => {
             <div className="flex items-center">
               <img
                 src={logoUrl}
-                alt="蕉幻 Banana Slides Logo"
+                alt={locale === 'zh' ? '蕉幻 Banana Slides Logo' : 'Banana Slides logo'}
                 className="h-10 md:h-12 w-auto rounded-lg object-contain"
               />
             </div>
             <span className="text-xl md:text-2xl font-bold bg-gradient-to-r from-banana-600 via-orange-500 to-pink-500 bg-clip-text text-transparent">
-              蕉幻
+              {locale === 'zh' ? '蕉幻' : 'Banana Slides'}
             </span>
           </div>
           <div className="flex items-center gap-2 md:gap-3">
@@ -861,12 +946,12 @@ export const Home: React.FC = () => {
             <div className="h-5 w-px bg-gray-300 dark:bg-border-primary mx-1" />
             {/* 语言切换按钮 */}
             <button
-              onClick={() => i18n.changeLanguage(i18n.language?.startsWith('zh') ? 'en' : 'zh')}
+              onClick={() => i18n.changeLanguage(nextLocale(i18n.language))}
               className="flex items-center gap-1 px-2 py-1 text-xs font-medium text-gray-600 dark:text-foreground-tertiary hover:text-gray-900 dark:hover:text-gray-100 hover:bg-banana-100/60 dark:hover:bg-background-hover rounded-md transition-all"
               title={t('settings.language.label')}
             >
               <Globe size={14} />
-              <span>{i18n.language?.startsWith('zh') ? 'EN' : '中'}</span>
+              <span>{nextLocale(i18n.language) === 'zh' ? '中' : nextLocale(i18n.language) === 'ru' ? 'Русский' : 'EN'}</span>
             </button>
             {/* 主题切换按钮 */}
             <div className="relative" ref={themeMenuRef}>
@@ -932,7 +1017,7 @@ export const Home: React.FC = () => {
               backgroundSize: '200% auto',
               animation: 'gradient 3s ease infinite',
             }}>
-              {i18n.language?.startsWith('zh') ? `${t('home.title')} · Banana Slides` : 'Banana Slides'}
+              {locale === 'zh' ? `${t('home.title')} · Banana Slides` : 'Banana Slides'}
             </span>
           </h1>
 
@@ -1124,7 +1209,7 @@ export const Home: React.FC = () => {
                       type="button"
                       onClick={() => setIsAspectRatioOpen(!isAspectRatioOpen)}
                       className="flex items-center gap-1 px-2 py-1 text-xs font-medium text-gray-400 hover:text-gray-600 hover:bg-gray-100 dark:text-foreground-tertiary dark:hover:text-foreground-secondary dark:hover:bg-background-hover rounded transition-colors"
-                      title={i18n.language?.startsWith('zh') ? '画面比例' : 'Aspect Ratio'}
+                      title={locale === 'zh' ? '画面比例' : locale === 'ru' ? 'Соотношение сторон' : 'Aspect Ratio'}
                     >
                       <span>{aspectRatio}</span>
                       <ChevronDown size={12} className={`transition-transform ${isAspectRatioOpen ? 'rotate-180' : ''}`} />

@@ -5,6 +5,7 @@ import { useT } from '@/hooks/useT';
 import { Textarea } from './Textarea';
 import { PRESET_STYLES } from '@/config/presetStyles';
 import { presetStylesI18n } from '@/config/presetStylesI18n';
+import { resolveLocale } from '@/utils/i18nHelper';
 import {
   extractStyleFromImage,
   generateStyleFromContent,
@@ -72,6 +73,32 @@ const i18n = {
     deleteFailed: 'Delete failed',
     noContent: 'Please enter a style description first',
   },
+  ru: {
+    presetStyles: presetStylesI18n.ru,
+    stylePlaceholder: 'Опишите желаемый стиль PPT, например: минималистичный деловой стиль, чёткие шрифты и аккуратная компоновка...',
+    presetStylesLabel: 'Предустановленные стили:',
+    myStylesLabel: 'Мои стили:',
+    styleTip: 'Совет: нажмите на предустановленный стиль для быстрого заполнения или настройте описание самостоятельно',
+    generateFromContent: 'Создать стиль по содержимому',
+    generating: 'Идёт генерация…',
+    generateSuccess: 'Стиль создан',
+    generateFailed: 'Не удалось создать стиль',
+    noSourceContent: 'Сначала введите тему или содержимое PPT, затем создайте стиль по содержимому',
+    extractFromImage: 'Извлечь стиль из изображения',
+    extracting: 'Идёт извлечение…',
+    extractSuccess: 'Стиль извлечён',
+    extractFailed: 'Не удалось извлечь стиль',
+    saveAsTemplate: 'Сохранить как шаблон',
+    saveStyle: 'Сохранить',
+    cancel: 'Отменить',
+    styleName: 'Название стиля',
+    styleNamePlaceholder: 'Введите название стиля…',
+    saveSuccess: 'Шаблон стиля сохранён',
+    saveFailed: 'Не удалось сохранить',
+    deleteSuccess: 'Шаблон стиля удалён',
+    deleteFailed: 'Не удалось удалить',
+    noContent: 'Сначала введите описание стиля',
+  },
 };
 
 interface TextStyleSelectorProps {
@@ -113,7 +140,7 @@ export const TextStyleSelector: React.FC<TextStyleSelectorProps> = ({ value, onC
 
     setIsGeneratingFromContent(true);
     try {
-      const lang = i18nInstance?.language?.startsWith('zh') ? 'zh' : 'en';
+      const lang = resolveLocale(i18nInstance?.language);
       const result = await generateStyleFromContent(sourceContent.trim(), lang);
       if (result.data?.style_description) {
         onChange(result.data.style_description);

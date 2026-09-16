@@ -40,6 +40,23 @@ const updateI18n = {
     restartLater: 'Restart later',
     failed: 'Update failed. Try again.',
   },
+
+  ru: {
+    title: 'Доступна новая версия',
+    versionAvailable: 'Доступна Banana Slides v{{version}}',
+    summary: 'Что нового',
+    changelog: 'Просмотреть полный список изменений',
+    updateNow: 'Обновить сейчас',
+    openDownload: 'Открыть страницу загрузки',
+    later: 'Обновить позже',
+    downloading: 'Загрузка обновления',
+    downloadProgress: 'Загружено: {{progress}}%',
+    ready: 'Обновление загружено',
+    readyDescription: 'Перезапустите Banana Slides, чтобы завершить установку обновления.',
+    restart: 'Перезапустить и обновить',
+    restartLater: 'Перезапустить позже',
+    failed: 'Не удалось выполнить обновление. Повторите попытку.',
+  },
 };
 
 export function UpdateChecker() {

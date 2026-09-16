@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useT } from '@/hooks/useT';
 import { Modal } from '@/components/shared/Modal';
 import { loadStoredPresets, type StoredPreset } from '@/utils/presetStorage';
-
+import { resolveLocale } from '@/utils/i18nHelper';
 // ─── i18n ────────────────────────────────────────────────────────────────────
 const presetI18n = {
   zh: {
@@ -31,6 +31,19 @@ const presetI18n = {
       cancel: 'Cancel',
     },
   },
+
+  ru: {
+    preset: {
+      addCustom: 'Пользовательская',
+      modalTitle: 'Добавить пользовательскую предустановку',
+      nameLabel: 'Название предустановки',
+      namePlaceholder: 'например: Академический стиль',
+      contentLabel: 'Содержимое промпта',
+      contentPlaceholder: 'например: Использовать строгий академический язык, указывать источники данных при цитировании',
+      add: 'Добавить',
+      cancel: 'Отменить',
+    },
+  },
 };
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -39,14 +52,16 @@ export type Preset = StoredPreset;
 export type PresetType = 'outline' | 'description';
 
 // ─── System presets ──────────────────────────────────────────────────────────
-const SYSTEM_PRESETS: Record<PresetType, Record<'zh' | 'en', Preset[]>> = {
+const SYSTEM_PRESETS: Record<PresetType, Record<'zh' | 'en' | 'ru', Preset[]>> = {
   outline: {
     zh: [],
     en: [],
+    ru: [],
   },
   description: {
     zh: [],
     en: [],
+    ru: [],
   },
 };
 
@@ -83,7 +98,7 @@ export default function PresetCapsules({ type, onAppend }: PresetCapsulesProps) 
   const nameInputRef = useRef<HTMLInputElement>(null);
 
   const { i18n } = useTranslation();
-  const currentLang = i18n.language?.startsWith('zh') ? 'zh' : 'en';
+  const currentLang = resolveLocale(i18n.language);
   const systemPresets = SYSTEM_PRESETS[type][currentLang];
 
   useEffect(() => {
@@ -156,7 +171,7 @@ export default function PresetCapsules({ type, onAppend }: PresetCapsulesProps) 
             <button
               type="button"
               data-testid={`${type}-delete-preset-${i}`}
-              aria-label="Delete preset"
+              aria-label={t('common.delete')}
               className="ml-0.5 p-0.5 rounded-full hover:bg-banana-200 dark:hover:bg-banana-800/40 transition-colors"
               onClick={(e) => { e.stopPropagation(); handleDeletePreset(i); }}
             >

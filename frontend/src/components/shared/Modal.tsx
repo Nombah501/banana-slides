@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 import { cn } from '@/utils';
-
+import i18n from '@/i18n';
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -169,7 +169,7 @@ export const Modal: React.FC<ModalProps> = ({
                 'focus:outline-none focus-visible:ring-2 focus-visible:ring-banana-400/50 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-[#1a1a24]',
                 title ? 'top-5 right-5' : 'top-4 right-4'
               )}
-              aria-label="关闭"
+              aria-label={i18n.t('common.close')}
             >
               <X
                 size={18}

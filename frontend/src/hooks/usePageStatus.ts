@@ -24,7 +24,19 @@ const pageStatusI18n = {
       imageFailed: "Image generation failed", imageCompleted: "Image generated",
       statusUnknown: "Status unknown", draftStage: "Draft stage", allCompleted: "All completed"
     }
-  }
+  },
+
+  ru: {
+    status: {
+      draft: "Черновик", generatingDescription: "Генерируется описание", descriptionGenerated: "Описание сгенерировано", queued: "В очереди", generating: "Генерируется",
+      completed: "Завершено", failed: "Не удалось выполнить", unknown: "Неизвестно",
+      notGeneratedDesc: "Описание не создано", noDescription: "Описание ещё не сгенерировано",
+      descGenerated: "Описание сгенерировано", notGeneratedImage: "Изображение не создано",
+      waitingForImage: "Ожидание генерации изображения", queuedImage: "В очереди на генерацию", generatingImage: "Генерируется изображение",
+      imageFailed: "Не удалось сгенерировать изображение", imageCompleted: "Изображение сгенерировано",
+      statusUnknown: "Статус неизвестен", draftStage: "Этап черновика", allCompleted: "Всё завершено"
+    }
+  },
 };
 
 export type PageStatusContext = 'description' | 'image' | 'full';

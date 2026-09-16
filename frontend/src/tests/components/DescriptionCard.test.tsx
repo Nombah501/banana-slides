@@ -5,6 +5,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { DescriptionCard } from '@/components/preview/DescriptionCard'
+import i18n from '@/i18n'
 import type { Page } from '@/types'
 
 // Mock uploadMaterial
@@ -91,7 +92,8 @@ describe('DescriptionCard', () => {
     onRegenerate: vi.fn(),
   }
 
-  beforeEach(() => {
+  beforeEach(async () => {
+    await i18n.changeLanguage('zh')
     vi.clearAllMocks()
   })
 

@@ -3,9 +3,10 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Home, Key, Image, Zap, Save, RotateCcw, Globe, FileText, Brain, ArrowUp, ArrowUpRight, HelpCircle, Link2, ChevronDown, Volume2, Info, RefreshCw, CheckCircle, Lightbulb, Sparkles } from 'lucide-react';
 import { useT } from '@/hooks/useT';
+import { resolveLocale, type SupportedLocale } from '@/utils/i18nHelper';
 import { appVersion } from '@/utils/appVersion';
-import { isDesktop } from '@/utils';
 import { startOpenAIOAuthMonitor } from '@/utils/openaiOAuthMonitor';
+import { isDesktop } from '@/utils';
 import { DataStorageSettings } from '@/components/settings/DataStorageSettings';
 import type {
   DesktopAutoUpdateSettings,
@@ -14,7 +15,7 @@ import type {
 } from '@/types/desktopUpdate';
 
 // 组件内翻译
-const settingsI18n = {
+export const settingsI18n = {
   zh: {
     nav: { backToHome: '返回首页' },
     settings: {
@@ -504,7 +505,257 @@ const settingsI18n = {
         testSuccess: "Test passed"
       }
     }
-  }
+  },
+
+  ru: {
+    nav: { backToHome: "Вернуться на главную" },
+    settings: {
+      title: "Настройки",
+      subtitle: "Настройка параметров приложения",
+      sections: {
+        appearance: "Внешний вид", language: "Язык интерфейса", apiConfig: "Конфигурация API по умолчанию",
+        apiConfigDesc: "Эта конфигурация используется, если для модели ниже не указан отдельный провайдер",
+        modelConfig: "Конфигурация моделей", mineruConfig: "Конфигурация MinerU", imageConfig: "Конфигурация генерации изображений",
+        performanceConfig: "Конфигурация производительности", outputLanguage: "Настройки языка вывода",
+        textReasoning: "Режим рассуждений для текста", imageReasoning: "Режим рассуждений для изображений",
+        baiduOcr: "Конфигурация Baidu", serviceTest: "Тестирование сервисов", lazyllmConfig: "Конфигурация провайдера LazyLLM",
+        vendorApiKeys: "Конфигурация API Key провайдеров",
+        advancedSettings: "Расширенные настройки",
+        elevenlabs: "Синтез речи ElevenLabs",
+        about: "О приложении"
+      },
+      about: {
+        version: "Текущая версия",
+        source: "Проект на GitHub",
+        automaticUpdates: "Автоматическая проверка обновлений",
+        automaticUpdatesDesc: "Проверять наличие новых версий после запуска и предлагать выбрать, обновить приложение сейчас или сделать это позже.",
+        automaticUpdateChecks: "Автоматическая проверка обновлений",
+        automaticUpdateChecksDesc: "Автоматически уведомлять о новых версияx. Для этой версии требуется ручное скачивание.",
+        automaticUpdatesSaveFailed: "Не удалось сохранить настройку автоматических обновлений",
+        checkUpdate: "Проверить обновления",
+        checking: "Выполняется проверка...",
+        upToDate: "Установлена последняя версия",
+        updateAvailable: "Доступно обновление до версии: {{version}}",
+        updateDownloading: "Выполняется загрузка версии {{version}} ({{progress}}%)",
+        updateReady: "Версия {{version}} загружена; обновление будет завершено после перезапуска",
+        unknown: "Не удалось определить, является ли текущая версия последней",
+        failed: "Не удалось проверить наличие обновлений",
+        resultTitle: "Результат проверки обновлений",
+        download: "Обновить сейчас",
+        fallbackDownload: "Открыть страницу загрузки",
+        restart: "Перезапустить и обновить",
+        summary: "Что нового",
+        changelog: "Просмотреть полный список изменений",
+        later: "Обновить позже",
+        close: "Закрыть",
+      },
+      openaiOAuth: {
+        title: "Учетная запись OpenAI",
+        description: "Войдите в учетную запись OpenAI через OAuth, чтобы использовать модели OpenAI (например, GPT Image) без ввода API Key",
+        loginBtn: "Войти с помощью OpenAI",
+        disconnectBtn: "Отключить",
+        connected: "Подключено",
+        disconnected: "Не подключено",
+        account: "Учетная запись",
+        connecting: "Выполняется подключение...",
+        disconnecting: "Выполняется отключение...",
+        connectFailed: "Не удалось подключиться",
+        popupBlocked: "Браузер заблокировал окно входа. Разрешите всплывающие окна и повторите попытку.",
+        connectTimeout: "Время ожидания входа истекло. Повторите попытку или используйте ручной способ подключения через callback.",
+        disconnectFailed: "Не удалось отключить",
+        disconnectSuccess: "Учетная запись OpenAI отключена",
+        hint: "После подключения в расположенной выше конфигурации моделей выберите Codex в качестве провайдера, чтобы использовать лимит вашей учетной записи OpenAI",
+        availableModels: "Доступные модели",
+        selectModel: "Выбрать модель...",
+        loadingModels: "Загрузка доступных моделей...",
+        connectFirst: "Сначала подключите учетную запись OpenAI",
+        manualCallbackLabel: "Не удалось подключиться после входа?",
+        manualCallbackHint: "Скопируйте полный URL из адресной строки всплывающего окна и вставьте его ниже, чтобы завершить подключение",
+        manualCallbackPlaceholder: "Вставьте callback URL...",
+        manualCallbackSubmit: "Отправить",
+        manualCallbackSuccess: "Подключение успешно выполнено",
+        callbackPortBusy: "Порт 1455 уже используется. После входа скопируйте полный URL из адресной строки всплывающего окна и вставьте его ниже.",
+      },
+      theme: { label: "Тема", light: "Светлая", dark: "Темная", system: "Системная" },
+      language: { label: "Язык интерфейса", zh: "中文", en: "English", ru: "Русский" },
+      fields: {
+        aiProviderFormat: "Формат API провайдера ИИ",
+        aiProviderFormatDesc: "Выберите формат API-запросов — от этого зависит, как сервер формирует и отправляет запросы. Настройка вступает в силу после сохранения.",
+        openaiFormat: "Формат OpenAI", geminiFormat: "Формат Gemini", lazyllmFormat: "Формат LazyLLM",
+        apiBaseUrl: "API Base URL", apiBaseUrlPlaceholder: "https://api.example.com",
+        apiBaseUrlDesc: "Задайте базовый URL API провайдера больших языковых моделей",
+        volcengineBaseUrlHint: "Текущий Base URL не является официальной конечной точкой Volcengine AgentPlans (https://ark.cn-beijing.volces.com/api/plan/v3); тестирование или генерация могут завершиться ошибкой",
+        volcengineBaseUrlReset: "Использовать официальную конечную точку",
+        apiKey: "API Key", apiKeyPlaceholder: "Введите новый API Key",
+        apiKeyDesc: "Оставьте поле пустым, чтобы сохранить текущую настройку; для обновления введите новое значение",
+        apiKeySet: "Задано (длина: {{length}})",
+        textModel: "Текстовая модель", textModelPlaceholder: "Оставьте пустым, чтобы использовать настройку из переменной окружения (например, gemini-3-flash-preview)",
+        textModelDesc: "Название модели для создания планов, описаний и другого текста",
+        imageModel: "Модель генерации изображений", imageModelPlaceholder: "Оставьте пустым, чтобы использовать настройку из переменной окружения (например, imagen-3.0-generate-001)",
+        imageModelDesc: "Название модели для генерации изображений страниц",
+        imageCaptionModel: "Модель распознавания изображений", imageCaptionModelPlaceholder: "Оставьте пустым, чтобы использовать настройку из переменной окружения (например, gemini-3-flash-preview)",
+        imageCaptionModelDesc: "Модель для распознавания изображений в референсных файлах и создания описаний",
+        mineruApiBase: "MinerU API Base", mineruApiBasePlaceholder: "Оставьте пустым, чтобы использовать настройку из переменной окружения (например, https://mineru.net)",
+        mineruApiBaseDesc: "Адрес сервиса MinerU для разбора референсных файлов",
+        mineruToken: "MinerU Token", mineruTokenPlaceholder: "Введите новый MinerU Token",
+        mineruTokenDesc: "Оставьте поле пустым, чтобы сохранить текущую настройку; для обновления введите новое значение",
+        imageResolution: "Разрешение изображения (может не работать с некоторыми прокси в формате OpenAI)",
+        imageResolutionDesc: "Более высокое разрешение позволяет создавать более детализированные изображения, но увеличивает время обработки",
+        enableImageQualityControl: "Включить контроль качества",
+        enableImageQualityControlDesc: "После включения каждое созданное изображение проверяется на наличие искаженного текста, некачественной иллюстрации и несоответствия запросу перед сохранением; отклоненные изображения автоматически генерируются повторно, а неудачные попытки не сохраняются как версии",
+        descriptionGenerationMode: "Режим создания описаний", descriptionGenerationModeDesc: "В потоковом режиме все страницы создаются за один вызов ИИ, что обеспечивает более плавную работу; в параллельном режиме ИИ вызывается отдельно для каждой страницы, что ускоряет обработку",
+        descriptionGenerationModeStreaming: "Потоковый", descriptionGenerationModeParallel: "Параллельный",
+        maxDescriptionWorkers: "Максимальное число задач для описаний", maxDescriptionWorkersDesc: "Максимальное число одновременно выполняемых задач создания описаний в параллельном режиме (1–20); большее значение повышает скорость",
+        maxImageWorkers: "Максимальное число задач для изображений", maxImageWorkersDesc: "Максимальное число одновременно выполняемых задач генерации изображений (1–20); большее значение повышает скорость",
+        defaultOutputLanguage: "Язык вывода по умолчанию", defaultOutputLanguageDesc: "Язык по умолчанию для контента, создаваемого ИИ",
+        enableTextReasoning: "Включить рассуждения для текста", enableTextReasoningDesc: "После включения при создании текста используются extended thinking для более глубокого рассуждения",
+        textThinkingBudget: "Бюджет рассуждений для текста", textThinkingBudgetDesc: "Бюджет токенов для рассуждений по тексту (1–8192); большее значение обеспечивает более глубокое рассуждение",
+        enableImageReasoning: "Включить рассуждения для изображений", enableImageReasoningDesc: "После включения при генерации изображений используется режим chain-of-thought для улучшения композиции",
+        imageThinkingBudget: "Бюджет рассуждений для изображений", imageThinkingBudgetDesc: "Бюджет токенов для рассуждений по изображениям (1–8192); большее значение обеспечивает более глубокое рассуждение",
+        baiduOcrApiKey: "Baidu API Key", baiduOcrApiKeyPlaceholder: "Введите Baidu API Key",
+        baiduOcrApiKeyDesc: "Используется для распознавания текста при экспорте редактируемого PPTX; оставьте поле пустым, чтобы сохранить текущую настройку",
+        elevenLabsEnabled: "Включить синтез речи ElevenLabs",
+        elevenLabsEnabledDesc: "После включения при экспорте видео для создания аудиодорожки с озвучкой используется ElevenLabs вместо edge-tts, что обеспечивает более естественное звучание",
+        elevenLabsApiKey: "ElevenLabs API Key", elevenLabsApiKeyPlaceholder: "Введите ElevenLabs API Key",
+        elevenLabsApiKeyDesc: "Оставьте поле пустым, чтобы сохранить текущую настройку. API Key можно получить в панели управления ElevenLabs",
+        applyLink: ", нажмите здесь, чтобы подать заявку",
+        textModelSource: "Формат провайдера текстовой модели", textModelSourceDesc: "Выберите формат провайдера для генерации текста", textModelSourcePlaceholder: "-- Выберите --",
+        imageModelSource: "Формат провайдера модели изображений", imageModelSourceDesc: "Выберите формат провайдера для генерации изображений", imageModelSourcePlaceholder: "-- Выберите --", imageSourceUnavailable: "Этот провайдер не поддерживает генерацию изображений; выберите другого провайдера", sensenovaImageHint: "Для генерации изображений с помощью SenseNova U1 используйте формат, совместимый с OpenAI, с Base URL https://token.sensenova.cn/v1 и моделью sensenova-u1.5-lite",
+        imageCaptionModelSource: "Формат провайдера модели распознавания изображений", imageCaptionModelSourceDesc: "Выберите формат провайдера для распознавания изображений", imageCaptionModelSourcePlaceholder: "-- Выберите --",
+        vendorApiKey: "{{vendor}} API Key", vendorApiKeyPlaceholder: "Введите {{vendor}} API Key",
+        vendorApiKeyDesc: "Оставьте поле пустым, чтобы сохранить текущую настройку; для обновления введите новое значение",
+        vendorApiKeySet: "Задано (длина: {{length}})",
+        selectPlaceholder: "-- Выберите --",
+        modelProvider: "Провайдер", modelProviderDesc: "Выберите отдельного провайдера для этой модели; если оставить поле пустым, будет использована конфигурация по умолчанию",
+        modelProviderPlaceholder: "-- Использовать конфигурацию по умолчанию --",
+        perModelApiBaseUrl: "API Base URL", perModelApiBaseUrlPlaceholder: "Оставьте пустым, чтобы использовать Base URL по умолчанию",
+        perModelApiKey: "API Key", perModelApiKeyPlaceholder: "Введите API Key",
+        perModelApiKeyDesc: "Оставьте поле пустым, чтобы сохранить текущую настройку",
+        perModelApiKeySet: "Задано (длина: {{length}})",
+        imageApiProtocol: "Протокол Image API",
+        imageApiProtocolDesc: "Выберите путь API для генерации изображений. При автоматическом определении путь выбирается по названию модели; также можно указать его вручную",
+        imageApiProtocolAuto: "Определять автоматически",
+        imageApiProtocolImages: "images.generate",
+        imageApiProtocolChat: "chat.completions",
+      },
+      apiKeyHelp: {
+        title: "Как получить API Key",
+        step1: "Откройте {{link}}, затем войдите в учетную запись или зарегистрируйтесь",
+        step2: "Перейдите в «Console» и сначала выберите в левой боковой панели «Account» → «Top Up», чтобы пополнить баланс",
+        step3: "После пополнения баланса выберите в левой боковой панели «Develop» → «API Keys»",
+        step4: "На странице «API Keys» нажмите «Add key», чтобы создать новый API Key, затем скопируйте его на эту страницу",
+        linkLabel: "Открыть AIHubMix →",
+        copyLink: "Скопировать ссылку",
+      },
+      apiKeyTip: { before: "Для быстрой настройки или стабильной генерации изображений при высокой нагрузке получите API Key у ", linkLabel: "AIHubMix", after: "" },
+      apimartKeyHelp: {
+        title: "Как получить API Key APIMart",
+        step1: "Откройте {{link}}, затем зарегистрируйтесь или войдите в APIMart",
+        step2: "Откройте консоль APIMart и завершите настройку учетной записи",
+        step3: "Создайте новый API Key в консоли",
+        step4: "Скопируйте API Key на эту страницу и сохраните настройки",
+        linkLabel: "Открыть APIMart →",
+        copyLink: "Скопировать ссылку",
+      },
+      apimartApiKeyTip: { before: "Выбран APIMart. Получите API Key у ", linkLabel: "APIMart", after: "" },
+      providerComparison: {
+        apimart: {
+          name: "APIMart",
+          providerHint: "Всего $0.006 за изображение",
+          tagline: "Недорогая генерация изображений · Оплата по факту",
+          suitedFor: "Подходит для: частой генерации изображений, пакетной обработки или экономного использования",
+          point1: "GPT-Image-2 — от $0.006 за изображение",
+          point2: "Более 160 изображений за 1 доллар",
+          point3: "Оплата по факту, без ежемесячной платы",
+          cta: "Использовать APIMart",
+          active: "Текущий план",
+          link: "Зарегистрироваться и получить API Key →",
+          note: "Автоматически подставляет конечную точку APIMart и рекомендуемые модели",
+        },
+        volcengine: {
+          name: "Volcengine Agent Plan",
+          tagline: "Прямой доступ · Выгодная цена",
+          suitedFor: "Подходит для: локальных сетей, личного использования и экономного расходования средств",
+          point1: "Прямой доступ из Китая без специальной настройки сети",
+          point2: "Сопоставимое качество по более низкой цене, чем у ведущих зарубежных API",
+          point3: "Подписку можно использовать и в повседневной работе, а не только в Banana Slides",
+          cta: "Выбрать этот план",
+          active: "Текущий план",
+          link: "Просмотреть планы и оформить подписку →",
+          note: "Автоматически подставляет конечную точку Agent Plan и рекомендуемые модели",
+        },
+      },
+      volcenginePromo: {
+        providerHint: "Прямой доступ",
+        title: "Почему стоит выбрать Volcengine Agent Plan?",
+        body: "Он выгоднее ведущих зарубежных API моделей и при этом обеспечивает сопоставимое качество генерации. Подписку также можно использовать для повседневной работы и в других совместимых инструментах, а не только в Banana Slides. На официальной странице акции сейчас доступны скидки на Agent Plan и Coding Plan, пакеты моделей Doubao и бесплатные Tokens.",
+        cta: "Просмотреть планы и оформить подписку",
+        copy: "Скопировать ссылку",
+        guideLink: "Volcengine AgentPlans",
+        applyModels: "Заполнить рекомендуемые модели",
+      },
+      volcengineKeyHelp: {
+        title: "Оформить подписку и получить API Key Volcengine AgentPlans",
+        step1: "Откройте официальную страницу акции и оформите подписку на ModelArk Agent Plan",
+        step2: "Перейдите в консоль Agent Plan",
+        step3: "Создайте выделенный API Key в консоли Agent Plan",
+        step4: "Вернитесь на эту страницу и введите выделенный API Key Agent Plan",
+        apikeyConsoleLabel: "Консоль API Key",
+      },
+      doubaoVolcenginePromo: {
+        providerHint: "Прямой доступ",
+        title: "Почему стоит выбрать Doubao / ModelArk?",
+        body: "API Key можно использовать в Banana Slides, при повседневной разработке и в других совместимых инструментах. Официальная акция включает модель создания изображений Doubao 5.0, пакеты моделей, скидки на Agent Plan и Coding Plan, а также бесплатные Tokens. Здесь необходимо указать стандартный API Key ModelArk, а не выделенный ключ Agent/Coding Plan.",
+        cta: "Просмотреть официальную акцию",
+        copy: "Скопировать ссылку",
+        guideLink: "официальная страница акции Volcengine",
+        applyModels: "Заполнить рекомендуемые модели",
+        tokenTitle: "Как получить бесплатные Tokens",
+        tokenStep1: "Войдите в Volcengine и откройте официальную страницу акции",
+        tokenStep2: "Нажмите «Claim now» на странице акции",
+        tokenStep3: "Перейдите в консоль ModelArk, нажмите «Activate service» и завершите авторизацию одним нажатием",
+        tokenStep4: "Для каждой модели можно получить 500K Tokens; общий доступный лимит определяется условиями на странице акции. Для вызовов по-прежнему используется стандартный API Key ModelArk",
+      },
+      doubaoKeyHelp: {
+        title: "Получить лимит и стандартный API Key ModelArk",
+        step1: "Откройте официальную страницу акции и войдите в Volcengine",
+        step2: "Чтобы получить бесплатные Tokens, нажмите «Claim now» на странице акции, затем активируйте сервис и завершите авторизацию одним нажатием в консоли ModelArk",
+        step3: "Активируйте необходимые сервисы моделей Doubao в ModelArk, затем откройте раздел управления API Key и создайте стандартный API Key ModelArk",
+        step4: "Вернитесь на эту страницу и введите стандартный API Key ModelArk; выделенные ключи Agent/Coding Plan не подходят",
+      },
+      serviceTest: {
+        title: "Тестирование сервисов", description: "Проверьте ключевые конфигурации сервисов перед использованием, чтобы избежать неполадок.",
+        tip: "Совет: тестирование генерации изображений может занять несколько минут в зависимости от модели. Пожалуйста, подождите.",
+        startTest: "Начать тестирование", testing: "Выполняется тестирование...", testTimeout: "Время ожидания тестирования истекло, повторите попытку", testFailed: "Тестирование завершилось ошибкой",
+        tests: {
+          baiduOcr: { title: "Сервис Baidu OCR", description: "Распознать текст на тестовом изображении и проверить конфигурацию BAIDU_API_KEY" },
+          textModel: { title: "Модель генерации текста", description: "Отправить короткий запрос и проверить конфигурацию текстовой модели и API" },
+          captionModel: { title: "Модель распознавания изображений", description: "Создать тестовое изображение и запросить у модели его описание" },
+          baiduInpaint: { title: "Восстановление изображений Baidu", description: "Выполнить восстановление тестового изображения и проверить сервис Baidu inpaint" },
+          imageModel: { title: "Модель генерации изображений", description: "Создать фон презентации на основе тестового изображения (фиксированное разрешение, может занять 20–40 секунд)" },
+          mineruPdf: { title: "Разбор PDF в MinerU", description: "Загрузить тестовый PDF и дождаться результата разбора (может занять 30–60 секунд)" }
+        },
+        results: {
+          recognizedText: "Результат распознавания: {{text}}", modelReply: "Ответ модели: {{reply}}",
+          captionDesc: "Описание: {{caption}}", imageSize: "Размер результата: {{width}}x{{height}}",
+          parsePreview: "Предпросмотр разбора: {{preview}}"
+        }
+      },
+      actions: { save: "Сохранить настройки", saving: "Выполняется сохранение...", resetToDefault: "Сбросить настройки по умолчанию" },
+      messages: {
+        loadFailed: "Не удалось загрузить настройки", saveSuccess: "Настройки успешно сохранены", saveFailed: "Не удалось сохранить настройки",
+        resetConfirm: "Все конфигурации (большие языковые модели, генерация изображений, параллельная обработка и прочее) будут сброшены до значений по умолчанию из окружения. Пользовательские настройки будут утрачены. Продолжить?",
+        resetTitle: "Подтвердите сброс настроек",
+        resetSuccess: "Настройки успешно сброшены",
+        resetFailed: "Не удалось сбросить настройки",
+        testServiceTip: "Рекомендуется протестировать сервисы в нижней части этой страницы, чтобы проверить конфигурацию",
+        resetConfirmBtn: "Сбросить настройки",
+        resetCancelBtn: "Отмена",
+        unknownError: "Неизвестная ошибка",
+        testSuccess: "Тест успешно пройден"
+      }
+    }
+  },
 };
 import { Button, Input, Card, Loading, Markdown, Modal, useToast, useConfirm } from '@/components/shared';
 import * as api from '@/api/endpoints';
@@ -567,11 +818,11 @@ const LAZYLLM_SOURCES = [
 ];
 
 // 所有可用的提供商选项（Gemini/OpenAI/Codex + LazyLLM 厂商）
-const getAllProviderSources = (isZh: boolean) => [
+const getAllProviderSources = (locale: SupportedLocale) => [
   { value: 'gemini', label: 'Gemini' },
   { value: 'openai', label: 'OpenAI' },
-  { value: 'volcengine', label: isZh ? '火山 Agent Plan' : 'Volcengine Agent Plan' },
-  { value: 'doubao', label: isZh ? 'Doubao（豆包）' : 'Doubao / ModelArk' },
+  { value: 'volcengine', label: locale === 'zh' ? '火山 Agent Plan' : 'Volcengine Agent Plan' },
+  { value: 'doubao', label: locale === 'zh' ? 'Doubao（豆包）' : 'Doubao / ModelArk' },
   { value: 'codex', label: 'Codex (OpenAI OAuth)' },
   ...LAZYLLM_SOURCES.filter(s => !['openai', 'doubao', 'ppio', 'aiping'].includes(s.value)), // avoid duplicate or non-partner providers
 ];
@@ -1104,7 +1355,8 @@ const formDataFromSettings = (data: SettingsType): typeof initialFormData => {
 export const Settings: React.FC = () => {
   const t = useT(settingsI18n);
   const { i18n } = useTranslation();
-  const isZh = i18n.language?.startsWith('zh') ?? true;
+  const locale = resolveLocale(i18n.language);
+  const isZh = locale === 'zh';
   const { show, ToastContainer } = useToast();
   const { confirm, ConfirmDialog } = useConfirm();
 
@@ -1121,7 +1373,7 @@ export const Settings: React.FC = () => {
       document.execCommand('copy');
       document.body.removeChild(textarea);
     }
-    show({ message: '链接已复制到剪贴板', type: 'success' });
+    show({ message: locale === 'ru' ? 'Ссылка скопирована в буфер обмена' : '链接已复制到剪贴板', type: 'success' });
   };
 
   const [settings, setSettings] = useState<SettingsType | null>(null);
@@ -1136,7 +1388,7 @@ export const Settings: React.FC = () => {
   const [advancedOpen, setAdvancedOpen] = useState(false);
   const oauthMonitorStopRef = useRef<(() => void) | null>(null);
   const oauthAttemptRef = useRef(0);
-  const allProviderSources = getAllProviderSources(isZh);
+  const allProviderSources = getAllProviderSources(locale);
   const globalProviderSources = [
     allProviderSources[0],
     { value: 'apimart', label: 'APIMart' },
@@ -2382,7 +2634,7 @@ export const Settings: React.FC = () => {
                 <a href={volcengineAgentPlansUrl} target="_blank" rel="noopener noreferrer" className="shrink-0">
                   <img
                     src={volcengineLogoUrl}
-                    alt={isZh ? '火山引擎' : 'BytePlus'}
+                    alt={isZh ? '火山引擎' : locale === 'ru' ? 'Volcengine' : 'BytePlus'}
                     className="h-9 w-auto max-w-[160px] object-contain"
                   />
                 </a>
@@ -2784,6 +3036,8 @@ const SCROLL_SHOW_THRESHOLD = 300;
 export const SettingsPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { i18n } = useTranslation();
+  const locale = resolveLocale(i18n.language);
   const t = useT(settingsI18n);
   const [showTop, setShowTop] = useState(false);
   const hasInAppBackHistory = typeof window !== 'undefined' && typeof window.history.state?.idx === 'number'
@@ -2838,8 +3092,8 @@ export const SettingsPage: React.FC = () => {
       {showTop && (
         <button
           data-testid="back-to-top-button"
-          aria-label="Back to top"
-          title="Back to top"
+          aria-label={locale === 'ru' ? 'Наверх' : 'Back to top'}
+          title={locale === 'ru' ? 'Наверх' : 'Back to top'}
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           className="fixed bottom-6 right-6 p-3 rounded-full bg-banana-500 text-white shadow-lg hover:bg-banana-600 transition-all z-50"
         >

@@ -20,7 +20,16 @@ const referenceFileCardI18n = {
       imageCaptionFailed: "{{count}} images failed to generate captions",
       previewAfterParse: "Preview available after parsing"
     }
-  }
+  },
+
+  ru: {
+    referenceFile: {
+      parseStatus: { pending: "Ожидание", parsing: "Выполняется разбор...", completed: "Разбор завершён", failed: "Не удалось выполнить разбор" },
+      reparse: "Выполнить разбор заново", removeFromProject: "Удалить из проекта", deleteFile: "Удалить файл",
+      imageCaptionFailed: "Не удалось сгенерировать описания для {{count}} изображений",
+      previewAfterParse: "Предварительный просмотр будет доступен после разбора"
+    }
+  },
 };
 
 export interface ReferenceFileCardProps {

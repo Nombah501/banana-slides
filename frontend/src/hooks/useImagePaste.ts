@@ -108,7 +108,18 @@ const imagePasteI18n = {
       unsupportedType: 'Unsupported file type: {{types}}',
       captionFailed: 'Image caption recognition failed, using filename instead',
     }
-  }
+  },
+
+  ru: {
+    imagePaste: {
+      uploadSuccess: '{{count}} изображений вставлено',
+      uploadSuccessSingle: 'Изображение вставлено',
+      uploadFailed: 'Не удалось загрузить изображение',
+      partialSuccess: 'Успешно загружено: {{success}}; не удалось загрузить: {{failed}}',
+      unsupportedType: 'Неподдерживаемый тип файла: {{types}}',
+      captionFailed: 'Не удалось распознать описание изображения, вместо него использовано имя файла',
+    }
+  },
 };
 
 interface UseImagePasteOptions {

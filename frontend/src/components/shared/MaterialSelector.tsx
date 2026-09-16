@@ -39,7 +39,25 @@ const materialSelectorI18n = {
         selectAtLeastOne: "Please select at least one material", maxSelection: "Maximum {{count}} materials can be selected"
       }
     }
-  }
+  },
+
+  ru: {
+    material: {
+      selectTitle: "Выбрать материал", totalMaterials: "Всего материалов: {{count}}", noMaterials: "Материалы отсутствуют",
+      selectedCount: "Выбрано: {{count}}", allMaterials: "Все материалы", unassociated: "Не связанные с проектом",
+      currentProject: "Текущий проект", viewMoreProjects: "+ Просмотреть больше проектов...", uploadFile: "Загрузить файл",
+      previewMaterial: "Просмотреть материал", deleteMaterial: "Удалить материал", closePreview: "Закрыть просмотр",
+      canUploadOrGenerate: "Можно загрузить изображения или создать материалы с помощью генератора материалов",
+      canUploadImages: "Можно загрузить изображения в качестве материалов",
+      generateMaterial: "Сгенерировать материал",
+      messages: {
+        loadMaterialFailed: "Не удалось загрузить материалы", unsupportedFormat: "Неподдерживаемый формат изображения",
+        uploadSuccess: "Материал успешно загружен", uploadFailed: "Не удалось загрузить материал",
+        cannotDelete: "Невозможно удалить: отсутствует идентификатор материала", deleteSuccess: "Материал удалён", deleteFailed: "Не удалось удалить материал",
+        selectAtLeastOne: "Выберите хотя бы один материал", maxSelection: "Можно выбрать не более {{count}} материалов"
+      }
+    }
+  },
 };
 import type { Project } from '@/types';
 import { getImageUrl } from '@/api/client';

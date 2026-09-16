@@ -35,7 +35,23 @@ const templateI18n = {
       messages: { uploadSuccess: "Template uploaded successfully", uploadFailed: "Failed to upload template", deleteSuccess: "Template deleted", deleteFailed: "Failed to delete template" }
     },
     material: { messages: { savedToLibrary: "Material saved to template library", selectedAsTemplate: "Selected from library as template", loadMaterialFailed: "Failed to load materials" } }
-  }
+  },
+
+  ru: {
+    template: {
+      myTemplates: "Мои шаблоны", presetTemplates: "Предустановленные шаблоны", uploadTemplate: "Загрузить шаблон",
+      deleteTemplate: "Удалить шаблон", templateSelected: "Выбрано",
+      saveToLibraryOnUpload: "Сохранять в мою библиотеку шаблонов при загрузке",
+      selectFromMaterials: "Выбрать из материалов", selectAsTemplate: "Выбрать из материалов в качестве шаблона",
+      cannotDeleteInUse: "Невозможно удалить используемый шаблон. Сначала отмените его выбор или выберите другой.",
+      presets: {
+        retroScroll: "Ретро-скролл", vectorIllustration: "Векторная иллюстрация", glassEffect: "Эффект стекла",
+        techBlue: "Техно-синий", simpleBusiness: "Лаконичный деловой", academicReport: "Академический отчёт"
+      },
+      messages: { uploadSuccess: "Шаблон успешно загружен", uploadFailed: "Не удалось загрузить шаблон", deleteSuccess: "Шаблон удалён", deleteFailed: "Не удалось удалить шаблон" }
+    },
+    material: { messages: { savedToLibrary: "Материал сохранён в библиотеке шаблонов", selectedAsTemplate: "Выбрано из библиотеки в качестве шаблона", loadMaterialFailed: "Не удалось загрузить материалы" } }
+  },
 };
 import { listUserTemplates, uploadUserTemplate, deleteUserTemplate, type UserTemplate } from '@/api/endpoints';
 import { materialUrlToFile } from '@/components/shared/MaterialSelector';

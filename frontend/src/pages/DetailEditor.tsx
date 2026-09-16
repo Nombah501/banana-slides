@@ -1,8 +1,10 @@
 import React, { useEffect, useCallback, useState, useRef } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { ArrowLeft, ArrowRight, FileText, Sparkles, Download, Upload, ChevronDown, Settings2, X, Plus, HelpCircle, ImageIcon, Layers } from 'lucide-react';
 import logoUrl from '@/assets/logo.png';
 import { useT } from '@/hooks/useT';
+import { getExtraFieldDisplayName } from '@/utils/extraFieldLabels';
 import { MarkdownTextarea, type MarkdownTextareaRef } from '@/components/shared/MarkdownTextarea';
 import PresetCapsules from '@/components/shared/PresetCapsules';
 import { useImagePaste, buildMaterialsMarkdown } from '@/hooks/useImagePaste';
@@ -128,7 +130,87 @@ const detailI18n = {
         loadingProject: "Loading project..."
       }
     }
-  }
+  },
+
+  ru: {
+    home: { title: "Banana Slides" },
+    detail: {
+      title: "Редактирование описаний",
+      pageCount: "Всего страниц: {{count}}",
+      generateImages: "Сгенерировать изображения",
+      generating: "Выполняется генерация...",
+      page: "Страница {{num}}",
+      titleLabel: "Заголовок",
+      description: "Описание",
+      batchGenerate: "Сгенерировать описания для всех страниц",
+      export: "Экспортировать описания",
+      exportFull: "Экспортировать структуру и описания",
+      import: "Импортировать",
+      importExport: "Импорт/экспорт",
+      pagesCompleted: "Завершено страниц",
+      noPages: "Пока нет страниц",
+      toMultiTemplate: "Переключиться на отдельные шаблоны для каждой страницы",
+      toTemplateSetup: "Перейти к настройке шаблона",
+      switchFailed: "Не удалось переключить режим шаблонов",
+      noPagesHint: "Сначала вернитесь в редактор структуры, чтобы добавить страницы",
+      backToOutline: "Вернуться к редактору структуры",
+      aiPlaceholder: "Например: сделать описания более подробными, удалить пункт со страницы 2, подчеркнуть важность XXX... · Нажмите Ctrl+Enter для отправки",
+      aiPlaceholderShort: "Например: сделать описания более подробными... · Нажмите Ctrl+Enter",
+      renovationProcessing: "Выполняется анализ содержимого страниц...",
+      renovationProgress: "Обработано: {{completed}} из {{total}}",
+      renovationFailed: "Не удалось проанализировать PDF. Вернитесь и повторите попытку",
+      renovationPollFailed: "Не удалось связаться с сервером. Проверьте подключение к сети и обновите страницу",
+      disabledNextTip: "Не заполнены описания для {{count}} страниц. Сначала добавьте описания ко всем страницам",
+      detailLevel: {
+        label: "Степень детализации",
+        concise: "Кратко",
+        default: "По умолчанию",
+        detailed: "Подробно"
+      },
+      descSettings: "Настройки описаний",
+      generationMode: "Режим генерации",
+      generationModeHint: "Потоковый режим: ИИ последовательно выводит страницы, начиная с первой; это медленнее, но качество выше. Параллельный режим: ИИ одновременно генерирует описание каждой страницы на основе структуры; это быстрее, но описания могут быть менее подробными.",
+      streaming: "Потоковый",
+      parallel: "Параллельный",
+      extraFields: "Дополнительные поля",
+      extraFieldsHint: "После включения ИИ будет добавлять эти поля в описания. С помощью «Требований к генерации» можно дополнительно ограничить содержимое полей. Нажимайте на плашки, чтобы включать и отключать их, и перетаскивайте их для изменения порядка.",
+      imagePromptOn: "Это поле влияет на результат генерации изображений. Нажмите, чтобы отключить",
+      imagePromptOff: "Это поле не влияет на генерируемые изображения. Нажмите, чтобы включить",
+      addField: "Добавить поле",
+      descRequirements: "Требования к генерации",
+      descRequirementsPlaceholder: "Например: ограничить описание каждой страницы 100 словами, чаще использовать данные и примеры, выделять ключевые показатели...",
+      importModalTitle: "Импорт Markdown",
+      importModalDesc: "Вставьте Markdown непосредственно или загрузите файл `.md`, `.markdown` или `.txt`. Импортированные страницы будут добавлены в конец текущего проекта.",
+      importPasteLabel: "Вставить содержимое",
+      importPastePlaceholder: "Вставьте сюда Markdown с описанием либо со структурой и описаниями...",
+      importUploadLabel: "Загрузить файл",
+      importUploadHint: "Нажмите, чтобы выбрать файл, или перетащите сюда файл Markdown",
+      importUploadFormatsHint: "Поддерживаются `.md`, `.markdown`, `.txt`",
+      importPreviewReady: "В текущий проект будет добавлено страниц: {{count}}",
+      importPreviewEmpty: "Не найдено страниц для импорта. Убедитесь, что содержимое включает `## Page N: Title`",
+      importConfirm: "Импортировать в проект",
+      importCancel: "Отменить",
+      messages: {
+        generateSuccess: "Генерация успешно завершена",
+        generateFailed: "Не удалось выполнить генерацию",
+        confirmRegenerate: "Некоторые страницы уже содержат описания. Повторная генерация перезапишет их. Продолжить?",
+        confirmRegenerateTitle: "Подтверждение повторной генерации",
+        confirmRegeneratePage: "Для этой страницы уже создано описание. Повторная генерация перезапишет его. Продолжить?",
+        confirmRenovationRegenerate: "Вы находитесь в режиме обновления PPT. Повторная генерация повторно проанализирует исходную страницу PDF и заново создаст её структуру и описание, перезаписав существующее содержимое. Продолжить?",
+        confirmRenovationRegenerateTitle: "Повторно проанализировать эту страницу",
+        refineSuccess: "Описания успешно изменены",
+        refineFailed: "Не удалось внести изменения. Повторите попытку позже",
+        exportSuccess: "Экспорт выполнен успешно",
+        importSuccess: "Импорт выполнен успешно",
+        importFailed: "Не удалось выполнить импорт. Проверьте формат файла",
+        importEmpty: "В файле не найдено ни одной корректной страницы",
+        importContentEmpty: "Сначала вставьте содержимое или загрузите файл",
+        importReadFailed: "Не удалось прочитать файл. Повторите попытку",
+        importInvalidFileType: "Импортировать можно только файлы .md, .markdown или .txt",
+        loadingProject: "Выполняется загрузка проекта..."
+      }
+    }
+  },
 };
 import { Button, Loading, useToast, useConfirm, AiRefineInput, FilePreviewModal, ReferenceFileList, MaterialSelector, ImportMarkdownModal } from '@/components/shared';
 import { DescriptionCard } from '@/components/preview/DescriptionCard';
@@ -161,6 +243,7 @@ const SortableFieldPill: React.FC<{
   onRemove: () => void;
   onToggleImagePrompt?: () => void;
 }> = ({ name, active, onToggle, onRemove, removable = true, inImagePrompt, imagePromptTooltip, onToggleImagePrompt }) => {
+  const { i18n } = useTranslation();
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: name });
   const style: React.CSSProperties = {
     transform: CSS.Translate.toString(transform),
@@ -184,7 +267,7 @@ const SortableFieldPill: React.FC<{
       }`}
       onClick={onToggle}
     >
-      {name}
+      {getExtraFieldDisplayName(name, i18n.language)}
       {active && onToggleImagePrompt && (
         <span
           role="button"

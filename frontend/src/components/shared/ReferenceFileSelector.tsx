@@ -52,7 +52,32 @@ const referenceFileSelectorI18n = {
       }
     },
     shared: { pptTip: "Tip: Convert PPT to PDF for better parsing results" }
-  }
+  },
+
+  ru: {
+    referenceFile: {
+      title: "Выбор эталонных файлов", totalFiles: "Всего файлов: {{count}}", noFiles: "Нет файлов",
+      selectedCount: "Выбрано: {{count}}", allAttachments: "Все вложения", unclassified: "Без категории",
+      currentProjectAttachments: "Вложения текущего проекта", uploadedFiles: "Загруженные файлы",
+      refreshList: "Обновить список", imageLoadFailed: "Не удалось загрузить изображение",
+      parseStatus: { pending: "Ожидание разбора", parsing: "Выполняется разбор...", completed: "Разбор завершён", failed: "Не удалось выполнить разбор" },
+      reparse: "Повторно разобрать", removeFromProject: "Удалить из проекта", deleteFile: "Удалить файл",
+      uploading: "Выполняется загрузка...", uploadFile: "Загрузить файл", clearSelection: "Очистить выбор",
+      loading: "Выполняется загрузка...", noRefFiles: "Нет эталонных файлов", noRefFilesHint: "Нажмите кнопку «Загрузить файл», чтобы добавить файлы",
+      parseOnConfirm: "(разобрать после подтверждения)", imageCaptionFailed: "Не удалось создать описания для изображений: {{count}}",
+      autoParseHint: "При выборе файлов без разбора разбор начнётся автоматически",
+      cancel: "Отменить", confirm: "Подтвердить",
+      sortBy: "Сортировка", sortNewest: "Сначала новые", sortOldest: "Сначала старые", sortNameAsc: "Имя: А–Я", sortNameDesc: "Имя: Я–А",
+      messages: {
+        loadFailed: "Не удалось загрузить список эталонных файлов", uploadSuccess: "Успешно загружено файлов: {{count}}", uploadFailed: "Не удалось загрузить файл",
+        cannotDelete: "Невозможно удалить: отсутствует ID файла", deleteSuccess: "Файл успешно удалён", deleteFailed: "Не удалось удалить файл",
+        selectAtLeastOne: "Необходимо выбрать хотя бы один файл", selectValid: "Выберите допустимые файлы",
+        maxSelection: "Максимальное количество выбираемых файлов: {{count}}",
+        parseTriggered: "Запущен разбор {{count}} файлов; обработка будет выполняться в фоновом режиме", parseFailed: "Не удалось запустить разбор файлов"
+      }
+    },
+    shared: { pptTip: "Совет: преобразуйте PPT в PDF перед загрузкой, чтобы получить более качественный результат разбора" }
+  },
 };
 import {
   listProjectReferenceFiles,

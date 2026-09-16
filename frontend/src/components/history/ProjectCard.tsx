@@ -12,7 +12,11 @@ const projectCardI18n = {
   },
   en: {
     projectCard: { pages: "{{count}} pages", page: "Page {{num}}" }
-  }
+  },
+
+  ru: {
+    projectCard: { pages: "{{count}} страниц", page: "Страница {{num}}" }
+  },
 };
 
 export interface ProjectCardProps {

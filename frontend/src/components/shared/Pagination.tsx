@@ -1,7 +1,7 @@
 import React from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/utils';
-
+import i18n from '@/i18n';
 interface PaginationProps {
   currentPage: number;
   totalPages: number;
@@ -48,16 +48,16 @@ export const Pagination: React.FC<PaginationProps> = ({
   const btnSize = 'w-9 h-9 text-sm';
 
   return (
-    <nav className="flex items-center justify-center gap-1.5" aria-label="Pagination">
+    <nav className="flex items-center justify-center gap-1.5" aria-label={i18n.t('common.page')}>
       {/* Previous */}
       <button
         className={cn(buttonBase, btnSize, 'text-gray-500 dark:text-foreground-tertiary', {
-          'hover:bg-gray-100 dark:hover:bg-background-hover cursor-pointer': currentPage > 1,
-          'opacity-30 cursor-not-allowed': currentPage <= 1,
+          'opacity-50 cursor-not-allowed': currentPage <= 1,
+          'hover:bg-gray-100 dark:hover:bg-background-hover': currentPage > 1,
         })}
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage <= 1}
-        aria-label="Previous page"
+        aria-label={i18n.t('common.previous')}
       >
         <ChevronLeft size={18} />
       </button>
@@ -95,7 +95,7 @@ export const Pagination: React.FC<PaginationProps> = ({
         })}
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage >= totalPages}
-        aria-label="Next page"
+        aria-label={i18n.t('common.next')}
       >
         <ChevronRight size={18} />
       </button>

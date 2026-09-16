@@ -10,7 +10,11 @@ const imagePreviewI18n = {
   },
   en: {
     imagePreview: { title: "Image Preview", removeImage: "Remove Image", imageLoadFailed: "Image load failed" }
-  }
+  },
+
+  ru: {
+    imagePreview: { title: "Предпросмотр изображения", removeImage: "Удалить изображение", imageLoadFailed: "Не удалось загрузить изображение" }
+  },
 };
 
 interface ImagePreviewListProps {

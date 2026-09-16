@@ -1,10 +1,12 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { Edit2, FileText, RefreshCw, Tag, Layout, Image, Focus, MessageSquare, ImageOff } from 'lucide-react';
 import { useT } from '@/hooks/useT';
+import { useTranslation } from 'react-i18next';
 import { useImagePaste, buildMaterialsMarkdown } from '@/hooks/useImagePaste';
 import { Card, ContextualStatusBadge, Button, Modal, Skeleton, Markdown, MaterialSelector } from '@/components/shared';
 import { MarkdownTextarea, type MarkdownTextareaRef } from '@/components/shared/MarkdownTextarea';
 import { useDescriptionGeneratingState } from '@/hooks/useGeneratingState';
+import { getExtraFieldDisplayName } from '@/utils/extraFieldLabels';
 import type { Page, DescriptionContent, Material } from '@/types';
 
 // DescriptionCard 组件自包含翻译
@@ -32,7 +34,20 @@ const descriptionCardI18n = {
       coverPageTooltip: "This is the cover page, default to keep simple style",
       notInImagePrompt: "Not used in image generation"
     }
-  }
+  },
+
+  ru: {
+    descriptionCard: {
+      page: "Страница {{num}}", regenerate: "Сгенерировать заново",
+      descriptionTitle: "Редактирование описаний", description: "Текст страницы",
+      noDescription: "Описание ещё не сгенерировано",
+      uploadingImage: "Выполняется загрузка изображения...",
+      descriptionPlaceholder: "Только текст, который будет размещён на странице (заголовок, пункты, данные); требования к визуальным элементам и компоновке укажите в полях ниже. Поддерживается вставка изображений",
+      coverPage: "Титульная страница",
+      coverPageTooltip: "Это титульная страница; по умолчанию используется простой стиль",
+      notInImagePrompt: "Не используется при генерации изображений"
+    }
+  },
 };
 
 export interface DescriptionCardProps {
@@ -85,6 +100,7 @@ export const DescriptionCard: React.FC<DescriptionCardProps> = React.memo(({
   isAiRefining = false,
 }) => {
   const t = useT(descriptionCardI18n);
+  const { i18n } = useTranslation();
 
   const text = getDescriptionText(page.description_content);
   const extraFields = getExtraFields(page.description_content);
@@ -213,7 +229,7 @@ export const DescriptionCard: React.FC<DescriptionCardProps> = React.memo(({
                   <div key={name} className="mt-3 pt-3 border-t border-gray-100 dark:border-border-primary">
                     <div className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-foreground-tertiary mb-1">
                       <FieldIcon size={12} />
-                      <span className="font-medium">{name}</span>
+                      <span className="font-medium">{getExtraFieldDisplayName(name, i18n.language)}</span>
                       {notInImagePrompt && (
                         <span className="relative group/nip">
                           <ImageOff size={11} className="opacity-50" />
@@ -284,7 +300,7 @@ export const DescriptionCard: React.FC<DescriptionCardProps> = React.memo(({
             <MarkdownTextarea
               key={name}
               ref={el => { extraFieldRefs.current[name] = el; }}
-              label={name}
+              label={getExtraFieldDisplayName(name, i18n.language)}
               value={editExtraFields[name] || ''}
               onChange={v => setEditExtraFields(prev => ({ ...prev, [name]: v }))}
               onPaste={handlePaste}
@@ -292,7 +308,7 @@ export const DescriptionCard: React.FC<DescriptionCardProps> = React.memo(({
               onFocus={() => focusExtraField(name)}
               showUploadButton={false}
               rows={2}
-              placeholder={name}
+              placeholder={getExtraFieldDisplayName(name, i18n.language)}
             />
           ))}
           <div className="flex justify-end gap-3 pt-4">

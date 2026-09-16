@@ -1,7 +1,25 @@
 import i18n from '@/i18n';
 
-type NestedRecord = Record<string, unknown>;
-type Translations = { zh: NestedRecord; en: NestedRecord };
+export type NestedRecord = Record<string, unknown>;
+export type SupportedLocale = 'zh' | 'en' | 'ru';
+export type Translations = Record<SupportedLocale, NestedRecord>;
+
+export function resolveLocale(language?: string): SupportedLocale {
+  const normalized = language?.toLowerCase() || '';
+  if (normalized.startsWith('zh')) return 'zh';
+  if (normalized.startsWith('ru')) return 'ru';
+  return 'en';
+}
+
+export function nextLocale(language?: string): SupportedLocale {
+  const locale = resolveLocale(language);
+  return locale === 'zh' ? 'en' : locale === 'en' ? 'ru' : 'zh';
+}
+
+export function localeFallbackChain(language?: string): SupportedLocale[] {
+  const locale = resolveLocale(language);
+  return locale === 'ru' ? ['ru', 'en', 'zh'] : locale === 'en' ? ['en', 'zh'] : ['zh'];
+}
 
 function getNestedValue(obj: NestedRecord, path: string): string | undefined {
   let current: unknown = obj;
@@ -21,10 +39,9 @@ function getNestedValue(obj: NestedRecord, path: string): string | undefined {
  */
 export function getT<T extends Translations>(translations: T) {
   return (key: string, params?: Record<string, string | number>): string => {
-    const lang = i18n.language?.startsWith('zh') ? 'zh' : 'en';
-    const dict = translations[lang] || translations['zh'];
-    const localValue = getNestedValue(dict, key);
-
+    const localValue = localeFallbackChain(i18n.language)
+      .map((locale) => getNestedValue(translations[locale], key))
+      .find((value): value is string => value !== undefined);
     if (localValue !== undefined) {
       let text = localValue;
       if (params) {
@@ -34,8 +51,6 @@ export function getT<T extends Translations>(translations: T) {
       }
       return text;
     }
-
-    // Fallback to global i18n
-    return i18n.t(key, params as any);
+    return params ? i18n.t(key, params) : i18n.t(key);
   };
 }

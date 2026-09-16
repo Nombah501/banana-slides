@@ -8,6 +8,7 @@ import { ProjectCard } from '@/components/history/ProjectCard';
 import { useProjectStore } from '@/store/useProjectStore';
 import { useTheme } from '@/hooks/useTheme';
 import { useT } from '@/hooks/useT';
+import { nextLocale } from '@/utils/i18nHelper';
 import * as api from '@/api/endpoints';
 import { normalizeProject } from '@/utils';
 import { getProjectTitle, getProjectRoute } from '@/utils/projectUtils';
@@ -69,6 +70,35 @@ const historyI18n = {
       titleEmpty: 'Project name cannot be empty',
       titleUpdated: 'Project name updated',
       titleUpdateFailed: 'Failed to update project name',
+    },
+  },
+
+  ru: {
+    home: { title: 'Banana Slides', actions: { createProject: 'Создать новый проект' } },
+    nav: { home: 'Главная' },
+    settings: { language: { label: 'Язык интерфейса' }, theme: { light: 'Светлая', dark: 'Тёмная' } },
+    history: {
+      title: 'История проектов',
+      subtitle: 'Просмотр и управление всеми проектами',
+      noProjects: 'Проектов пока нет',
+      createFirst: 'Создайте свой первый проект, чтобы начать работу',
+      selectedCount: 'Выбрано: {{count}}',
+      cancelSelect: 'Отменить выбор',
+      batchDelete: 'Удалить выбранные',
+      confirmDelete: 'Вы уверены, что хотите удалить проект «{{title}}»? Это действие нельзя отменить.',
+      confirmBatchDelete: 'Вы уверены, что хотите удалить {{count}} выбранных проектов? Это действие нельзя отменить.',
+      deleteTitle: 'Подтвердить удаление',
+      batchDeleteTitle: 'Подтвердить массовое удаление',
+      deleteSuccess: 'Успешно удалено проектов: {{count}}',
+      deletePartial: 'Удалено проектов: {{success}}, не удалось удалить: {{fail}}',
+      deleteCurrentProject: 'Удалены проекты, включая текущий открытый проект',
+      deleteFailed: 'Не удалось удалить проект',
+      openFailed: 'Не удалось открыть проект',
+      loadFailed: 'Не удалось загрузить историю проектов',
+      perPage: 'на страницу',
+      titleEmpty: 'Название проекта не может быть пустым',
+      titleUpdated: 'Название проекта обновлено',
+      titleUpdateFailed: 'Не удалось обновить название проекта',
     },
   },
 };
@@ -394,11 +424,11 @@ export const History: React.FC = () => {
             <div className="h-5 w-px bg-gray-300 dark:bg-border-primary" />
             {/* 语言切换按钮 */}
             <button
-              onClick={() => i18n.changeLanguage(i18n.language?.startsWith('zh') ? 'en' : 'zh')}
+              onClick={() => i18n.changeLanguage(nextLocale(i18n.language))}
               className="px-2 py-1 text-xs font-medium text-gray-600 dark:text-foreground-tertiary hover:text-gray-900 dark:hover:text-gray-100 hover:bg-banana-100/60 dark:hover:bg-background-hover rounded-md transition-all"
               title={t('settings.language.label')}
             >
-              {i18n.language?.startsWith('zh') ? 'EN' : '中'}
+              {nextLocale(i18n.language) === 'zh' ? '中' : nextLocale(i18n.language) === 'ru' ? 'Русский' : 'EN'}
             </button>
             {/* 主题切换按钮 */}
             <button

@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { Sparkles, FileText, Palette, MessageSquare, Download, ChevronLeft, ChevronRight, ExternalLink, Settings, Check, Video, Lightbulb } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, type NavigateFunction } from 'react-router-dom';
 import { Modal } from './Modal';
 import { Button } from './Button';
-import { useT } from '@/hooks/useT';
+import { useT, type TranslationFunction } from '@/hooks/useT';
 import { useTranslation } from 'react-i18next';
 import logoUrl from '@/assets/logo.png';
+import { resolveLocale, type SupportedLocale } from '@/utils/i18nHelper';
 
 // ---------------------------------------------------------------------------
 // i18n
@@ -97,6 +98,50 @@ const i18nDict = {
       },
     },
   },
+
+    ru: {
+      guide: {
+        brand: 'Banana Slides',
+        setup: 'Быстрый старт',
+        setupSub: 'Выполните базовую настройку и начните создавать материалы с помощью ИИ',
+        features: 'Возможности',
+        featuresSub: 'Узнайте, как быстро создавать красивые PPT-презентации с помощью ИИ',
+        gallery: 'Примеры работ',
+        gallerySub: 'Здесь представлены примеры PPT-презентаций, созданных с помощью Banana Slides',
+        galleryMore: 'Просмотреть больше примеров',
+        hi: 'Добро пожаловать в Banana Slides!',
+        hiSub: 'Перед началом необходимо выполнить базовую настройку',
+        s1: 'Настроить API Key',
+        s1d: 'Перейдите на страницу настроек, чтобы настроить необходимые для проекта API-сервисы, включая:',
+        s1i: ['API Base и API Key вашего поставщика ИИ-сервисов', 'Настроить текстовую модель, модель генерации изображений (banana pro) и модель описания изображений', 'Если требуется разбор файлов, настройте MinerU Token', 'Если требуется экспорт с возможностью редактирования, настройте MinerU TOKEN и Baidu API KEY'],
+        s2: 'Сохранить и протестировать',
+        s2d: 'После завершения настройки обязательно нажмите кнопку «Сохранить настройки», а затем протестируйте сервисы внизу страницы, чтобы убедиться в их корректной работе.',
+        s3: 'Начать создание',
+        s3d: 'После успешного завершения настройки вернитесь на главную страницу и начните создавать красивые PPT-презентации с помощью ИИ!',
+        s4: '*Обратная связь',
+        s4d: 'Если при использовании возникнут проблемы, сообщите о них в GitHub Issues',
+        issueLink: 'Перейти к GitHub Issues',
+        settingsBtn: 'Открыть страницу настроек',
+        featuresOverview: 'Обзор возможностей',
+        featuresOverviewDesc: 'Узнайте о полном рабочем процессе Banana Slides, способах создания, поддерживаемых материалах и возможностях экспорта.',
+        feishuTutorial: 'Руководство по настройке',
+        feishuTutorialDesc: 'Настройте параметры по пошаговому руководству.',
+        faq: 'Часто задаваемые вопросы',
+        faqDesc: 'Ознакомьтесь с ответами на часто задаваемые вопросы о настройке API, экспорте и повседневном использовании.',
+        hint: 'Совет',
+        hintBody: 'Если у вас ещё нет API Key, зарегистрируйтесь на сайте соответствующего поставщика сервиса и получите его. После завершения настройки рекомендуется сначала протестировать сервисы, чтобы избежать проблем при дальнейшей работе.',
+        prev: 'Показать предыдущую',
+        next: 'Показать следующую',
+        cases: { softwareDev: 'Лучшие практики разработки ПО', deepseek: 'Техническая презентация DeepSeek-V3.2', prefabFood: 'Исследование и промышленное внедрение интеллектуального оборудования для линии по производству готовых блюд', moneyHistory: 'Эволюция денег: от ракушек до бумажных купюр' },
+        feat: {
+          paths: { t: 'Гибкие способы создания', d: 'В качестве отправной точки можно использовать идею, план или описание страницы — это позволяет учитывать различные творческие привычки.', items: ['Генерация по одной фразе: укажите тему — ИИ автоматически создаст чёткий план и описание содержимого каждой страницы', 'Редактирование на естественном языке: поддерживается внесение устных изменений в план или описание в формате «Vibe», а ИИ реагирует в реальном времени', 'Режим плана/описания: можно одним нажатием сгенерировать всё сразу или вручную скорректировать детали'] },
+          parse: { t: 'Мощный разбор материалов', d: 'Загружайте файлы различных форматов — их содержимое будет автоматически разобрано для подготовки материалов к генерации.', items: ['Поддержка разных форматов: загружайте файлы PDF/Docx/MD/Txt — содержимое автоматически разбирается в фоновом режиме', 'Интеллектуальное извлечение: автоматическое распознавание ключевых моментов, ссылок на изображения и данных диаграмм в тексте', 'Референсы стиля: поддерживается загрузка образцов изображений или шаблонов для настройки стиля PPT'] },
+          vibe: { t: 'Редактирование на естественном языке в стиле «Vibe»', d: 'Откажитесь от сложных меню и кнопок — просто формулируйте команды на естественном языке.', items: ['Локальная перерисовка: изменяйте неудовлетворяющие вас области обычной фразой (например, «Заменить эту диаграмму на круговую»)', 'Оптимизация всей страницы: создавайте страницы в высоком разрешении и едином стиле на основе nano banana pro'] },
+          export: { t: 'Экспорт в готовые к использованию форматы', d: 'Экспортируйте стандартные форматы одним нажатием и сразу демонстрируйте результат без дополнительных настроек.', items: ['Поддержка разных форматов: экспортируйте стандартные файлы PPTX или PDF одним нажатием', 'Идеальное соответствие: соотношение сторон 16:9 используется по умолчанию, дополнительная настройка макета не требуется'] },
+          video: { t: 'Экспорт видео с TTS-озвучкой', d: 'Одним нажатием преобразуйте слайды в видеоролики с голосовой озвучкой ИИ и субтитрами.', items: ['ИИ автоматически преобразует описания страниц в естественную устную речь и синтезирует озвучку с помощью edge-tts', 'Поддерживаются китайский, английский и японский языки; доступно несколько вариантов голоса', 'Прокручиваемые субтитры с разбивкой по предложениям автоматически переключаются в такт речи', 'Дополнительный эффект анимации Ken Burns (масштабирование/панорамирование)'] },
+        },
+      },
+    },
 };
 
 // ---------------------------------------------------------------------------
@@ -121,7 +166,7 @@ const CONFIG_LINKS = [
   {
     key: 'featuresOverview',
     descKey: 'featuresOverviewDesc',
-    href: { zh: 'https://docs.bananaslides.online/zh/features/overview', en: 'https://docs.bananaslides.online/features/overview' },
+    href: { zh: 'https://docs.bananaslides.online/zh/features/overview', en: 'https://docs.bananaslides.online/features/overview', ru: 'https://docs.bananaslides.online/features/overview' },
   },
   {
     key: 'feishuTutorial',
@@ -129,12 +174,13 @@ const CONFIG_LINKS = [
     href: {
       zh: 'https://ziy68cvfvu3.feishu.cn/wiki/GiNawdmpiinSRqkGspocqEWAnkh?from=from_copylink',
       en: 'https://ziy68cvfvu3.feishu.cn/wiki/GiNawdmpiinSRqkGspocqEWAnkh?from=from_copylink',
+      ru: 'https://ziy68cvfvu3.feishu.cn/wiki/GiNawdmpiinSRqkGspocqEWAnkh?from=from_copylink',
     },
   },
   {
     key: 'faq',
     descKey: 'faqDesc',
-    href: { zh: 'https://docs.bananaslides.online/zh/faq', en: 'https://docs.bananaslides.online/faq' },
+    href: { zh: 'https://docs.bananaslides.online/zh/faq', en: 'https://docs.bananaslides.online/faq', ru: 'https://docs.bananaslides.online/faq' },
   },
 ];
 
@@ -142,7 +188,7 @@ const CONFIG_LINKS = [
 // Page renderers
 // ---------------------------------------------------------------------------
 /** Retrieve an array value from i18nDict by dot-path (useT only handles strings). */
-function tList(lang: 'zh' | 'en', path: string): string[] {
+function tList(lang: SupportedLocale, path: string): string[] {
   const dict = i18nDict[lang] as Record<string, unknown>;
   let cur: unknown = dict;
   for (const seg of path.split('.')) {
@@ -156,9 +202,9 @@ function tList(lang: 'zh' | 'en', path: string): string[] {
 }
 
 type PageRenderer = (ctx: {
-  t: ReturnType<typeof useT>;
-  lang: 'zh' | 'en';
-  navigate: ReturnType<typeof useNavigate>;
+  t: TranslationFunction;
+  lang: SupportedLocale;
+  navigate: NavigateFunction;
   onClose: () => void;
   showcaseIdx: number;
   setShowcaseIdx: (i: number) => void;
@@ -382,7 +428,7 @@ interface HelpModalProps {
 export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
   const t = useT(i18nDict);
   const { i18n } = useTranslation();
-  const lang: 'zh' | 'en' = i18n.language?.startsWith('zh') ? 'zh' : 'en';
+  const lang: SupportedLocale = resolveLocale(i18n.language);
   const navigate = useNavigate();
   const [pageIdx, setPageIdx] = useState(0);
   const [showcaseIdx, setShowcaseIdx] = useState(0);

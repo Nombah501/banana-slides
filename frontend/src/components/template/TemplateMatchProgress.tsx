@@ -25,6 +25,17 @@ const i18n = {
       failedPages: '{failed} pages failed',
     },
   },
+
+  ru: {
+    tmp: {
+      matching: 'Выполняется автоматическое сопоставление шаблонов…',
+      done: 'Автоматическое сопоставление завершено',
+      failed: 'Не удалось автоматически сопоставить шаблоны',
+      progress: 'Обработано страниц: {completed}/{total}',
+      matched: 'Сопоставлено страниц: {matched}',
+      failedPages: 'Не удалось обработать страниц: {failed}',
+    },
+  },
 };
 
 export interface TemplateMatchProgressProps {

@@ -4,10 +4,11 @@ import { useTranslation } from 'react-i18next';
 import { Sparkles, FileText, MessageSquare, Download, ChevronRight, Github, ChevronLeft } from 'lucide-react';
 import { Button, Footer } from '@/components/shared';
 import { useT } from '@/hooks/useT';
+import { nextLocale, resolveLocale, type SupportedLocale } from '@/utils/i18nHelper';
 import logoUrl from '@/assets/logo.png';
 
 // 组件内翻译
-const landingI18n = {
+export const landingI18n = {
   zh: {
     landing: {
       nav: { enter: "进入应用" },
@@ -33,13 +34,69 @@ const landingI18n = {
         cta_primary: "Get Started for Free"
       }
     }
+  },
+  ru: {
+    landing: {
+      nav: { enter: "Войти в приложение" },
+      hero: {
+        badge: "Генератор презентаций на основе ИИ нового поколения",
+        title_start: "Превращайте идеи в",
+        title_highlight: "реальность мгновенно",
+        title_end: "без сложного форматирования",
+        subtitle: "Сосредоточьтесь на содержании и идеях, а всё остальное предоставьте Banana Slides. От структуры до красивых слайдов — всего за несколько секунд.",
+        cta_primary: "Начать бесплатно"
+      }
+    }
   }
+};
+
+
+const LANDING_FEATURE_I18N: Record<SupportedLocale, Record<string, { title: string; description: string; details: string[] }>> = {
+  zh: {
+    flexiblePaths: { title: '灵活多样的创作路径', description: '支持想法、大纲、页面描述三种起步方式，满足不同创作习惯。', details: ['一句话生成：输入一个主题，AI 自动生成结构清晰的大纲和逐页内容描述', '自然语言编辑：支持以 Vibe 形式口头修改大纲或描述，AI 实时响应调整', '大纲/描述模式：既可一键批量生成，也可手动调整细节'] },
+    materialParsing: { title: '强大的素材解析能力', description: '上传多种格式文件，自动解析内容，为生成提供丰富素材。', details: ['多格式支持：上传 PDF/Docx/MD/Txt 等文件，后台自动解析内容', '智能提取：自动识别文本中的关键点、图片链接和图表信息', '风格参考：支持上传参考图片或模板，定制 PPT 风格'] },
+    vibeEditing: { title: '「Vibe」式自然语言修改', description: '不再受限于复杂的菜单按钮，直接通过自然语言下达修改指令。', details: ['局部重绘：对不满意的区域进行口头式修改（如「把这个图换成饼图」）', '整页优化：基于 nano banana pro 生成高清、风格统一的页面'] },
+    easyExport: { title: '开箱即用的格式导出', description: '一键导出标准格式，直接演示无需调整。', details: ['多格式支持：一键导出标准 PPTX 或 PDF 文件', '完美适配：默认 16:9 比例，排版无需二次调整'] },
+  },
+  en: {
+    flexiblePaths: { title: 'Flexible Creation Paths', description: 'Support idea, outline, and page description as starting points to meet different creative habits.', details: ['One-line generation: Enter a topic, AI automatically generates a clear outline and page-by-page content description', 'Natural language editing: Support Vibe-style verbal modification of outlines or descriptions, AI responds in real-time', 'Outline/Description mode: Either batch generate with one click, or manually adjust details'] },
+    materialParsing: { title: 'Powerful Material Parsing', description: 'Upload multiple format files, automatically parse content to provide rich materials for generation.', details: ['Multi-format support: Upload PDF/Docx/MD/Txt files, backend automatically parses content', 'Smart extraction: Automatically identify key points, image links and chart information in text', 'Style reference: Support uploading reference images or templates to customize PPT style'] },
+    vibeEditing: { title: '"Vibe" Style Natural Language Editing', description: 'No longer limited by complex menu buttons, directly issue modification commands through natural language.', details: ['Partial redraw: Make verbal modifications to unsatisfying areas (e.g., "Change this chart to a pie chart")', 'Full page optimization: Generate HD, style-consistent pages based on nano banana pro'] },
+    easyExport: { title: 'Ready-to-Use Format Export', description: 'One-click export to standard formats, present directly without adjustments.', details: ['Multi-format support: One-click export to standard PPTX or PDF files', 'Perfect fit: Default 16:9 ratio, no secondary layout adjustments needed'] },
+  },
+  ru: {
+    flexiblePaths: { title: 'Гибкие способы создания', description: 'Начните с идеи, структуры или описания страниц — выбирайте подходящий рабочий процесс.', details: ['Генерация по одной фразе: укажите тему — ИИ создаст чёткую структуру и описание каждой страницы', 'Редактирование на естественном языке: вносите изменения в структуру или описания в формате «Vibe», а ИИ реагирует в реальном времени', 'Режим структуры или описания: создавайте всё сразу одним нажатием или корректируйте детали вручную'] },
+    materialParsing: { title: 'Мощный разбор материалов', description: 'Загружайте файлы разных форматов — их содержимое автоматически станет материалом для генерации.', details: ['Поддержка форматов: загружайте файлы PDF/Docx/MD/Txt — содержимое разбирается в фоновом режиме', 'Интеллектуальное извлечение: автоматически распознаются ключевые пункты, ссылки на изображения и данные диаграмм', 'Референсы стиля: загружайте образцы изображений или шаблоны для настройки стиля PPT'] },
+    vibeEditing: { title: 'Редактирование на естественном языке в стиле «Vibe»', description: 'Откажитесь от сложных меню и кнопок — просто сформулируйте команду на естественном языке.', details: ['Локальная перерисовка: изменяйте отдельные области обычной фразой, например «Заменить эту диаграмму на круговую»', 'Оптимизация всей страницы: создавайте страницы в высоком разрешении и едином стиле на основе nano banana pro'] },
+    easyExport: { title: 'Экспорт в готовые форматы', description: 'Экспортируйте стандартные файлы одним нажатием и сразу демонстрируйте результат.', details: ['Поддержка форматов: экспортируйте PPTX или PDF одним нажатием', 'Идеальное соответствие: соотношение сторон 16:9 используется по умолчанию, дополнительная настройка макета не требуется'] },
+  },
 };
 
 // Feature keys consistent with HelpModal
 const _featureKeys = ['flexiblePaths', 'materialParsing', 'vibeEditing', 'easyExport'] as const;
 
 // Showcase data consistent with HelpModal
+const LANDING_SHOWCASE_TITLES: Record<SupportedLocale, Record<string, string>> = {
+  zh: {
+    softwareDev: '软件开发最佳实践',
+    deepseek: 'DeepSeek-V3.2 技术展示',
+    prefabFood: '预制菜智能产线装备研发和产业化',
+    moneyHistory: '钱的演变：从贝壳到纸币的旅程',
+  },
+  en: {
+    softwareDev: 'Software Development Best Practices',
+    deepseek: 'DeepSeek-V3.2 Technical Showcase',
+    prefabFood: 'Prefab Food Intelligent Production Line R&D',
+    moneyHistory: 'The Evolution of Money: From Shells to Paper',
+  },
+  ru: {
+    softwareDev: 'Лучшие практики разработки ПО',
+    deepseek: 'Техническая презентация DeepSeek-V3.2',
+    prefabFood: 'Исследование и промышленное внедрение оборудования для производства готовых блюд',
+    moneyHistory: 'Эволюция денег: от ракушек до бумажных купюр',
+  },
+};
+
 const showcaseKeys = [
   { image: 'https://github.com/user-attachments/assets/d58ce3f7-bcec-451d-a3b9-ca3c16223644', titleKey: 'softwareDev' },
   { image: 'https://github.com/user-attachments/assets/c64cd952-2cdf-4a92-8c34-0322cbf3de4e', titleKey: 'deepseek' },
@@ -51,6 +108,7 @@ export const Landing: React.FC = () => {
   const navigate = useNavigate();
   const { i18n } = useTranslation();
   const t = useT(landingI18n);
+  const locale = resolveLocale(i18n.language);
   const [currentShowcase, setCurrentShowcase] = useState(0);
 
   // Auto-rotate showcase
@@ -102,10 +160,10 @@ export const Landing: React.FC = () => {
         </div>
         <div className="flex items-center gap-4">
           <button
-            onClick={() => i18n.changeLanguage(i18n.language?.startsWith('zh') ? 'en' : 'zh')}
+            onClick={() => i18n.changeLanguage(nextLocale(i18n.language))}
             className="text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition-colors px-3 py-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-white/10"
           >
-            {i18n.language?.startsWith('zh') ? 'EN' : '中'}
+            {nextLocale(i18n.language) === 'zh' ? '中' : nextLocale(i18n.language) === 'ru' ? 'Русский' : 'EN'}
           </button>
           <Button 
             variant="primary" 
@@ -175,7 +233,7 @@ export const Landing: React.FC = () => {
                 <div className="w-3 h-3 rounded-full bg-green-400"></div>
               </div>
               <div className="flex-1 text-center text-xs text-gray-400 dark:text-gray-500 font-mono">
-                {t(`help.showcaseTitles.${showcaseKeys[currentShowcase].titleKey}`)}
+                {LANDING_SHOWCASE_TITLES[locale][showcaseKeys[currentShowcase].titleKey]}
               </div>
             </div>
 
@@ -184,7 +242,7 @@ export const Landing: React.FC = () => {
                 <img 
                   key={idx}
                   src={showcase.image}
-                  alt={t(`help.showcaseTitles.${showcase.titleKey}`)}
+                  alt={LANDING_SHOWCASE_TITLES[locale][showcase.titleKey]}
                   className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out ${
                     idx === currentShowcase ? 'opacity-100' : 'opacity-0'
                   }`}
@@ -243,15 +301,15 @@ export const Landing: React.FC = () => {
                     {feature.icon}
                   </div>
                   <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">
-                    {t(`help.features.${feature.key}.title`)}
+                    {LANDING_FEATURE_I18N[locale][feature.key].title}
                   </h2>
                   <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
-                    {t(`help.features.${feature.key}.description`)}
+                    {LANDING_FEATURE_I18N[locale][feature.key].description}
                   </p>
                   
                   {/* 详情列表 */}
                   <ul className="space-y-4 pt-4">
-                    {(t(`help.features.${feature.key}.details`, { returnObjects: true }) as string[])?.map((detail: string, i: number) => (
+                    {LANDING_FEATURE_I18N[locale][feature.key].details.map((detail: string, i: number) => (
                       <li key={i} className="flex items-start gap-3">
                         <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-banana-500 shrink-0" />
                         <span className="text-gray-600 dark:text-gray-400 font-medium">{detail}</span>

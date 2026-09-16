@@ -36,6 +36,22 @@ const exportI18n = {
       createConfirmationPending: 'The task is not visible yet after the create response was interrupted; it may still be passing through the gateway or queue',
     },
   },
+
+  ru: {
+    exportStore: {
+      exportFailed: 'Экспорт не выполнен',
+      pollFailed: 'Не удалось получить статус',
+      pollRetrying: 'Статус экспорта временно недоступен. Фоновая задача не помечена как завершившаяся с ошибкой; выполняется автоматическое переподключение',
+      pollPaused: 'Автоматическая проверка статуса остановлена. Состояние фоновой задачи неизвестно; повторите проверку вручную',
+      staleTask: 'Ответ со статусом задачи некорректен. Состояние фоновой задачи неизвестно; повторите проверку вручную',
+      pollGatewayTimeout: 'При прохождении запроса статуса через шлюз истекло время ожидания',
+      pollRequestTimeout: 'Превышено время ожидания этого запроса статуса',
+      pollRateLimited: 'Превышена допустимая частота запросов проверки статуса',
+      pollServiceUnavailable: 'Сервис статуса экспорта временно недоступен',
+      pollNetworkError: 'Сетевое соединение для проверки статуса прервано',
+      createConfirmationPending: 'Задача пока не обнаружена после прерывания ответа на запрос создания; возможно, запрос ещё проходит через шлюз или записывается в очередь',
+    },
+  },
 };
 const t = getT(exportI18n);
 const EXPORT_POLL_INTERVAL_MS = 2000;

@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Settings, ImagePlus, FolderOpen, Globe, Sun, Moon, Monitor, ChevronDown, ZoomIn, ZoomOut, RefreshCw } from 'lucide-react';
 import { useTheme } from '@/hooks/useTheme';
 import { useT } from '@/hooks/useT';
+import { nextLocale } from '@/utils/i18nHelper';
 import { DESKTOP_TITLEBAR_HEIGHT, isDesktop } from '@/utils';
 import logoUrl from '@/assets/logo.png';
 
@@ -33,6 +34,20 @@ const titleBarI18n = {
     minimize: 'Minimize',
     maximize: 'Maximize',
     close: 'Close',
+  },
+
+  ru: {
+    materialGenerate: 'Сгенерировать',
+    materialCenter: 'Материалы',
+    history: 'История',
+    settings: 'Настройки',
+    themeLight: 'Светлая',
+    themeDark: 'Тёмная',
+    themeSystem: 'Системная',
+    refresh: 'Обновить',
+    minimize: 'Свернуть',
+    maximize: 'Развернуть',
+    close: 'Закрыть',
   },
 };
 
@@ -173,10 +188,10 @@ export function DesktopTitleBar() {
         {/* Language toggle */}
         <button
           className={navBtnClass}
-          onClick={() => i18n.changeLanguage(i18n.language?.startsWith('zh') ? 'en' : 'zh')}
+          onClick={() => i18n.changeLanguage(nextLocale(i18n.language))}
         >
           <Globe size={12} />
-          <span>{i18n.language?.startsWith('zh') ? 'EN' : '中'}</span>
+          <span>{nextLocale(i18n.language) === 'zh' ? '中' : nextLocale(i18n.language) === 'ru' ? 'Русский' : 'EN'}</span>
         </button>
 
         {/* Theme switcher */}

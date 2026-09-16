@@ -27,6 +27,17 @@ const translations = {
     connectHint: 'Please check if the backend service is running',
     retry: 'Retry',
   },
+
+  ru: {
+    title: 'Введите код доступа',
+    placeholder: 'Введите код',
+    submit: 'Подтвердить',
+    error: 'Неверный код, повторите попытку',
+    networkError: 'Ошибка сети, повторите попытку позже',
+    connectError: 'Не удалось подключиться к серверной службе',
+    connectHint: 'Проверьте, запущена ли серверная служба',
+    retry: 'Повторить',
+  },
 };
 
 export function AccessCodeGuard({ children }: { children: ReactNode }) {

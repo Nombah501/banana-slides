@@ -16,7 +16,16 @@ const filePreviewI18n = {
       title: "File Preview", loading: "Loading file content...",
       notParsed: "File not yet parsed, cannot preview", loadFailed: "Failed to load file content"
     }
-  }
+  },
+
+  ru: {
+    filePreview: {
+      title: "Предпросмотр файла",
+      loading: "Загрузка содержимого файла...",
+      notParsed: "Файл ещё не разобран, предварительный просмотр недоступен",
+      loadFailed: "Не удалось загрузить содержимое файла"
+    }
+  },
 };
 
 interface FilePreviewModalProps {
