@@ -20,8 +20,8 @@ const generatedFfmpegDir = path.join(desktopDir, 'ffmpeg');
 const ffmpegCacheDir = path.join(desktopDir, '.cache', 'ffmpeg');
 
 const windowsFfmpegArchive = {
-  url: 'https://github.com/BtbN/FFmpeg-Builds/releases/download/autobuild-2026-08-16-13-00/ffmpeg-n7.1.5-16-g9a4bb2c579-win64-gpl-7.1.zip',
-  sha256: '907ae59ae94d39561b9e03f6d5b0ec4a2778df1e75c763c9a0ddbae266415860',
+  url: 'https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-n8.1-latest-win64-gpl-8.1.zip',
+  checksumsUrl: 'https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/checksums.sha256',
 };
 
 function copyDir(src, dest) {
@@ -173,36 +173,116 @@ function downloadFile(url, dest, redirectCount = 0) {
   });
 }
 
-async function ensureDownloadedArchive(url, expectedSha256) {
-  const archiveName = path.basename(new URL(url).pathname);
-  const archiveDir = path.join(ffmpegCacheDir, expectedSha256);
-  const archivePath = path.join(archiveDir, archiveName);
+function downloadText(url, redirectCount = 0) {
+  if (redirectCount > 5) {
+    return Promise.reject(new Error(`Too many redirects while downloading ${url}`));
+  }
 
-  if (fs.existsSync(archivePath)) {
+  return new Promise((resolve, reject) => {
+    const client = url.startsWith('https:') ? https : http;
+    const request = client.get(url, (response) => {
+      if ([301, 302, 303, 307, 308].includes(response.statusCode)) {
+        response.resume();
+        const location = response.headers.location;
+        if (!location) {
+          reject(new Error(`Redirect missing Location header while downloading ${url}`));
+          return;
+        }
+        let redirectUrl;
+        try {
+          redirectUrl = new URL(location, url).toString();
+        } catch (error) {
+          reject(new Error(`Invalid redirect Location while downloading ${url}: ${location}`));
+          return;
+        }
+        downloadText(redirectUrl, redirectCount + 1).then(resolve, reject);
+        return;
+      }
+
+      if (response.statusCode !== 200) {
+        response.resume();
+        reject(new Error(`Download failed with HTTP ${response.statusCode}: ${url}`));
+        return;
+      }
+
+      const chunks = [];
+      response.setEncoding('utf8');
+      response.on('data', (chunk) => chunks.push(chunk));
+      response.on('end', () => resolve(chunks.join('')));
+      response.on('error', reject);
+    });
+    request.on('error', reject);
+  });
+}
+
+function parseChecksumForAsset(checksumText, assetName) {
+  if (typeof checksumText !== 'string' || typeof assetName !== 'string') return null;
+  for (const line of checksumText.split(/\r?\n/)) {
+    const match = line.trim().match(/^([a-f0-9]{64})\s+(.+)$/i);
+    if (!match) continue;
+    const listedAssetName = match[2].trim().replace(/^\*/, '');
+    if (listedAssetName === assetName) return match[1].toLowerCase();
+  }
+  return null;
+}
+
+async function ensureDownloadedArchive(url, expectedSha256 = '', checksumsUrl = '') {
+  const archiveName = path.basename(new URL(url).pathname);
+  const expected = expectedSha256.toLowerCase();
+  if (expected && !/^[a-f0-9]{64}$/.test(expected)) {
+    throw new Error(`Invalid FFmpeg archive SHA-256: ${expectedSha256}`);
+  }
+  const archiveDir = expected ? path.join(ffmpegCacheDir, expected) : ffmpegCacheDir;
+  const archivePath = path.join(archiveDir, archiveName);
+  const sidecarPath = `${archivePath}.sha256`;
+
+  if (fs.existsSync(archivePath) && fs.existsSync(sidecarPath)) {
+    const sidecarSha256 = fs.readFileSync(sidecarPath, 'utf8').trim().toLowerCase();
     const actualSha256 = sha256File(archivePath);
-    if (actualSha256 === expectedSha256) {
+    if (
+      /^[a-f0-9]{64}$/.test(sidecarSha256)
+      && actualSha256 === sidecarSha256
+      && (!expected || actualSha256 === expected)
+    ) {
       console.log(`Using cached FFmpeg archive  ${path.relative(repoRoot, archivePath)}`);
       return archivePath;
     }
     console.warn(`WARNING: cached FFmpeg archive checksum mismatch; re-downloading ${archiveName}`);
-    fs.rmSync(archivePath, { force: true });
+  } else if (fs.existsSync(archivePath)) {
+    console.warn(`WARNING: cached FFmpeg archive has no checksum sidecar; re-downloading ${archiveName}`);
   }
+  fs.rmSync(archivePath, { force: true });
+  fs.rmSync(sidecarPath, { force: true });
 
   console.log(`Downloading FFmpeg for Windows  ${url}`);
   await downloadFile(url, archivePath);
 
+  let verifiedSha256 = expected;
+  if (!verifiedSha256) {
+    if (!checksumsUrl) {
+      fs.rmSync(archivePath, { force: true });
+      throw new Error('FFmpeg archive checksum metadata URL is missing');
+    }
+    const checksums = await downloadText(checksumsUrl);
+    verifiedSha256 = parseChecksumForAsset(checksums, archiveName);
+    if (!verifiedSha256) {
+      fs.rmSync(archivePath, { force: true });
+      throw new Error(`FFmpeg checksum metadata does not contain an exact entry for ${archiveName}`);
+    }
+  }
+
   const actualSha256 = sha256File(archivePath);
-  if (actualSha256 !== expectedSha256) {
+  if (actualSha256 !== verifiedSha256) {
     fs.rmSync(archivePath, { force: true });
-    console.error(
-      `ERROR: FFmpeg archive checksum mismatch.\n` +
-      `Expected: ${expectedSha256}\n` +
+    throw new Error(
+      `FFmpeg archive checksum mismatch.\n` +
+      `Expected: ${verifiedSha256}\n` +
       `Actual:   ${actualSha256}\n` +
       'Set FFMPEG_BIN and FFPROBE_BIN to trusted local binaries if you need to bypass the download.'
     );
-    process.exit(1);
   }
 
+  fs.writeFileSync(sidecarPath, `${actualSha256}\n`);
   return archivePath;
 }
 
@@ -259,18 +339,12 @@ async function prepareWindowsFfmpegArtifacts() {
     process.exit(1);
   }
 
+  const isCustomDownload = Boolean(customDownloadUrl || customSha256);
   const downloadUrl = customDownloadUrl || windowsFfmpegArchive.url;
-  const expectedSha256 = customSha256 || windowsFfmpegArchive.sha256;
-  if (!expectedSha256) {
-    console.error(
-      'ERROR: FFMPEG_DOWNLOAD_SHA256 is required when overriding FFMPEG_DOWNLOAD_URL. ' +
-      'Alternatively set FFMPEG_BIN and FFPROBE_BIN to trusted local binaries.'
-    );
-    process.exit(1);
-  }
-
-  const archivePath = await ensureDownloadedArchive(downloadUrl, expectedSha256);
-  const extractedDir = path.join(ffmpegCacheDir, expectedSha256, 'extracted');
+  const expectedSha256 = customSha256;
+  const checksumsUrl = isCustomDownload ? '' : windowsFfmpegArchive.checksumsUrl;
+  const archivePath = await ensureDownloadedArchive(downloadUrl, expectedSha256, checksumsUrl);
+  const extractedDir = path.join(ffmpegCacheDir, `${path.basename(archivePath)}.extracted`);
   extractWindowsZip(archivePath, extractedDir);
 
   const ffmpegSourcePath = findFile(extractedDir, 'ffmpeg.exe');
@@ -337,7 +411,14 @@ async function main() {
   console.log('Artifacts ready.');
 }
 
-main().catch((error) => {
-  console.error(`ERROR: ${error.message}`);
-  process.exit(1);
-});
+module.exports = {
+  parseChecksumForAsset,
+  windowsFfmpegArchive,
+};
+
+if (require.main === module) {
+  main().catch((error) => {
+    console.error(`ERROR: ${error.message}`);
+    process.exit(1);
+  });
+}
