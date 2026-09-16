@@ -1257,7 +1257,7 @@ export const dissociateFileFromProject = async (
 
 // ===== 输出语言设置 =====
 
-export type OutputLanguage = 'zh' | 'ja' | 'en' | 'auto';
+export type OutputLanguage = 'zh' | 'ja' | 'en' | 'ru' | 'auto';
 
 export interface OutputLanguageOption {
   value: OutputLanguage;
@@ -1268,6 +1268,7 @@ export const OUTPUT_LANGUAGE_OPTIONS: OutputLanguageOption[] = [
   { value: 'zh', label: '中文' },
   { value: 'ja', label: '日本語' },
   { value: 'en', label: 'English' },
+  { value: 'ru', label: 'Русский' },
   { value: 'auto', label: '自动' },
 ];
 

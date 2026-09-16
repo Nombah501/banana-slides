@@ -59,7 +59,7 @@ def workflows_outline(
     project_id: Optional[str] = typer.Option(None, help="Project ID or prefix"),
     from_description: bool = typer.Option(False, help="Generate from description"),
     refine: Optional[str] = typer.Option(None, help="Refine with user requirement"),
-    language: Optional[str] = typer.Option(None, help="Language", click_type=click.Choice(["zh", "en", "ja", "auto"])),
+    language: Optional[str] = typer.Option(None, help="Language", click_type=click.Choice(["zh", "en", "ja", "ru", "auto"])),
     pages: Optional[int] = typer.Option(None, help=_PAGES_HINT),
 ) -> None:
     """Generate or refine outline."""
@@ -75,7 +75,7 @@ def workflows_descriptions(
     project_id: Optional[str] = typer.Option(None, help="Project ID or prefix"),
     refine: Optional[str] = typer.Option(None, help="Refine with user requirement"),
     max_workers: Optional[int] = typer.Option(None, help="Max workers"),
-    language: Optional[str] = typer.Option(None, help="Language", click_type=click.Choice(["zh", "en", "ja", "auto"])),
+    language: Optional[str] = typer.Option(None, help="Language", click_type=click.Choice(["zh", "en", "ja", "ru", "auto"])),
     wait: bool = typer.Option(True, "--wait/--no-wait", help="Wait for task completion (default: wait)"),
     timeout_sec: int = typer.Option(1800, help="Task timeout seconds"),
 ) -> None:
@@ -112,7 +112,7 @@ def workflows_descriptions(
 def workflows_images(
     project_id: Optional[str] = typer.Option(None, help="Project ID or prefix"),
     max_workers: Optional[int] = typer.Option(None, help="Max workers"),
-    language: Optional[str] = typer.Option(None, help="Language", click_type=click.Choice(["zh", "en", "ja", "auto"])),
+    language: Optional[str] = typer.Option(None, help="Language", click_type=click.Choice(["zh", "en", "ja", "ru", "auto"])),
     page_ids: Optional[str] = typer.Option(None, help="Comma-separated page IDs"),
     wait: bool = typer.Option(True, "--wait/--no-wait", help="Wait for task completion (default: wait)"),
     timeout_sec: int = typer.Option(1800, help="Task timeout seconds"),
@@ -152,7 +152,7 @@ def workflows_full(
     skip_outline: bool = typer.Option(False, help="Skip outline generation"),
     skip_descriptions: bool = typer.Option(False, help="Skip descriptions generation"),
     skip_images: bool = typer.Option(False, help="Skip images generation"),
-    language: Optional[str] = typer.Option(None, help="Language", click_type=click.Choice(["zh", "en", "ja", "auto"])),
+    language: Optional[str] = typer.Option(None, help="Language", click_type=click.Choice(["zh", "en", "ja", "ru", "auto"])),
     pages: Optional[int] = typer.Option(None, help=_PAGES_HINT),
     desc_max_workers: Optional[int] = typer.Option(None, help="Description max workers"),
     image_max_workers: Optional[int] = typer.Option(None, help="Image max workers"),

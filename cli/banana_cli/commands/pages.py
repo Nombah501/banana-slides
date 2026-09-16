@@ -15,7 +15,7 @@ from .common import ensure_file, parse_list_csv
 
 app = typer.Typer(no_args_is_help=True)
 
-LANGUAGE_CHOICES = ["zh", "en", "ja", "auto"]
+LANGUAGE_CHOICES = ["zh", "en", "ja", "ru", "auto"]
 
 
 def _parse_json(raw: str) -> dict:

@@ -531,19 +531,22 @@ def _build_region_edit_instruction(prompt: str, operation: str) -> str:
     """Create a focused prompt for region-based edits using a marked reference image."""
     cleaned_prompt = (prompt or '').strip()
     if operation == 'erase_region':
-        user_goal = cleaned_prompt or "移除黑色标记区域中的主体内容，并自然补全背景纹理与光影。"
+        user_goal = cleaned_prompt or "Remove the main content inside the black marked region and naturally reconstruct the surrounding background."
         return (
-            "用户会提供两张参考图：一张原图，一张带有黑色实心选区标记的图。\n"
-            "请只处理黑色标记区域，将该区域内容移除，并根据周围视觉自然补全。\n"
-            "黑色区域之外的构图、文字、光影、色调尽量保持不变。\n"
-            f"额外要求：{user_goal}"
+            "Two reference images will be provided: the original and a copy with a solid black "
+            "selection marker.\n"
+            "Process only the black marked region: remove its content and reconstruct it naturally "
+            "from the surrounding visual context.\n"
+            "Preserve composition, text, lighting, and color outside the marked region.\n"
+            f"Additional requirement: {user_goal}"
         )
 
     return (
-        "用户会提供两张参考图：一张原图，一张带有黑色实心选区标记的图。\n"
-        "请重点修改黑色标记区域，严格围绕该区域执行用户指令。\n"
-        "未标记区域尽量保持原样，不要无关改动整体构图。\n"
-        f"用户编辑要求：{cleaned_prompt}"
+        "Two reference images will be provided: the original and a copy with a solid black "
+        "selection marker.\n"
+        "Focus the edit on the black marked region and follow the user's instruction precisely.\n"
+        "Keep unmarked areas unchanged and do not alter the overall composition unnecessarily.\n"
+        f"User edit instruction: {cleaned_prompt}"
     )
 
 
@@ -566,7 +569,7 @@ def generate_descriptions_task(task_id: str, project_id: str, ai_service,
         outline: Complete outline structure
         max_workers: Maximum number of parallel workers
         app: Flask app instance
-        language: Output language (zh, en, ja, auto)
+        language: Output language (zh, en, ja, ru, auto)
         detail_level: Description detail level (concise/default/detailed)
     """
     if app is None:
@@ -721,7 +724,7 @@ def generate_images_task(task_id: str, project_id: str, ai_service, file_service
     Note: app instance MUST be passed from the request context
     
     Args:
-        language: Output language (zh, en, ja, auto)
+        language: Output language (zh, en, ja, ru, auto)
         page_ids: Optional list of page IDs to generate (if not provided, generates all pages)
     """
     if app is None:

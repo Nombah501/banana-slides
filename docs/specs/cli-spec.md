@@ -171,7 +171,7 @@ banana-cli files fetch --url <download_url> --output <path>
   "template_image_path": "/abs/path.png",
   "template_style": "text style",
   "extra_requirements": "optional",
-  "language": "zh|en|ja|auto",
+  "language": "zh|en|ja|ru|auto",
   "max_description_workers": 5,
   "max_image_workers": 8,
   "use_template": true,

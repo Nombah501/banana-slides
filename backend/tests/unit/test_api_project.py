@@ -494,12 +494,12 @@ class TestProjectOutlineStream:
         )
 
         assert '<!-- PAGE_DESCRIPTION -->' in prompt
-        assert '--- 页面文字 ---' in prompt
-        assert '--- 页面文字结束 ---' in prompt
-        # 素材引用并入"配图与素材"字段，不再有独立的"图片素材"段
-        assert '图片素材：' not in prompt
-        assert '配图与素材：' in prompt
-        assert '页面标题：' not in prompt
+        assert '--- Page text ---' in prompt
+        assert '--- End page text ---' in prompt
+        # Material references are carried by the dedicated English field.
+        assert 'Visuals and materials:' in prompt
+        assert 'Other page materials:' not in prompt
+        assert 'Page title:' not in prompt
 
     def test_outline_stream_parses_legacy_outline_only_markdown(self):
         """普通大纲 SSE 仍兼容只含标题和要点的 Markdown 输出"""

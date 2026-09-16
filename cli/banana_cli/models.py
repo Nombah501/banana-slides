@@ -38,7 +38,7 @@ class JobSpec(BaseModel):
     template_style: str | None = None
     extra_requirements: str | None = None
 
-    language: Literal["zh", "en", "ja", "auto"] | None = None
+    language: Literal["zh", "en", "ja", "ru", "auto"] | None = None
     max_description_workers: int | None = None
     max_image_workers: int | None = None
     use_template: bool = True

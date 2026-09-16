@@ -63,7 +63,7 @@ def test_generate_single_caption_uses_provider_factory():
         assert caption == '示例描述'
         mock_provider.generate_with_image.assert_called_once()
         call_args = mock_provider.generate_with_image.call_args
-        assert '描述' in call_args[0][0]
+        assert 'description text' in call_args[0][0]
     finally:
         if os.path.exists(image_path):
             os.remove(image_path)

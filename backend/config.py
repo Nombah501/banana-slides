@@ -119,7 +119,7 @@ class Config:
     CORS_ORIGINS = os.getenv('CORS_ORIGINS', f'http://localhost:{DEFAULT_FRONTEND_PORT}').split(',')
     
     # 输出语言配置
-    # 可选值: 'zh' (中文), 'ja' (日本語), 'en' (English), 'auto' (自动)
+    # Supported values: 'zh' (Chinese), 'ja' (Japanese), 'en' (English), 'ru' (Russian), 'auto'
     OUTPUT_LANGUAGE = os.getenv('OUTPUT_LANGUAGE', 'zh')
     
     # 火山引擎配置
@@ -140,6 +140,7 @@ class Config:
     TTS_DEFAULT_VOICE_ZH = os.getenv('TTS_DEFAULT_VOICE_ZH', 'zh-CN-XiaoxiaoNeural')
     TTS_DEFAULT_VOICE_EN = os.getenv('TTS_DEFAULT_VOICE_EN', 'en-US-JennyNeural')
     TTS_DEFAULT_VOICE_JA = os.getenv('TTS_DEFAULT_VOICE_JA', 'ja-JP-NanamiNeural')
+    TTS_DEFAULT_VOICE_RU = os.getenv('TTS_DEFAULT_VOICE_RU', 'ru-RU-DmitryNeural')
     TTS_DEFAULT_RATE = os.getenv('TTS_DEFAULT_RATE', '+0%')
     VIDEO_OUTPUT_WIDTH = int(os.getenv('VIDEO_OUTPUT_WIDTH', '1920'))
     VIDEO_OUTPUT_HEIGHT = int(os.getenv('VIDEO_OUTPUT_HEIGHT', '1080'))

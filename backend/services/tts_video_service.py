@@ -318,12 +318,14 @@ def get_default_voice(language: str, config: Optional[dict] = None) -> str:
         'zh': 'zh-CN-XiaoxiaoNeural',
         'en': 'en-US-JennyNeural',
         'ja': 'ja-JP-NanamiNeural',
+        'ru': 'ru-RU-DmitryNeural',
     }
     if config:
         voice_map = {
             'zh': config.get('TTS_DEFAULT_VOICE_ZH', defaults['zh']),
             'en': config.get('TTS_DEFAULT_VOICE_EN', defaults['en']),
             'ja': config.get('TTS_DEFAULT_VOICE_JA', defaults['ja']),
+            'ru': config.get('TTS_DEFAULT_VOICE_RU', defaults['ru']),
         }
         return voice_map.get(language, voice_map['zh'])
     return defaults.get(language, defaults['zh'])

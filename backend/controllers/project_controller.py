@@ -470,7 +470,7 @@ def generate_outline(project_id):
     Request body (optional):
     {
         "idea_prompt": "...",  # for idea type
-        "language": "zh"  # output language: zh, en, ja, auto
+        "language": "zh"  # output language: zh, en, ja, ru, auto
     }
     """
     try:
@@ -685,7 +685,7 @@ def generate_from_description(project_id):
     Request body (optional):
     {
         "description_text": "...",  # if not provided, uses project.description_text
-        "language": "zh"  # output language: zh, en, ja, auto
+        "language": "zh"  # output language: zh, en, ja, ru, auto
     }
     """
     
@@ -796,7 +796,7 @@ def generate_descriptions(project_id):
     Request body:
     {
         "max_workers": 5,
-        "language": "zh"  # output language: zh, en, ja, auto
+        "language": "zh"  # output language: zh, en, ja, ru, auto
     }
     """
     try:
@@ -1032,7 +1032,7 @@ def generate_images(project_id):
     {
         "max_workers": 8,
         "use_template": true,
-        "language": "zh",  # output language: zh, en, ja, auto
+        "language": "zh",  # output language: zh, en, ja, ru, auto
         "page_ids": ["id1", "id2"]  # optional: specific page IDs to generate (if not provided, generates all)
     }
     """
@@ -1179,7 +1179,7 @@ def refine_outline(project_id):
     Request body:
     {
         "user_requirement": "用户要求，例如：增加一页关于XXX的内容",
-        "language": "zh"  # output language: zh, en, ja, auto
+        "language": "zh"  # output language: zh, en, ja, ru, auto
     }
     """
     try:
@@ -1276,7 +1276,7 @@ def refine_descriptions(project_id):
     Request body:
     {
         "user_requirement": "用户要求，例如：让描述更详细一些",
-        "language": "zh"  # output language: zh, en, ja, auto
+        "language": "zh"  # output language: zh, en, ja, ru, auto
     }
     """
     try:

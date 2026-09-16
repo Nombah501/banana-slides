@@ -544,7 +544,7 @@ def generate_page_image(project_id, page_id):
         # 合并额外要求和风格描述
         combined_requirements = project.extra_requirements or ""
         if project.template_style:
-            style_requirement = f"\n\nppt页面风格描述：\n\n{project.template_style}"
+            style_requirement = f"\n\nPPT page style description:\n\n{project.template_style}"
             combined_requirements = combined_requirements + style_requirement
         
         # Create async task for image generation

@@ -14,7 +14,7 @@ How to use:
    - full_generation: adjust creation_type and prompt fields.
 3. Optional fields:
    - template_image_path/reference_files/material_files must be absolute local paths if provided.
-   - language: zh/en/ja/auto.
+   - language: zh/en/ja/ru/auto.
 4. Run:
    ./banana-cli run jobs --file /ABS/PATH/jobs.jsonl --report /ABS/PATH/report.json
 

@@ -10,12 +10,10 @@ def test_get_style_from_content_prompt_structure_zh():
     prompt = get_style_from_content_prompt(content=content, language='zh')
 
     assert content in prompt
-    assert "视觉描述" in prompt
-    assert "配色与材质" in prompt
-    assert "内容与排版" in prompt
-    assert "插图与渲染要求" in prompt
-    assert "简约商务" in prompt
-    assert "现代科技" in prompt
+    assert "Visual description" in prompt
+    assert "Color and material" in prompt
+    assert "Content and typography" in prompt
+    assert "Illustration and rendering" in prompt
 
 
 def test_get_style_from_content_prompt_structure_en():
@@ -23,10 +21,10 @@ def test_get_style_from_content_prompt_structure_en():
     prompt = get_style_from_content_prompt(content=content, language='en')
 
     assert content in prompt
-    assert "Visual Description" in prompt
-    assert "Color & Material" in prompt
-    assert "Content & Typography" in prompt
-    assert "Illustration & Rendering" in prompt
+    assert "Visual description" in prompt
+    assert "Color and material" in prompt
+    assert "Content and typography" in prompt
+    assert "Illustration and rendering" in prompt
 
 
 def test_ai_service_generate_style_from_content():

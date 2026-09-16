@@ -303,10 +303,10 @@ def update_settings():
 
         if "output_language" in data:
             language = data["output_language"]
-            if language in ["zh", "en", "ja", "auto"]:
+            if language in ["zh", "en", "ja", "ru", "auto"]:
                 settings.output_language = language
             else:
-                return bad_request("Output language must be 'zh', 'en', 'ja', or 'auto'")
+                return bad_request("Output language must be 'zh', 'en', 'ja', 'ru', or 'auto'")
 
         # Update description generation mode
         if "description_generation_mode" in data:
@@ -1001,7 +1001,7 @@ def _test_image_model():
     """测试图像生成模型"""
     ai_service = AIService()
     test_image_path = _get_test_image_path()
-    prompt = "生成一张简洁、明亮、适合演示文稿的背景图。"
+    prompt = "Generate a simple, bright background image suitable for a presentation."
     settings = Settings.get_settings()
     image_model = (current_app.config.get("IMAGE_MODEL", "") or "").lower()
     ref_image_path = None if image_model.startswith("gpt-image-") else str(test_image_path)

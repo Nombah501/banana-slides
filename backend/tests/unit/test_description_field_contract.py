@@ -53,29 +53,29 @@ def test_default_fields_render_full_instructions():
 
 
 def test_field_instructions_state_exclusion_rules():
-    """字段之间必须互斥：越界的内容要被明确推给别的字段。"""
+    """Fields remain mutually exclusive and state their ownership explicitly."""
     materials = EXTRA_FIELD_INSTRUCTIONS['配图与素材']
-    assert '不要写正文文字' in materials
-    assert '不要写摆放位置' in materials
+    assert 'Do not write body text' in materials
+    assert 'placement' in materials
 
     layout = EXTRA_FIELD_INSTRUCTIONS['版式与重点']
-    assert '不引入新内容' in layout
-    assert '不复述页面文字' in layout
+    assert 'do not add or repeat content' in layout
+    assert 'visual focus' in layout
 
     notes = EXTRA_FIELD_INSTRUCTIONS['演讲者备注']
-    assert '不会渲染到页面上' in notes
+    assert 'not rendered on the slide' in notes
 
 
 def test_field_instructions_carry_length_budget():
-    """长度预算是硬约束：文生图的文字渲染预算有限，字段冗长会挤占它。"""
-    assert '最多 3 项' in EXTRA_FIELD_INSTRUCTIONS['配图与素材']
-    assert '不超过两句' in EXTRA_FIELD_INSTRUCTIONS['版式与重点']
+    """Length budgets keep generated fields from crowding out slide text."""
+    assert 'at most 3 items' in EXTRA_FIELD_INSTRUCTIONS['配图与素材']
+    assert 'No more than two sentences' in EXTRA_FIELD_INSTRUCTIONS['版式与重点']
 
 
 def test_custom_field_falls_back_to_generic_instruction():
     result = _format_extra_field_instructions(['品牌规范'])
 
-    assert '品牌规范：[关于品牌规范的建议，只写其他字段未覆盖的信息]' in result
+    assert '品牌规范: [Suggestions about 品牌规范; include only information not covered by other fields.]' in result
 
 
 def test_legacy_field_names_do_not_borrow_new_definitions():
@@ -83,8 +83,8 @@ def test_legacy_field_names_do_not_borrow_new_definitions():
     result = _format_extra_field_instructions(['视觉焦点', '排版布局'])
 
     assert EXTRA_FIELD_INSTRUCTIONS['版式与重点'] not in result
-    assert '视觉焦点：[关于视觉焦点的建议' in result
-    assert '排版布局：[关于排版布局的建议' in result
+    assert '视觉焦点: [Suggestions about 视觉焦点; include only information not covered by other fields.]' in result
+    assert '排版布局: [Suggestions about 排版布局; include only information not covered by other fields.]' in result
 
 
 def test_empty_field_list_renders_nothing():
@@ -111,8 +111,8 @@ def test_page_description_prompt_states_verbatim_and_title_rules(ctx):
         extra_fields=list(Settings.DEFAULT_EXTRA_FIELDS),
     )
 
-    assert '逐字渲染' in prompt
-    assert '论断句' in prompt
+    assert 'rendered verbatim' in prompt
+    assert 'assertion sentence' in prompt
     assert 'takeaway' in prompt
 
 
@@ -122,9 +122,9 @@ def test_stream_description_prompt_matches_contract(ctx):
         extra_fields=list(Settings.DEFAULT_EXTRA_FIELDS),
     )
 
-    assert '图片素材：' not in prompt
-    assert '逐字渲染' in prompt
-    assert '论断句' in prompt
+    assert 'Visuals and materials:' in prompt
+    assert 'rendered verbatim' in prompt
+    assert 'assertion sentence' in prompt
     # 流式解析依赖的标记不能被改动
     for marker in ('<!-- BEGIN -->', '<!-- PAGE_END -->', '<!-- END -->'):
         assert marker in prompt
@@ -398,8 +398,8 @@ def test_refinement_prompt_includes_existing_extra_fields(ctx):
         project_context=ctx,
     )
 
-    assert '版式与重点：居中大标题' in prompt
-    assert '不要凭空删除' in prompt
+    assert 'Layout and emphasis: 居中大标题' in prompt
+    assert 'Preserve existing field information' in prompt
 
 
 def test_refine_descriptions_splits_extra_fields_back_out(client, monkeypatch):
@@ -562,7 +562,7 @@ def test_refinement_prompt_tolerates_null_text(ctx):
         project_context=ctx,
     )
 
-    assert '版式与重点：居中' in prompt
+    assert 'Layout and emphasis: 居中' in prompt
 
 
 def test_refine_descriptions_rejects_non_list(client, monkeypatch):

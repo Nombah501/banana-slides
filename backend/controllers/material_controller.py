@@ -7,6 +7,7 @@ from models import db, Project, Material, Task
 from utils import success_response, error_response, not_found, bad_request
 from services import FileService
 from services.ai_service_manager import get_ai_service
+from services.prompts import get_language_instruction
 from services.task_manager import task_manager, generate_material_image_task, process_material_image_task
 from pathlib import Path
 from werkzeug.utils import secure_filename
@@ -52,10 +53,11 @@ def _generate_image_caption(filepath: str) -> str:
         image.thumbnail((1024, 1024), Image.Resampling.LANCZOS)
 
         output_lang = current_app.config.get('OUTPUT_LANGUAGE', 'zh')
-        if output_lang == 'en':
-            prompt = "Please provide a short description of the main content of this image. Return only the description text without any other explanation."
-        else:
-            prompt = "请用一句简短的中文描述这张图片的主要内容。只返回描述文字，不要其他解释。"
+        prompt = (
+            "Provide a short description of the main content of this image. Return only the "
+            "description text without any other explanation.\n"
+            f"{get_language_instruction(output_lang)}"
+        )
 
         provider_format = (current_app.config.get('AI_PROVIDER_FORMAT') or 'gemini').lower()
         caption_source = (current_app.config.get('IMAGE_CAPTION_MODEL_SOURCE') or '').lower()

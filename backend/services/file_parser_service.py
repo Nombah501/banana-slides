@@ -744,8 +744,17 @@ class FileParserService:
                 logger.warning(f"Unsupported image path type: {image_url}")
                 return ""
             
-            # Generate caption via provider factory
-            prompt = "请用一句简短的中文描述这张图片的主要内容。只返回描述文字，不要其他解释。"
+            # Generate a caption in the configured output language.
+            try:
+                from flask import current_app
+                output_language = current_app.config.get('OUTPUT_LANGUAGE', 'auto')
+            except RuntimeError:
+                output_language = 'auto'
+            from services.prompts import get_language_instruction
+            prompt = (
+                "Provide one short description of the main content of this image. Return only "
+                f"the description text.\n{get_language_instruction(output_language)}"
+            )
 
             with tempfile.NamedTemporaryFile(prefix='caption_', suffix='.jpg', delete=False) as tmp:
                 temp_path = tmp.name

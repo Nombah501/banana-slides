@@ -32,6 +32,8 @@ from .prompts import (
     get_description_to_outline_prompt_markdown,
     get_template_analysis_prompt,
     get_template_auto_match_prompt,
+    EXTRA_FIELD_NAME_ALIASES,
+    normalize_extra_field_name,
 )
 from .ai_providers import get_text_provider, get_image_provider, get_caption_provider, TextProvider, ImageProvider
 from config import get_config
@@ -746,16 +748,15 @@ class AIService:
         # 按位置排序
         positions.sort(key=lambda x: x[0])
 
-        # 提取每个字段的值
+        # Extract each field value.
         for i, (start, end, name) in enumerate(positions):
             if i + 1 < len(positions):
                 value = text[end:positions[i + 1][0]].strip()
             else:
                 value = text[end:].strip()
-            # 清理 HTML 注释标记
             value = re.sub(r'<!--.*?-->', '', value).strip()
             if value:
-                extra_fields[name] = value
+                extra_fields[normalize_extra_field_name(name)] = value
 
         # 清理后的描述文本（截取到第一个字段之前）
         cleaned_text = text[:positions[0][0]].strip()
@@ -783,7 +784,11 @@ class AIService:
         """
         from models import Settings
         return list(dict.fromkeys(
-            [*cls._get_extra_field_names(), *Settings.LEGACY_FIELD_EQUIV.keys()]
+            [
+                *cls._get_extra_field_names(),
+                *Settings.LEGACY_FIELD_EQUIV.keys(),
+                *EXTRA_FIELD_NAME_ALIASES.keys(),
+            ]
         ))
 
     def generate_page_description(self, project_context: ProjectContext, outline: List[Dict],
@@ -902,7 +907,7 @@ class AIService:
             if field_pattern:
                 field_match = field_pattern.match(stripped)
                 if field_match:
-                    field_name = field_match.group(1)
+                    field_name = normalize_extra_field_name(field_match.group(1))
                     current_field = field_name
                     value = field_match.group(2).strip()
                     if value:

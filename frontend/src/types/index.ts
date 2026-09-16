@@ -223,7 +223,7 @@ export interface Settings {
   mineru_api_base?: string;
   mineru_token_length: number;
   image_caption_model?: string;
-  output_language: 'zh' | 'en' | 'ja' | 'auto';
+  output_language: 'zh' | 'en' | 'ja' | 'ru' | 'auto';
   // 描述生成模式
   description_generation_mode: 'streaming' | 'parallel';
   // 描述额外字段

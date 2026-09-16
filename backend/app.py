@@ -235,8 +235,7 @@ def create_app():
     @app.route('/api/output-language', methods=['GET'])
     def get_output_language():
         """
-        获取用户的输出语言偏好（从数据库 Settings 读取）
-        返回: zh, ja, en, auto
+        Return: zh, ja, en, ru, auto
         """
         from models import Settings
         try:

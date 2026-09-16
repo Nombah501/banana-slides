@@ -29,7 +29,7 @@ class Settings(db.Model):
     mineru_api_base = db.Column(db.String(255), nullable=True)  # MinerU 服务地址（覆盖 Config.MINERU_API_BASE）
     mineru_token = db.Column(db.String(500), nullable=True)  # MinerU API Token（覆盖 Config.MINERU_TOKEN）
     image_caption_model = db.Column(db.String(100), nullable=True)  # 图片识别模型（覆盖 Config.IMAGE_CAPTION_MODEL）
-    output_language = db.Column(db.String(10), nullable=True)  # 输出语言偏好（zh, en, ja, auto）(NULL=use .env)
+    output_language = db.Column(db.String(10), nullable=True)  # Output language preference (zh, en, ja, ru, auto) (NULL=use .env)
     
     # 推理模式配置（分别控制文本和图像生成）
     enable_text_reasoning = db.Column(db.Boolean, nullable=False, default=False)  # 文本生成是否开启推理

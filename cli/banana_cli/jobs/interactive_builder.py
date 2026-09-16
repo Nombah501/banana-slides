@@ -17,7 +17,7 @@ PrintFn = Callable[[str], None]
 
 JOB_TYPES = ("full_generation", "export_only")
 CREATION_TYPES = ("idea", "outline", "descriptions")
-LANGUAGES = ("zh", "en", "ja", "auto")
+LANGUAGES = ("zh", "en", "ja", "ru", "auto")
 EXPORT_FORMATS = {"pptx", "pdf", "images", "editable_pptx"}
 
 
