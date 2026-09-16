@@ -1,0 +1,512 @@
+
+> banana-slides-desktop@0.9.0 test
+> node --test update-policy.test.js auto-updater.test.js update-settings.test.js github-release-client.test.js download-manager.test.js storage-config.test.js markdown-image-script.test.js icon-policy.test.js scripts/check-icon-contract.test.js scripts/check-installer-data-root.test.js scripts/check-auto-update-contract.test.js
+
+TAP version 13
+# Subtest: automatic checks wait for the user before downloading an available update
+ok 1 - automatic checks wait for the user before downloading an available update
+  ---
+  duration_ms: 8.656137
+  type: 'test'
+  ...
+# Subtest: does not automatically check or install when automatic updates are disabled
+ok 2 - does not automatically check or install when automatic updates are disabled
+  ---
+  duration_ms: 0.893349
+  type: 'test'
+  ...
+# Subtest: ignores an in-flight automatic check after automatic updates are disabled
+ok 3 - ignores an in-flight automatic check after automatic updates are disabled
+  ---
+  duration_ms: 15.830423
+  type: 'test'
+  ...
+# Subtest: runs a fresh check after re-enabling during an invalidated automatic check
+ok 4 - runs a fresh check after re-enabling during an invalidated automatic check
+  ---
+  duration_ms: 3.293062
+  type: 'test'
+  ...
+# Subtest: coalesces a manual request into an in-flight automatic check without an automatic prompt
+ok 5 - coalesces a manual request into an in-flight automatic check without an automatic prompt
+  ---
+  duration_ms: 2.507698
+  type: 'test'
+  ...
+# Subtest: keeps manual update actions available while automatic updates are disabled
+ok 6 - keeps manual update actions available while automatic updates are disabled
+  ---
+  duration_ms: 2.449925
+  type: 'test'
+  ...
+# Subtest: preserves a downloaded update when a later check finds the same version
+ok 7 - preserves a downloaded update when a later check finds the same version
+  ---
+  duration_ms: 1.442069
+  type: 'test'
+  ...
+# Subtest: uses the timestamp-aware release fallback when electron-updater sees the same version
+ok 8 - uses the timestamp-aware release fallback when electron-updater sees the same version
+  ---
+  duration_ms: 1.169927
+  type: 'test'
+  ...
+# Subtest: does not offer a release when electron-updater marks it unavailable
+ok 9 - does not offer a release when electron-updater marks it unavailable
+  ---
+  duration_ms: 1.647234
+  type: 'test'
+  ...
+# Subtest: does not download a stale update after a later check clears it
+ok 10 - does not download a stale update after a later check clears it
+  ---
+  duration_ms: 1.984258
+  type: 'test'
+  ...
+# Subtest: persists the toggle and immediately schedules checks when re-enabled
+ok 11 - persists the toggle and immediately schedules checks when re-enabled
+  ---
+  duration_ms: 2.476129
+  type: 'test'
+  ...
+# Subtest: disables in-place macOS updates for ad hoc signed builds
+ok 12 - disables in-place macOS updates for ad hoc signed builds
+  ---
+  duration_ms: 0.616532
+  type: 'test'
+  ...
+# Subtest: enables in-place macOS updates when the app has a stable signature
+ok 13 - enables in-place macOS updates when the app has a stable signature
+  ---
+  duration_ms: 0.384071
+  type: 'test'
+  ...
+# Subtest: supports automatic updates on packaged Windows and AppImage builds
+ok 14 - supports automatic updates on packaged Windows and AppImage builds
+  ---
+  duration_ms: 0.337643
+  type: 'test'
+  ...
+# Subtest: uses release notifications instead of in-place updates for Debian packages
+ok 15 - uses release notifications instead of in-place updates for Debian packages
+  ---
+  duration_ms: 0.286377
+  type: 'test'
+  ...
+# Subtest: uses safe defaults when update preferences cannot be read
+ok 16 - uses safe defaults when update preferences cannot be read
+  ---
+  duration_ms: 0.919338
+  type: 'test'
+  ...
+# Subtest: detects a configured fork release through the Atom-backed fallback
+ok 17 - detects a configured fork release through the Atom-backed fallback
+  ---
+  duration_ms: 2.680686
+  type: 'test'
+  ...
+# Subtest: uses the configured repository when the packaged updater is rate limited
+ok 18 - uses the configured repository when the packaged updater is rate limited
+  ---
+  duration_ms: 1.695478
+  type: 'test'
+  ...
+# Subtest: waits for Session.downloadURL to write a non-empty file
+ok 19 - waits for Session.downloadURL to write a non-empty file
+  ---
+  duration_ms: 52.981532
+  type: 'test'
+  ...
+# Subtest: reports an interrupted download instead of claiming success
+ok 20 - reports an interrupted download instead of claiming success
+  ---
+  duration_ms: 6.018348
+  type: 'test'
+  ...
+# Subtest: does not touch window listeners after the Electron window is destroyed
+ok 21 - does not touch window listeners after the Electron window is destroyed
+  ---
+  duration_ms: 9.707525
+  type: 'test'
+  ...
+# Subtest: copies an existing desktop export directly to the selected path
+ok 22 - copies an existing desktop export directly to the selected path
+  ---
+  duration_ms: 6.612066
+  type: 'test'
+  ...
+# Subtest: does not resolve traversal or non-local URLs as desktop exports
+ok 23 - does not resolve traversal or non-local URLs as desktop exports
+  ---
+  duration_ms: 1.250927
+  type: 'test'
+  ...
+# Subtest: packages the download manager with the desktop application
+ok 24 - packages the download manager with the desktop application
+  ---
+  duration_ms: 1.359412
+  type: 'test'
+  ...
+# Subtest: rechecks the desktop window after resolving an export asynchronously
+ok 25 - rechecks the desktop window after resolving an export asynchronously
+  ---
+  duration_ms: 1.234382
+  type: 'test'
+  ...
+# Subtest: packages the GitHub release client with the desktop application
+ok 26 - packages the GitHub release client with the desktop application
+  ---
+  duration_ms: 1.635912
+  type: 'test'
+  ...
+# Subtest: paginates until GitHub returns a partial release page
+ok 27 - paginates until GitHub returns a partial release page
+  ---
+  duration_ms: 1.964063
+  type: 'test'
+  ...
+# Subtest: rejects malformed release pages instead of reporting the app current
+ok 28 - rejects malformed release pages instead of reporting the app current
+  ---
+  duration_ms: 1.470637
+  type: 'test'
+  ...
+# Subtest: uses the Atom feed when the GitHub releases API is rate limited
+ok 29 - uses the Atom feed when the GitHub releases API is rate limited
+  ---
+  duration_ms: 3.864166
+  type: 'test'
+  ...
+# Subtest: recognizes both GitHub rate-limit status forms
+ok 30 - recognizes both GitHub rate-limit status forms
+  ---
+  duration_ms: 0.450102
+  type: 'test'
+  ...
+# Subtest: packaged macOS uses the bundle icon and never overrides the Dock icon
+ok 31 - packaged macOS uses the bundle icon and never overrides the Dock icon
+  ---
+  duration_ms: 3.48873
+  type: 'test'
+  ...
+# Subtest: macOS Tray uses its dedicated template image
+ok 32 - macOS Tray uses its dedicated template image
+  ---
+  duration_ms: 0.705772
+  type: 'test'
+  ...
+# Subtest: development macOS may set the Dock icon from the opaque fallback
+ok 33 - development macOS may set the Dock icon from the opaque fallback
+  ---
+  duration_ms: 0.747535
+  type: 'test'
+  ...
+# Subtest: Windows keeps using the ICO app icon for the window and Tray
+ok 34 - Windows keeps using the ICO app icon for the window and Tray
+  ---
+  duration_ms: 0.613651
+  type: 'test'
+  ...
+# Subtest: desktop Markdown test only deletes nested temporary directories
+ok 35 - desktop Markdown test only deletes nested temporary directories
+  ---
+  duration_ms: 3.734944
+  type: 'test'
+  ...
+# Subtest: desktop Markdown test rejects critical or unrelated directories
+ok 36 - desktop Markdown test rejects critical or unrelated directories
+  ---
+  duration_ms: 2.262416
+  type: 'test'
+  ...
+# Subtest: desktop Markdown test detects a signal-terminated app without waiting for timeout
+ok 37 - desktop Markdown test detects a signal-terminated app without waiting for timeout
+  ---
+  duration_ms: 1.326445
+  type: 'test'
+  ...
+# Subtest: Windows FFmpeg cache is restored before npm install invokes prepare
+ok 38 - Windows FFmpeg cache is restored before npm install invokes prepare
+  ---
+  duration_ms: 16.483488
+  type: 'test'
+  ...
+# Subtest: desktop packaging publishes the artifacts required by electron-updater
+ok 39 - desktop packaging publishes the artifacts required by electron-updater
+  ---
+  duration_ms: 6.661245
+  type: 'test'
+  ...
+# Subtest: desktop icon assets and packaging follow one contract
+ok 40 - desktop icon assets and packaging follow one contract
+  ---
+  duration_ms: 11.140183
+  type: 'test'
+  ...
+# Subtest: legacy app icon fallback must be opaque to avoid the macOS gray backplate
+ok 41 - legacy app icon fallback must be opaque to avoid the macOS gray backplate
+  ---
+  duration_ms: 2.514784
+  type: 'test'
+  ...
+# Subtest: Icon Composer contract rejects a drifting dark appearance
+ok 42 - Icon Composer contract rejects a drifting dark appearance
+  ---
+  duration_ms: 5.406965
+  type: 'test'
+  ...
+# Subtest: electron-builder version ranges may omit the patch component
+ok 43 - electron-builder version ranges may omit the patch component
+  ---
+  duration_ms: 0.465832
+  type: 'test'
+  ...
+# Subtest: PNG metadata parser reports a truncated chunk without a RangeError
+ok 44 - PNG metadata parser reports a truncated chunk without a RangeError
+  ---
+  duration_ms: 1.651153
+  type: 'test'
+  ...
+# Subtest: PNG metadata parser rejects files shorter than an IHDR chunk
+ok 45 - PNG metadata parser rejects files shorter than an IHDR chunk
+  ---
+  duration_ms: 1.499741
+  type: 'test'
+  ...
+# Subtest: YAML section reader accepts spacing and an inline comment
+ok 46 - YAML section reader accepts spacing and an inline comment
+  ---
+  duration_ms: 0.543345
+  type: 'test'
+  ...
+# Subtest: electron-builder includes the custom bilingual NSIS installer
+ok 47 - electron-builder includes the custom bilingual NSIS installer
+  ---
+  duration_ms: 3.218054
+  type: 'test'
+  ...
+# Subtest: data storage page follows the installation-directory page and skips upgrades
+ok 48 - data storage page follows the installation-directory page and skips upgrades
+  ---
+  duration_ms: 1.304557
+  type: 'test'
+  ...
+# Subtest: first install persists the selected path before install and supports silent install
+ok 49 - first install persists the selected path before install and supports silent install
+  ---
+  duration_ms: 3.051397
+  type: 'test'
+  ...
+# Subtest: uses Electron userData as the data root when no config exists
+ok 50 - uses Electron userData as the data root when no config exists
+  ---
+  duration_ms: 32.88165
+  type: 'test'
+  ...
+# Subtest: creates a missing default Electron userData directory on first launch
+ok 51 - creates a missing default Electron userData directory on first launch
+  ---
+  duration_ms: 8.523226
+  type: 'test'
+  ...
+# Subtest: atomically saves and reads a Unicode data root
+ok 52 - atomically saves and reads a Unicode data root
+  ---
+  duration_ms: 9.750313
+  type: 'test'
+  ...
+# Subtest: normalizes trailing separators without changing filesystem roots
+ok 53 - normalizes trailing separators without changing filesystem roots
+  ---
+  duration_ms: 0.492103
+  type: 'test'
+  ...
+# Subtest: consumes a utf8 installer path only once
+ok 54 - consumes a utf8 installer path only once
+  ---
+  duration_ms: 10.653618
+  type: 'test'
+  ...
+# Subtest: consumes a utf16le installer path only once
+ok 55 - consumes a utf16le installer path only once
+  ---
+  duration_ms: 8.503588
+  type: 'test'
+  ...
+# Subtest: starts from the saved installer config when the handoff file is temporarily locked
+ok 56 - starts from the saved installer config when the handoff file is temporarily locked
+  ---
+  duration_ms: 9.162663
+  type: 'test'
+  ...
+# Subtest: an existing config takes precedence over an installer handoff
+ok 57 - an existing config takes precedence over an installer handoff
+  ---
+  duration_ms: 6.441696
+  type: 'test'
+  ...
+# Subtest: inspect does not create a missing selected data directory
+ok 58 - inspect does not create a missing selected data directory
+  ---
+  duration_ms: 3.794804
+  type: 'test'
+  ...
+# Subtest: creates and write-tests a data directory only after initialization is confirmed
+ok 59 - creates and write-tests a data directory only after initialization is confirmed
+  ---
+  duration_ms: 9.07365
+  type: 'test'
+  ...
+# Subtest: cleans up the write probe when writing reports a late failure
+ok 60 - cleans up the write probe when writing reports a late failure
+  ---
+  duration_ms: 5.669516
+  type: 'test'
+  ...
+# Subtest: does not reject a writable directory when write-probe cleanup is temporarily locked
+ok 61 - does not reject a writable directory when write-probe cleanup is temporarily locked
+  ---
+  duration_ms: 4.243561
+  type: 'test'
+  ...
+# Subtest: preparation rejects an unconfirmed missing location before creating it
+ok 62 - preparation rejects an unconfirmed missing location before creating it
+  ---
+  duration_ms: 1.025301
+  type: 'test'
+  ...
+# Subtest: preparation creates a missing location after initialization is confirmed
+ok 63 - preparation creates a missing location after initialization is confirmed
+  ---
+  duration_ms: 3.43941
+  type: 'test'
+  ...
+# Subtest: startup rejects and does not create a missing configured data root
+ok 64 - startup rejects and does not create a missing configured data root
+  ---
+  duration_ms: 5.796479
+  type: 'test'
+  ...
+# Subtest: rejects relative and non-directory paths with stable error codes
+ok 65 - rejects relative and non-directory paths with stable error codes
+  ---
+  duration_ms: 3.475455
+  type: 'test'
+  ...
+# Subtest: does not silently fall back when configured storage is unavailable
+ok 66 - does not silently fall back when configured storage is unavailable
+  ---
+  duration_ms: 5.904595
+  type: 'test'
+  ...
+# Subtest: packaged smoke tests set Electron userData explicitly before app readiness
+ok 67 - packaged smoke tests set Electron userData explicitly before app readiness
+  ---
+  duration_ms: 1.98215
+  type: 'test'
+  ...
+# Subtest: uses commit timestamp for clean builds
+ok 68 - uses commit timestamp for clean builds
+  ---
+  duration_ms: 3.414497
+  type: 'test'
+  ...
+# Subtest: uses build timestamp for dirty builds
+ok 69 - uses build timestamp for dirty builds
+  ---
+  duration_ms: 0.566768
+  type: 'test'
+  ...
+# Subtest: shows semver upgrade even when current build timestamp is newer
+ok 70 - shows semver upgrade even when current build timestamp is newer
+  ---
+  duration_ms: 1.128854
+  type: 'test'
+  ...
+# Subtest: uses timestamp when versions are equal
+ok 71 - uses timestamp when versions are equal
+  ---
+  duration_ms: 1.001949
+  type: 'test'
+  ...
+# Subtest: suppresses downgrade prompts even when latest release timestamp is newer
+ok 72 - suppresses downgrade prompts even when latest release timestamp is newer
+  ---
+  duration_ms: 0.632068
+  type: 'test'
+  ...
+# Subtest: falls back to semver when timestamps are unavailable
+ok 73 - falls back to semver when timestamps are unavailable
+  ---
+  duration_ms: 0.402206
+  type: 'test'
+  ...
+# Subtest: treats stable releases as newer than pre-release builds
+ok 74 - treats stable releases as newer than pre-release builds
+  ---
+  duration_ms: 0.730804
+  type: 'test'
+  ...
+# Subtest: selects a newer pre-release for an app already on the pre-release channel
+ok 75 - selects a newer pre-release for an app already on the pre-release channel
+  ---
+  duration_ms: 1.795512
+  type: 'test'
+  ...
+# Subtest: stable builds do not opt into pre-release updates
+ok 76 - stable builds do not opt into pre-release updates
+  ---
+  duration_ms: 1.605887
+  type: 'test'
+  ...
+# Subtest: ignores releases without an installer for the current platform
+ok 77 - ignores releases without an installer for the current platform
+  ---
+  duration_ms: 1.411884
+  type: 'test'
+  ...
+# Subtest: accepts electron-builder Linux x64 artifact names
+ok 78 - accepts electron-builder Linux x64 artifact names
+  ---
+  duration_ms: 1.01272
+  type: 'test'
+  ...
+# Subtest: enables automatic updates and uses upstream by default
+ok 79 - enables automatic updates and uses upstream by default
+  ---
+  duration_ms: 16.871938
+  type: 'test'
+  ...
+# Subtest: persists the update repository with the automatic update preference
+ok 80 - persists the update repository with the automatic update preference
+  ---
+  duration_ms: 14.036859
+  type: 'test'
+  ...
+# Subtest: normalizes missing fields from older preference files
+ok 81 - normalizes missing fields from older preference files
+  ---
+  duration_ms: 12.152104
+  type: 'test'
+  ...
+# Subtest: recovers from a malformed preference file without blocking app startup
+ok 82 - recovers from a malformed preference file without blocking app startup
+  ---
+  duration_ms: 5.562217
+  type: 'test'
+  ...
+# Subtest: rejects repository path components and falls back to upstream
+ok 83 - rejects repository path components and falls back to upstream
+  ---
+  duration_ms: 1.210868
+  type: 'test'
+  ...
+1..83
+# tests 83
+# suites 0
+# pass 83
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 384.978866

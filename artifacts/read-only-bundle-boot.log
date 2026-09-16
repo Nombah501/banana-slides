@@ -1,0 +1,15 @@
+$ cp -a /workspace/banana-slides-ru/backend /tmp/banana-readonly-bundle-z_usx07q/bundle/resources/backend
+$ chmod -R a-w /tmp/banana-readonly-bundle-z_usx07q/bundle
+$ PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/tmp/banana-readonly-bundle-z_usx07q/bundle/resources/backend INSTANCE_PATH=/tmp/banana-readonly-bundle-z_usx07q/data/data DATABASE_PATH=/tmp/banana-readonly-bundle-z_usx07q/data/data/database.db UPLOAD_FOLDER=/tmp/banana-readonly-bundle-z_usx07q/data/uploads EXPORT_FOLDER=/tmp/banana-readonly-bundle-z_usx07q/data/exports BACKEND_PORT=0 FLASK_ENV=production USE_MOCK_AI=true python3 /tmp/banana-readonly-bundle-z_usx07q/bundle/resources/backend/app.py
+/workspace/banana-slides-ru/.venv/lib/python3.11/site-packages/pydub/utils.py:170: RuntimeWarning: Couldn't find ffmpeg or avconv - defaulting to ffmpeg, but may not work
+  warn("Couldn't find ffmpeg or avconv - defaulting to ffmpeg, but may not work", RuntimeWarning)
+2026-09-16 13:02:13,969 [INFO] root - Loaded image settings: 2K, 16:9
+2026-09-16 13:02:13,970 [INFO] services.task_manager - Updating background task pool size: 16 -> 44
+2026-09-16 13:02:13,970 [INFO] root - Loaded worker settings: desc=20, img=20
+2026-09-16 13:02:13,970 [INFO] root - Loaded reasoning config: text=False(budget=1024), image=False(budget=1024)
+2026-09-16 13:02:13,970 [INFO] root - Loaded image quality control: False
+LISTENING_ON:41467
+health: HTTP 200 {"message":"Banana Slides API is running","status":"ok"}
+
+bundle instance exists: False
+writable database exists: True
