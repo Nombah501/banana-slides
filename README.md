@@ -48,6 +48,8 @@
 
 </div>
 
+公开 Demo 提供 Inferera、APIMart 和火山 Agent Plan 的固定模型配置，API Key 按访客隔离。公开版不提供历史记录，请保存预览页链接以便再次访问；描述额外字段配置固定，正文和生成要求仍可编辑。设置页的各项服务测试可同时运行，分别显示结果。站主可在 `.env` 设置 `PUBLIC_DEMO_ADMIN_PASSWORD`，通过 `/admin/history` 口令入口查看历史。参见[公开 Demo 使用与迁移说明](docs/zh/public-demo.mdx)。
+
 ## ❤️ 赞助
 
 > 想赞助本项目？请发送邮件至 davidyang042@gmail.com。
@@ -530,7 +532,8 @@ npm run dev
 
 欢迎在群中提出新功能建议或反馈～
 
-<img width="312" alt="0ed188e1aa9d2d6ffffebdf749a077c7" src="https://github.com/user-attachments/assets/943dd564-eb3c-436a-85e3-ec0547c29f15" />
+<img width="312" alt="image" src="https://github.com/user-attachments/assets/d4392639-3b5b-4e53-bccd-60b5028d6def" />
+
 
 
 
